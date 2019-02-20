@@ -1,0 +1,35 @@
+{
+    "name": "xdk2mam-back",
+    "main": "server.js",
+    "license": "ISC",
+    "version": "1.0.0",
+    "dependencies": {
+        "axios": "^0.18.0",
+        "body-parser": "~1.0.1",
+        "compression": "^1.5.2",
+        "config": "^1.14.0",
+        "delay": "^4.1.0",
+        "express": "^4.13.3",
+        "level": "^4.0.0",
+        "log4js": "^0.6.26",
+        "merkle-lib": "^2.0.10",
+        "moment": "^2.12.0",
+        "morgan": "^1.6.1",
+        "q": "^1.4.1",
+        "underscore-node": "^0.1.2"
+    },
+    "scripts": {
+        "start": "nodemon app.js",
+        "lint": "node_modules/.bin/eslint ."
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "devDependencies": {
+        "clone": "^1.0.2",
+        "eslint": "^4.10.0",
+        "eslint-config-node-style-guide": "^3.0.0",
+        "nodemon": "^1.18.10"
+    }
+}
