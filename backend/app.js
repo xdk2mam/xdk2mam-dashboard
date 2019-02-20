@@ -1,7 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
-var main = require('./route/main.js'); // Require app routes
+var main = require('./route/main.js');
+var headers = require('./middleware/headers.js');
 var compression = require('compression');
 
 var port = 8081;
@@ -13,6 +14,7 @@ if (!process.env.NODE_ENV) {
 var app = express();
 
 app.use(morgan('dev'));
+app.use(headers);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(compression());

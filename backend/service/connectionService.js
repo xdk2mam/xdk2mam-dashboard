@@ -19,24 +19,26 @@ var ConnectionService = function () {
     this.getLast = function (last, callback) {
 
         var date = moment().utc().format('MM/DD/YYYY')
-        var info = []
-
+        var info = []        
         xdk2mamDB.get(date, async function (err, value) {            
 
             if (err) return callback({ error: "key does not exist" });
 
             var list = JSON.parse(value)            
-            
-            for(var i=0;i<list.timestamps.length;i++){
+            var max = list.timestamps.length
+
+            var top = last > max ? max : last
+
+            for(var i=1;i<=top;i++){
                 
-                await xdk2mamDB.get(list.timestamps[i].toString(), function (err, read) {
+                await xdk2mamDB.get(list.timestamps[max-i].toString(), function (err, read) {
                     if (err) return callback({ error: "key does not exist" });                    
                     info.push(read)
                     
                 })
 
             }
-            await delay(1)
+            await delay(100)
             return callback(err, { info })
         })
     }
