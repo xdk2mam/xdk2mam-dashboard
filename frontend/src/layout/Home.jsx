@@ -22,15 +22,15 @@ export default class Home extends Component {
     getLastInfo = (num) => {
         getLast(num)
             .then(({ data }) => {
-                this.setState({ infoSensor: data.info })
+                this.setState({ infoSensor: data })
             })
     }
 
-    getEnvironmentInfo = () => {
+    getEnvironmentInfo = () => {        
         if (this.state.infoSensor && this.state.infoSensor.length > 0) {
             return this.state.infoSensor.map((info) => {
-                var read = JSON.parse(info)                
-                if (read.xdk2mam[0].sensor == 'Environmental')
+                var read = JSON.parse(info.data);
+                if (read.xdk2mam[0].sensor == 'Environmental') 
                     return <h4>Pressure: {read.xdk2mam[0].data[0].Pressure} -
                                 Temperature: {read.xdk2mam[0].data[1].Temp} -
                                 Humidity: {read.xdk2mam[0].data[2].Humidity} -
