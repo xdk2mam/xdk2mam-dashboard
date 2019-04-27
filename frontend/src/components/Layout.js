@@ -2,10 +2,12 @@ import React, { Fragment, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 
 import { Grid, CssBaseline, Typography, AppBar, Toolbar, IconButton } from '@material-ui/core'
+
 // import MenuIcon from '@material-ui/icons/Menu'
 
 import CustomLink from '../components/CustomLink'
 import Drawer from '../components/Drawer'
+import Header from '../components/Header'
 
 /**
  * Layout
@@ -27,22 +29,7 @@ class Layout extends PureComponent {
     return (
       <Fragment>
         <CssBaseline />
-        {/* TODO: Insert final AppBar
-        
-        <AppBar style={styles.appBar}>
-          <Toolbar>
-            <IconButton onClick={this.handleDrawerOpen} color="inherit" aria-label="Menu" style={styles.drawerButton}>
-              >
-            </IconButton>
-            <CustomLink to="/">
-              <Typography style={styles.navigationBarText} variant="h6" color="inherit">
-                XDK2MAM
-              </Typography>
-            </CustomLink>
-          </Toolbar>
-        </AppBar> 
-
-        */}
+        <Header />
 
         <Drawer open={isDrawerOpened} onDrawerClose={this.handleDrawerClose} />
 

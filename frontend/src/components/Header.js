@@ -37,7 +37,6 @@ const styles = {
   },
   grow: {
     flexGrow: 1,
-    textAlign: 'right',
   },
   menuButton: {
     marginLeft: -12,
@@ -46,6 +45,7 @@ const styles = {
   logo: {
     width: '200px',
     padding: '8px 0 0 0',
+    marginLeft: '5%',
   },
 }
 
