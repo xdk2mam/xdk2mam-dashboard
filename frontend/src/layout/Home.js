@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import { getLast } from './utils.js'
+import Layout from '../components/Layout'
 
 class Home extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class Home extends Component {
   }
 
   render() {
-    return <React.Fragment>{this.getEnvironmentInfo()}</React.Fragment>
+    return <Layout>{this.getEnvironmentInfo()}</Layout>
   }
 }
 

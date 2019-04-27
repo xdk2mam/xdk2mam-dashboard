@@ -5,7 +5,7 @@ export function getLast(number) {
         {
           xdk2mam: [
             {
-              sensorType: 'Environmental',
+              sensorType: 'Weather',
               data: [
                 { name: 'Pressure', value: '100809' },
                 { name: 'Temperature', value: '34280' },
