@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { getLast } from './utils.js'
 
-import Header from '~/components/Header'
+import Header from '../components/Header'
 
 class Home extends Component {
   constructor(props) {
@@ -45,10 +45,12 @@ class Home extends Component {
   }
 
   render() {
-    return <React.Fragment>
-      <Header/>
-      {this.getEnvironmentInfo()}
-    </React.Fragment>
+    return (
+      <React.Fragment>
+        <Header />
+        {this.getEnvironmentInfo()}
+      </React.Fragment>
+    )
   }
 }
 
