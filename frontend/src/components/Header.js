@@ -4,9 +4,10 @@ import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
+
+import logo from '../assets/logo.png'
 
 function Header(props) {
   const { classes } = props
@@ -18,9 +19,8 @@ function Header(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            XDK2MAM
+            <img src={logo} alt="Logo" className={classes.logo} />
           </Typography>
-          <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
     </div>
@@ -32,16 +32,21 @@ Header.propTypes = {
 }
 
 const styles = {
-    root: {
-      flexGrow: 1,
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginLeft: -12,
-      marginRight: 20,
-    },
-  }
+  root: {
+    flexGrow: 1,
+  },
+  grow: {
+    flexGrow: 1,
+    textAlign: 'right',
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+  logo: {
+    width: '200px',
+    padding: '8px 0 0 0',
+  },
+}
 
 export default withStyles(styles)(Header)
