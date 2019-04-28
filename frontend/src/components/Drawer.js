@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { List, Drawer as MaterialDrawer } from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
 
 import DrawerLinkButton from './DrawerLinkButton'
 
@@ -10,15 +11,15 @@ import DrawerLinkButton from './DrawerLinkButton'
 
 class Drawer extends PureComponent {
   render() {
-    const { open, onDrawerClose } = this.props
+    const { classes } = this.props
 
     return (
-      <MaterialDrawer variant="permanent" open={open} onClose={onDrawerClose}>
-        <div tabIndex={0} role="button" onClick={onDrawerClose} onKeyDown={onDrawerClose}>
+      <MaterialDrawer classes={{ paper: classes.drawer }} variant="permanent">
+        <div tabIndex={0} role="button">
           <List>
             <DrawerLinkButton href="/" text="Home" />
-            <DrawerLinkButton href="/" text="Datasets" />
-            <DrawerLinkButton href="/" text="Settings" />
+            <DrawerLinkButton href="/datasets" text="Datasets" />
+            <DrawerLinkButton href="/settings" text="Settings" />
           </List>
         </div>
       </MaterialDrawer>
@@ -31,12 +32,21 @@ class Drawer extends PureComponent {
  */
 
 Drawer.propTypes = {
-  open: PropTypes.bool.isRequired,
-  onDrawerClose: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
+}
+
+/**
+ * Styles
+ */
+
+const styles = {
+  drawer: {
+    width: 200,
+  },
 }
 
 /**
  * Exports
  */
 
-export default Drawer
+export default withStyles(styles)(Drawer)
