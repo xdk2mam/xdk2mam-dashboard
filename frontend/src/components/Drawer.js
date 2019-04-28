@@ -17,9 +17,9 @@ class Drawer extends PureComponent {
       <MaterialDrawer classes={{ paper: classes.drawer }} variant="permanent">
         <div tabIndex={0} role="button">
           <List>
-            <DrawerLinkButton href="/" text="Home" />
-            <DrawerLinkButton href="/datasets" text="Datasets" />
-            <DrawerLinkButton href="/settings" text="Settings" />
+            <DrawerLinkButton to="/" text="Home" />
+            <DrawerLinkButton to="/datasets" text="Datasets" />
+            <DrawerLinkButton to="/settings" text="Settings" />
           </List>
         </div>
       </MaterialDrawer>

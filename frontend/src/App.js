@@ -1,29 +1,28 @@
 import React from 'react'
-import CssBaseline from '@material-ui/core/CssBaseline'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import Home from './layout/Home'
+import Home from './routes/Home'
+import Settings from './routes/Settings'
+import Datasets from './routes/Datasets'
 
-class App extends React.Component {
-  constructor(props) {
-    super(props)
+/**
+ * App
+ */
 
-    this.state = {
-      loaded: false,
-    }
-  }
-
-  componentDidMount() {
-    this.setState({ loaded: true })
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <CssBaseline />
-        <Home />
-      </React.Fragment>
-    )
-  }
+function App() {
+  return (
+    <Router>
+      <div>
+        <Route exact path="/" component={Home} />
+        <Route path="/settings" component={Settings} />
+        <Route path="/datasets" component={Datasets} />
+      </div>
+    </Router>
+  )
 }
+
+/**
+ * Exports
+ */
 
 export default App

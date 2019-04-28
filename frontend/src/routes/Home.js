@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 
-import { getLast } from './utils.js'
-import Layout from '../components/Layout'
+import { getLast } from '../helpers/utils.js'
+import Layout from '../components/Layout.js'
+
+/**
+ * Home
+ */
 
 class Home extends Component {
   constructor(props) {
@@ -47,5 +51,9 @@ class Home extends Component {
     return <Layout>{this.getEnvironmentInfo()}</Layout>
   }
 }
+
+/**
+ * Exports
+ */
 
 export default Home
