@@ -1,10 +1,11 @@
-import React, { Fragment, PureComponent } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Grid, CssBaseline } from '@material-ui/core'
 
 import Drawer from '../components/Drawer'
 import Header from '../components/Header'
+import Colors from '../helpers/colors'
 
 /**
  * Layout
@@ -15,16 +16,16 @@ class Layout extends PureComponent {
     const { children, classes } = this.props
 
     return (
-      <Fragment>
+      <div className={classes.root}>
         <CssBaseline />
-        <Header />
 
         <Drawer />
 
-        <Grid classes={{ container: classes.grid }} container spacing={24}>
+        <Grid classes={{ container: classes.grid }} container>
+          <Header />
           {children}
         </Grid>
-      </Fragment>
+      </div>
     )
   }
 }
@@ -35,9 +36,13 @@ Layout.propTypes = {
 }
 
 const styles = {
+  root: {
+    display: 'flex',
+  },
+
   grid: {
-    padding: 25,
-    marginLeft: 200,
+    backgroundColor: Colors.COMP_PURPLE,
+    marginLeft: Drawer.width,
   },
 }
 

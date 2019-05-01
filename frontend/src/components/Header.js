@@ -14,7 +14,7 @@ function Header(props) {
   return (
     <AppBar position="static" elevation={0} classes={{ root: classes.root }}>
       <Toolbar>
-        <Typography variant="h6" color="inherit" className={classes.grow}>
+        <Typography variant="h6" color="inherit">
           <img src={logo} alt="Logo" className={classes.logo} />
         </Typography>
       </Toolbar>
@@ -28,13 +28,7 @@ Header.propTypes = {
 
 const styles = {
   root: {
-    flexGrow: 1,
-    marginLeft: 200,
     backgroundColor: Colors.BASE,
-  },
-
-  grow: {
-    flexGrow: 1,
   },
 
   logo: {

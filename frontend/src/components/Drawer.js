@@ -4,12 +4,15 @@ import { List, Drawer as MaterialDrawer } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
 import DrawerLinkButton from './DrawerLinkButton'
+import Colors from '../helpers/colors'
 
 /**
  * Drawer
  */
 
 class Drawer extends PureComponent {
+  static width = 150
+
   render() {
     const { classes } = this.props
 
@@ -41,7 +44,8 @@ Drawer.propTypes = {
 
 const styles = {
   drawer: {
-    width: 200,
+    width: Drawer.width,
+    backgroundColor: Colors.DARKEST_BLUE,
   },
 }
 
