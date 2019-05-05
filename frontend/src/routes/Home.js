@@ -54,8 +54,9 @@ class Home extends Component {
   render() {
     const { classes } = this.props
     const { selectedTab } = this.state
-    const { sensorType } = data && data[0].xdk2mam[0]
     const weatherData = this.state.infoSensor
+
+    const colorPalette = [Colors.LOGO_GREEN, Colors.DARKEST_BLUE, Colors.COMP_YELLOW]
 
     return (
       <Layout>
@@ -66,27 +67,31 @@ class Home extends Component {
             classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
           >
             <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="Weather" />
-            <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="Environmental">
-              <Typography variant="h4" color="inherit">
-                {sensorType}
-              </Typography>
-              {weatherData &&
-                weatherData.map((data, index) => (
-                  <Grid item xs={3} key={index}>
-                    <Grid item xs={12}>
-                      <Paper className={classes.paper}>
-                        <Typography variant="h6" color="inherit">
-                          {data.name}
-                        </Typography>
-                        <LineChart data={data.data} />
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                ))}
-            </Tab>
+            <Tab
+              disableRipple
+              classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+              label="Environmental"
+            />
             <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="Inertial" />
           </Tabs>
         </Grid>
+        {selectedTab === 0 && (
+          <Grid container spacing={12} className={classes.baseGrid}>
+            {weatherData &&
+              weatherData.map((data, index) => (
+                <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
+                  <Grid item xs={12}>
+                    <Paper className={classes.paper} elevation={0}>
+                      <Typography variant="subheading" color="inherit">
+                        {data.sensorName}
+                      </Typography>
+                      <LineChart data={data.data} color={colorPalette[index]} />
+                    </Paper>
+                  </Grid>
+                </Grid>
+              ))}
+          </Grid>
+        )}
       </Layout>
     )
   }
@@ -109,7 +114,7 @@ const styles = {
     borderBottom: `1px solid ${Colors.WHITE}`,
   },
   tabsIndicator: {
-    backgroundColor: Colors.DARKEST_BLUE,
+    backgroundColor: Colors.COMP_YELLOW,
   },
   tabRoot: {
     color: Colors.WHITE,
@@ -139,9 +144,16 @@ const styles = {
     },
   },
   tabSelected: {},
+  baseGrid: {
+    backgroundColor: Colors.FAFAFA,
+  },
+  gridInner: {
+    padding: '1%',
+  },
   paper: {
     padding: 10,
     fontFamily: 'Roboto',
+    textAlign: 'center',
   },
 }
 
