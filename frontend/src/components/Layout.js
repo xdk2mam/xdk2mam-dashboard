@@ -38,6 +38,9 @@ Layout.propTypes = {
 const styles = {
   root: {
     display: 'flex',
+    backgroundColor: Colors.FAFAFA,
+    height: '100vh',
+    alignItems: 'flex-start',
   },
 
   grid: {

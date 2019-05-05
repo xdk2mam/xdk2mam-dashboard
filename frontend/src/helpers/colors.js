@@ -16,6 +16,9 @@ const Colors = Object.freeze({
   COMP_BROWN: '#786A17',
   COMP_BLUE: '#2713C4',
   COMP_PURPLE: '#4939C4',
+  // More
+  LOGO_GREEN: 'rgb(7, 188, 239)',
+  FAFAFA: '#FAFAFA',
 })
 
 /*
