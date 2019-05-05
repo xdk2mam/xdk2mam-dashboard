@@ -34,7 +34,6 @@ const styles = {
   logo: {
     width: 200,
     padding: '8px 0 0 0',
-    marginLeft: '5%',
   },
 }
 

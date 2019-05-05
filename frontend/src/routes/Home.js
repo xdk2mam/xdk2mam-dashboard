@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+
 import { withStyles } from '@material-ui/core/styles'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import { Paper, Grid, Typography } from '@material-ui/core'
 
-import { getLast } from '../helpers/utils.js'
-import Layout from '../components/Layout.js'
 import Colors from '../helpers/colors.js'
-import { Grid } from '@material-ui/core'
+import { formatWeatherData } from '../helpers/utils.js'
+import data from '../helpers/data.js'
+import Layout from '../components/Layout'
+import LineChart from '../components/LineChart'
 
 /**
  * Home
@@ -20,14 +23,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => {
-      this.getLastInfo(5)
-    }, 2000)
-  }
-
-  getLastInfo = async num => {
-    const data = await getLast(num)
-    this.setState({ infoSensor: data })
+    this.setState({ infoSensor: formatWeatherData(data) })
   }
 
   getEnvironmentInfo = () => {
@@ -43,10 +39,12 @@ class Home extends Component {
       }
 
       return (
-        <h4 key={`${info.timestamp}`}>
-          Pressure: {info.xdk2mam[0].data[0].value} - Temperature: {info.xdk2mam[0].data[1].value} - Humidity:{' '}
-          {info.xdk2mam[0].data[2].value} - Device: {info.device} - Timestamp: {info.timestamp}
-        </h4>
+        <div>
+          <h4 key={`${info.timestamp}`}>
+            Pressure: {info.xdk2mam[0].data[0].value} - Temperature: {info.xdk2mam[0].data[1].value} - Humidity:{' '}
+            {info.xdk2mam[0].data[2].value} - Device: {info.device} - Timestamp: {info.timestamp}
+          </h4>
+        </div>
       )
     })
   }
@@ -56,10 +54,11 @@ class Home extends Component {
   render() {
     const { classes } = this.props
     const { selectedTab } = this.state
+    const { sensorType } = data && data[0].xdk2mam[0]
+    const weatherData = this.state.infoSensor
 
     return (
       <Layout>
-        {this.getEnvironmentInfo()}
         <Grid item xs={12}>
           <Tabs
             value={selectedTab}
@@ -67,11 +66,24 @@ class Home extends Component {
             classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
           >
             <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="Weather" />
-            <Tab
-              disableRipple
-              classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-              label="Environmental"
-            />
+            <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="Environmental">
+              <Typography variant="h4" color="inherit">
+                {sensorType}
+              </Typography>
+              {weatherData &&
+                weatherData.map((data, index) => (
+                  <Grid item xs={3} key={index}>
+                    <Grid item xs={12}>
+                      <Paper className={classes.paper}>
+                        <Typography variant="h6" color="inherit">
+                          {data.name}
+                        </Typography>
+                        <LineChart data={data.data} />
+                      </Paper>
+                    </Grid>
+                  </Grid>
+                ))}
+            </Tab>
             <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="Inertial" />
           </Tabs>
         </Grid>
@@ -127,6 +139,10 @@ const styles = {
     },
   },
   tabSelected: {},
+  paper: {
+    padding: 10,
+    fontFamily: 'Roboto',
+  },
 }
 
 /**
