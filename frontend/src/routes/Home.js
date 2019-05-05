@@ -7,7 +7,8 @@ import Tab from '@material-ui/core/Tab'
 import { Paper, Grid, Typography } from '@material-ui/core'
 
 import Colors from '../helpers/colors.js'
-import { formatWeatherData } from '../helpers/utils.js'
+import { formatWeatherData, getLast } from '../helpers/utils.js'
+import generateRandomData from '../helpers/randomData.js'
 import data from '../helpers/data.js'
 import Layout from '../components/Layout'
 import LineChart from '../components/LineChart'
@@ -19,11 +20,30 @@ import LineChart from '../components/LineChart'
 class Home extends Component {
   state = {
     infoSensor: null,
+    rawData: null,
     selectedTab: 0,
   }
 
   componentDidMount() {
     this.setState({ infoSensor: formatWeatherData(data) })
+    this.setState({ rawData: data })
+
+    this.interval = setInterval(() => {
+      const newRandomData = generateRandomData()
+
+      let data = this.state.rawData
+      data.push(newRandomData)
+
+      this.setState({ infoSensor: formatWeatherData(data) })
+
+      // this.getLastInfo(5)
+    }, 2000)
+  }
+
+  getLastInfo = num => {
+    getLast(num).then(({ data }) => {
+      this.setState({ infoSensor: data.info })
+    })
   }
 
   getEnvironmentInfo = () => {
@@ -76,7 +96,7 @@ class Home extends Component {
           </Tabs>
         </Grid>
         {selectedTab === 0 && (
-          <Grid container spacing={12} className={classes.baseGrid}>
+          <Grid container className={classes.baseGrid}>
             {weatherData &&
               weatherData.map((data, index) => (
                 <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
