@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab'
 import { Paper, Grid, Typography } from '@material-ui/core'
 
 import Colors from '../helpers/colors.js'
-import { formatWeatherData, getLast } from '../helpers/utils.js'
+import { formatDataForCharts, getLast } from '../helpers/utils.js'
 import generateRandomData from '../helpers/randomData.js'
 import data from '../helpers/data.js'
 import Layout from '../components/Layout'
@@ -25,7 +25,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.setState({ infoSensor: formatWeatherData(data) })
+    this.setState({ infoSensor: formatDataForCharts(data) })
     this.setState({ rawData: data })
 
     this.interval = setInterval(() => {
@@ -34,7 +34,7 @@ class Home extends Component {
       let data = this.state.rawData
       data.push(newRandomData)
 
-      this.setState({ infoSensor: formatWeatherData(data) })
+      this.setState({ infoSensor: formatDataForCharts(data) })
 
       // this.getLastInfo(5)
     }, 2000)
@@ -98,18 +98,56 @@ class Home extends Component {
         {selectedTab === 0 && (
           <Grid container className={classes.baseGrid}>
             {weatherData &&
-              weatherData.map((data, index) => (
+              weatherData[0].series.map((data, index) => (
                 <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
                   <Grid item xs={12}>
                     <Paper className={classes.paper} elevation={0}>
                       <Typography variant="subheading" color="inherit">
-                        {data.sensorName}
+                        {data.seriesName}
                       </Typography>
                       <LineChart data={data.data} color={colorPalette[index]} />
                     </Paper>
                   </Grid>
                 </Grid>
               ))}
+          </Grid>
+        )}
+        {selectedTab === 1 && (
+          <Grid container className={classes.baseGrid}>
+            {weatherData &&
+              weatherData[4].series.map((data, index) => (
+                <Grid item xs={12} key={index} className={classes.gridInner}>
+                  <Grid item xs={12}>
+                    <Paper className={classes.paper} elevation={0}>
+                      <Typography variant="subheading" color="inherit">
+                        {weatherData[4].sensorName}
+                      </Typography>
+                      <LineChart data={data.data} color={colorPalette[index]} />
+                    </Paper>
+                  </Grid>
+                </Grid>
+              ))}
+          </Grid>
+        )}
+        {selectedTab === 2 && (
+          <Grid container className={classes.baseGrid}>
+            {weatherData &&
+              weatherData.map((sensors, i) => {
+                if (i !== 0 && i !== 4) {
+                  return (
+                    <Grid item sm={6} xs={12} key={i} className={classes.gridInner}>
+                      <Grid item xs={12}>
+                        <Paper className={classes.paper} elevation={0}>
+                          <Typography variant="subheading" color="inherit">
+                            {sensors.sensorName}
+                          </Typography>
+                          <LineChart data={sensors} color={colorPalette[i]} />
+                        </Paper>
+                      </Grid>
+                    </Grid>
+                  )
+                }
+              })}
           </Grid>
         )}
       </Layout>

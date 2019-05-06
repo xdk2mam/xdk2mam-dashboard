@@ -26,9 +26,12 @@ class LineChart extends Component {
       <FlexibleXYPlot height={300} className={classes.linePlot} xType="time">
         <XAxis style={baseColor ? { stroke: baseColor } : {}} />
         <YAxis style={baseColor ? { stroke: baseColor } : {}} />
-
-        <LineMarkSeries curve={'curveMonotoneX'} data={data} color={color} />
-
+        {data && !data.series && <LineMarkSeries curve={'curveMonotoneX'} data={data} color={color} size={2} />}
+        {data &&
+          data.series &&
+          data.series.map(series => {
+            return <LineMarkSeries curve={'curveMonotoneX'} data={series.data} size={2} />
+          })}
         {/* TO DO: INCLUDE THESE LATER WITH PROPER STYLES 
           <HorizontalGridLines />
           <VerticalGridLines /> 
