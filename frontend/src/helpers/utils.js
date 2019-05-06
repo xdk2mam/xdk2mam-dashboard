@@ -157,3 +157,19 @@ export function formatDataForCharts(data) {
 
   return formattedData
 }
+
+export function formatDataForTable(data) {
+  let formattedData = []
+
+  data.map(item => {
+    let itemData = []
+    item.xdk2mam.map(sensor => {
+      sensor.data.map((item, index) => {
+        itemData.push(item.value)
+      })
+    })
+    formattedData.push(itemData)
+  })
+
+  return formattedData
+}
