@@ -10,6 +10,7 @@ import generateRandomData from '../helpers/randomData.js'
 import data from '../helpers/data.js'
 import Layout from '../components/Layout'
 import LineChart from '../components/LineChart'
+import Table from '../components/Table.js'
 
 /**
  * Home
@@ -19,6 +20,7 @@ class Home extends Component {
   state = {
     infoSensor: null,
     rawData: null,
+    tableData: [],
     selectedTab: 0,
   }
 
@@ -70,7 +72,7 @@ class Home extends Component {
 
   render() {
     const { classes } = this.props
-    const { infoSensor: weatherData, selectedTab } = this.state
+    const { infoSensor: weatherData, selectedTab, tableData } = this.state
 
     const colorPalette = [Colors.LOGO_GREEN, Colors.DARKEST_BLUE, Colors.COMP_YELLOW]
 
@@ -149,6 +151,12 @@ class Home extends Component {
               })}
           </Grid>
         )}
+
+        <Grid item xs={12} classes={{ item: classes.tableContainer }}>
+          <Paper className={classes.tablePaper} elevation={0}>
+            <Table data={tableData} />
+          </Paper>
+        </Grid>
       </Layout>
     )
   }
@@ -215,6 +223,15 @@ const styles = {
     padding: 10,
     fontFamily: 'Roboto',
     textAlign: 'center',
+  },
+
+  tableContainer: {
+    padding: 20,
+  },
+
+  tablePaper: {
+    width: '100%',
+    height: 400,
   },
 }
 

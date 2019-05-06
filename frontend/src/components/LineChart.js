@@ -4,17 +4,24 @@ import {
   XYPlot,
   makeWidthFlexible,
   LineMarkSeries,
-  ChartLabel,
-  VerticalGridLines,
-  HorizontalGridLines,
+  // ChartLabel,
+  // VerticalGridLines,
+  // HorizontalGridLines,
   XAxis,
   YAxis,
 } from 'react-vis'
 import { withStyles } from '@material-ui/core'
 import '../../node_modules/react-vis/dist/style.css'
-import Colors from '../helpers/colors'
+
+/**
+ * Helpers
+ */
 
 const FlexibleXYPlot = makeWidthFlexible(XYPlot)
+
+/**
+ * LineChart
+ */
 
 class LineChart extends Component {
   render() {
@@ -53,11 +60,19 @@ class LineChart extends Component {
   }
 }
 
+/**
+ * Styles
+ */
+
 const styles = {
   linePlot: {
     marginTop: 15,
     fontFamily: 'Roboto',
   },
 }
+
+/**
+ * Exports
+ */
 
 export default withStyles(styles)(LineChart)

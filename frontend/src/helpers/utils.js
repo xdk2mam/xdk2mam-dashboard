@@ -168,7 +168,7 @@ export function formatDataForTable(data) {
         itemData.push(item.value)
       })
     })
-    formattedData.push(itemData)
+    formattedData.unshift(itemData)
   })
 
   return formattedData
