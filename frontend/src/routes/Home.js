@@ -2,12 +2,10 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import { withStyles } from '@material-ui/core/styles'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import { Paper, Grid, Typography } from '@material-ui/core'
+import { Tab, Tabs, Paper, Grid, Typography } from '@material-ui/core'
 
 import Colors from '../helpers/colors.js'
-import { formatDataForCharts, getLast } from '../helpers/utils.js'
+import { formatDataForCharts, formatDataForTable, getLast } from '../helpers/utils.js'
 import generateRandomData from '../helpers/randomData.js'
 import data from '../helpers/data.js'
 import Layout from '../components/Layout'
@@ -25,8 +23,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.setState({ infoSensor: formatDataForCharts(data) })
-    this.setState({ rawData: data })
+    this.setState({ infoSensor: formatDataForCharts(data), tableData: formatDataForTable(data), rawData: data })
 
     this.interval = setInterval(() => {
       const newRandomData = generateRandomData()
@@ -34,7 +31,7 @@ class Home extends Component {
       let data = this.state.rawData
       data.push(newRandomData)
 
-      this.setState({ infoSensor: formatDataForCharts(data) })
+      this.setState({ infoSensor: formatDataForCharts(data), tableData: formatDataForTable(data), rawData: data })
 
       // this.getLastInfo(5)
     }, 2000)
@@ -73,8 +70,7 @@ class Home extends Component {
 
   render() {
     const { classes } = this.props
-    const { selectedTab } = this.state
-    const weatherData = this.state.infoSensor
+    const { infoSensor: weatherData, selectedTab } = this.state
 
     const colorPalette = [Colors.LOGO_GREEN, Colors.DARKEST_BLUE, Colors.COMP_YELLOW]
 
@@ -95,6 +91,7 @@ class Home extends Component {
             <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="Inertial" />
           </Tabs>
         </Grid>
+
         {selectedTab === 0 && (
           <Grid container className={classes.baseGrid}>
             {weatherData &&
@@ -112,6 +109,7 @@ class Home extends Component {
               ))}
           </Grid>
         )}
+
         {selectedTab === 1 && (
           <Grid container className={classes.baseGrid}>
             {weatherData &&
@@ -129,6 +127,7 @@ class Home extends Component {
               ))}
           </Grid>
         )}
+
         {selectedTab === 2 && (
           <Grid container className={classes.baseGrid}>
             {weatherData &&
@@ -171,9 +170,11 @@ const styles = {
   tabsRoot: {
     borderBottom: `1px solid ${Colors.WHITE}`,
   },
+
   tabsIndicator: {
     backgroundColor: Colors.COMP_YELLOW,
   },
+
   tabRoot: {
     color: Colors.WHITE,
     textTransform: 'initial',
@@ -201,13 +202,15 @@ const styles = {
       color: Colors.WHITE,
     },
   },
-  tabSelected: {},
+
   baseGrid: {
     backgroundColor: Colors.FAFAFA,
   },
+
   gridInner: {
     padding: '1%',
   },
+
   paper: {
     padding: 10,
     fontFamily: 'Roboto',
