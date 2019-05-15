@@ -11,13 +11,11 @@ import Colors from '../helpers/colors'
  */
 
 class Drawer extends PureComponent {
-  static width = 150
-
   render() {
-    const { classes } = this.props
+    const { classes, open, onClose } = this.props
 
     return (
-      <MaterialDrawer classes={{ paper: classes.drawer }} variant="permanent">
+      <MaterialDrawer open={open} classes={{ paper: classes.drawer }} variant="temporary" onClose={onClose}>
         <div tabIndex={0} role="button">
           <List>
             <DrawerLinkButton to="/" text="Home" />
@@ -36,6 +34,7 @@ class Drawer extends PureComponent {
 
 Drawer.propTypes = {
   classes: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
 }
 
 /**
@@ -44,7 +43,7 @@ Drawer.propTypes = {
 
 const styles = {
   drawer: {
-    width: Drawer.width,
+    width: 150,
     backgroundColor: Colors.DARKEST_BLUE,
   },
 }
