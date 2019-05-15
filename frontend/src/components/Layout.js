@@ -12,17 +12,26 @@ import Colors from '../helpers/colors'
  */
 
 class Layout extends PureComponent {
+  state = {
+    isDrawerOpened: false,
+  }
+
+  handleDrawerOpen = () => this.setState({ isDrawerOpened: true })
+
+  handleDrawerClose = () => this.setState({ isDrawerOpened: false })
+
   render() {
     const { children, classes } = this.props
+    const { isDrawerOpened } = this.state
 
     return (
       <div className={classes.root}>
         <CssBaseline />
 
-        <Drawer />
+        <Drawer open={isDrawerOpened} onClose={this.handleDrawerClose} />
 
         <Grid classes={{ container: classes.grid }} container>
-          <Header />
+          <Header onMenuButtonClick={this.handleDrawerOpen} />
           {children}
         </Grid>
       </div>
@@ -45,7 +54,6 @@ const styles = {
 
   grid: {
     backgroundColor: Colors.COMP_PURPLE,
-    marginLeft: Drawer.width,
   },
 }
 
