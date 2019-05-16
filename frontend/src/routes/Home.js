@@ -13,6 +13,12 @@ import LineChart from '../components/LineChart'
 import Table from '../components/Table.js'
 
 /**
+ * Constants
+ */
+
+const VISIBLE_VALUES_ON_CHART = 25
+
+/**
  * Home
  */
 
@@ -20,20 +26,40 @@ class Home extends Component {
   state = {
     infoSensor: null,
     rawData: null,
+    rawChartData: null,
     tableData: [],
     selectedTab: 0,
   }
 
   componentDidMount() {
-    this.setState({ infoSensor: formatDataForCharts(data), tableData: formatDataForTable(data), rawData: data })
+    this.setState({
+      infoSensor: formatDataForCharts(data),
+      tableData: formatDataForTable(data),
+      rawData: data,
+      rawChartData: data,
+    })
 
     this.interval = setInterval(() => {
+      const { rawData, rawChartData } = this.state
+
       const newRandomData = generateRandomData()
 
-      let data = this.state.rawData
-      data.push(newRandomData)
+      let newRawData = rawData.slice(0)
+      let newChartData = rawChartData.slice(0)
 
-      this.setState({ infoSensor: formatDataForCharts(data), tableData: formatDataForTable(data), rawData: data })
+      newRawData.push(newRandomData)
+      newChartData.push(newRandomData)
+
+      if (newChartData.length >= VISIBLE_VALUES_ON_CHART) {
+        newChartData.shift()
+      }
+
+      this.setState({
+        infoSensor: formatDataForCharts(newChartData),
+        tableData: formatDataForTable(newRawData),
+        rawData: newRawData,
+        rawChartData: newChartData,
+      })
 
       // this.getLastInfo(5)
     }, 2000)
