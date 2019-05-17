@@ -1,7 +1,7 @@
 import generateRandomData from '../helpers/randomData.js'
 import axios from 'axios'
 
-export function getLast(number) {
+export const getLast = number => {
   return new Promise(async (res, rej) => {
     try {
       const respDB = await axios.get(`http://localhost:8081/api/getLast/${number}`)
@@ -14,7 +14,7 @@ export function getLast(number) {
   })
 }
 
-export function putRandomData() {
+export const putRandomData = () => {
   const randomData = generateRandomData()
   return new Promise(async (res, rej) => {
     try {
@@ -28,7 +28,7 @@ export function putRandomData() {
   })
 }
 
-export function formatDataForCharts(data) {
+export const formatDataForCharts = data => {
   let formattedData = [
     {
       sensorName: 'Weather',
@@ -158,7 +158,7 @@ export function formatDataForCharts(data) {
   return formattedData
 }
 
-export function formatDataForTable(data) {
+export const formatDataForTable = data => {
   let formattedData = []
 
   data.map(item => {
@@ -173,3 +173,7 @@ export function formatDataForTable(data) {
 
   return formattedData
 }
+
+export const getMaxYValue = data => Math.max.apply(Math, data.map(item => item.y))
+
+export const getMinYValue = data => Math.min.apply(Math, data.map(item => item.y))
