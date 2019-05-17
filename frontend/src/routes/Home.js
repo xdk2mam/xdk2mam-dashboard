@@ -5,12 +5,13 @@ import { withStyles } from '@material-ui/core/styles'
 import { Tab, Tabs, Paper, Grid, Typography } from '@material-ui/core'
 
 import Colors from '../helpers/colors.js'
-import { formatDataForCharts, formatDataForTable, getLast } from '../helpers/utils.js'
+import { formatDataForCharts, formatDataForTable, getLast, getMinYValue, getMaxYValue } from '../helpers/utils.js'
 import generateRandomData from '../helpers/randomData.js'
 import data from '../helpers/data.js'
 import Layout from '../components/Layout'
 import LineChart from '../components/LineChart'
 import Table from '../components/Table.js'
+import MaxMinLabels from '../components/MaxMinLabels'
 
 /**
  * Constants
@@ -123,36 +124,48 @@ class Home extends Component {
         {selectedTab === 0 && (
           <Grid container className={classes.baseGrid}>
             {weatherData &&
-              weatherData[0].series.map((data, index) => (
-                <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
-                  <Grid item xs={12}>
-                    <Paper className={classes.paper} elevation={0}>
-                      <Typography variant="subheading" color="inherit">
-                        {data.seriesName}
-                      </Typography>
-                      <LineChart data={data.data} color={colorPalette[index]} />
-                    </Paper>
+              weatherData[0].series.map((data, index) => {
+                const maxValue = getMaxYValue(data.data)
+                const minValue = getMinYValue(data.data)
+
+                return (
+                  <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
+                    <Grid item xs={12}>
+                      <Paper className={classes.paper} elevation={0}>
+                        <Typography variant="subheading" color="inherit">
+                          {data.seriesName}
+                        </Typography>
+                        <LineChart data={data.data} color={colorPalette[index]} />
+                        <MaxMinLabels maxValue={maxValue} minValue={minValue} />
+                      </Paper>
+                    </Grid>
                   </Grid>
-                </Grid>
-              ))}
+                )
+              })}
           </Grid>
         )}
 
         {selectedTab === 1 && (
           <Grid container className={classes.baseGrid}>
             {weatherData &&
-              weatherData[4].series.map((data, index) => (
-                <Grid item xs={12} key={index} className={classes.gridInner}>
-                  <Grid item xs={12}>
-                    <Paper className={classes.paper} elevation={0}>
-                      <Typography variant="subheading" color="inherit">
-                        {weatherData[4].sensorName}
-                      </Typography>
-                      <LineChart data={data.data} color={colorPalette[index]} />
-                    </Paper>
+              weatherData[4].series.map((data, index) => {
+                const maxValue = getMaxYValue(data.data)
+                const minValue = getMinYValue(data.data)
+
+                return (
+                  <Grid item xs={12} key={index} className={classes.gridInner}>
+                    <Grid item xs={12}>
+                      <Paper className={classes.paper} elevation={0}>
+                        <Typography variant="subheading" color="inherit">
+                          {weatherData[4].sensorName}
+                        </Typography>
+                        <LineChart data={data.data} color={colorPalette[index]} />
+                        <MaxMinLabels maxValue={maxValue} minValue={minValue} />
+                      </Paper>
+                    </Grid>
                   </Grid>
-                </Grid>
-              ))}
+                )
+              })}
           </Grid>
         )}
 
@@ -169,6 +182,21 @@ class Home extends Component {
                             {sensors.sensorName}
                           </Typography>
                           <LineChart data={sensors} color={colorPalette[i]} />
+                          {sensors.series.map((data, index) => {
+                            const maxValue = getMaxYValue(data.data)
+                            const minValue = getMinYValue(data.data)
+
+                            console.log('data', data)
+
+                            return (
+                              <MaxMinLabels
+                                key={index}
+                                title={data.seriesName}
+                                maxValue={maxValue}
+                                minValue={minValue}
+                              />
+                            )
+                          })}
                         </Paper>
                       </Grid>
                     </Grid>

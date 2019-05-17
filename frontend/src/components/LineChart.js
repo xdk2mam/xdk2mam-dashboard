@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-
+import React, { PureComponent } from 'react'
 import {
   XYPlot,
   makeWidthFlexible,
@@ -10,6 +9,7 @@ import {
   XAxis,
   YAxis,
 } from 'react-vis'
+import { isEmpty } from 'lodash'
 import { withStyles } from '@material-ui/core'
 import '../../node_modules/react-vis/dist/style.css'
 
@@ -23,22 +23,25 @@ const FlexibleXYPlot = makeWidthFlexible(XYPlot)
  * LineChart
  */
 
-class LineChart extends Component {
+class LineChart extends PureComponent {
   render() {
-    const { classes, color, baseColor } = this.props
+    const { data, classes, color, baseColor } = this.props
 
-    const { data } = this.props
+    if (isEmpty(data)) {
+      return null
+    }
+
+    const hasSeries = !isEmpty(data.series)
 
     return (
       <FlexibleXYPlot height={300} className={classes.linePlot} xType="time">
         <XAxis style={baseColor ? { stroke: baseColor } : {}} />
         <YAxis style={baseColor ? { stroke: baseColor } : {}} />
-        {data && !data.series && <LineMarkSeries curve={'curveMonotoneX'} data={data} color={color} size={2} />}
-        {data &&
-          data.series &&
-          data.series.map(series => {
-            return <LineMarkSeries curve={'curveMonotoneX'} data={series.data} size={2} />
-          })}
+        {!hasSeries && <LineMarkSeries curve={'curveMonotoneX'} data={data} color={color} size={2} />}
+        {hasSeries &&
+          data.series.map((series, index) => (
+            <LineMarkSeries key={index} curve={'curveMonotoneX'} data={series.data} size={2} />
+          ))}
         {/* TO DO: INCLUDE THESE LATER WITH PROPER STYLES 
           <HorizontalGridLines />
           <VerticalGridLines /> 
