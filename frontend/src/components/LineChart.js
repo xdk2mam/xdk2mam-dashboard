@@ -3,15 +3,17 @@ import {
   XYPlot,
   makeWidthFlexible,
   LineMarkSeries,
-  // ChartLabel,
-  // VerticalGridLines,
-  // HorizontalGridLines,
+  VerticalGridLines,
+  HorizontalGridLines,
   XAxis,
   YAxis,
+  Crosshair,
 } from 'react-vis'
 import { isEmpty } from 'lodash'
-import { withStyles } from '@material-ui/core'
+import { CircularProgress, withStyles } from '@material-ui/core'
 import '../../node_modules/react-vis/dist/style.css'
+
+import Colors from '../helpers/colors'
 
 /**
  * Helpers
@@ -24,40 +26,59 @@ const FlexibleXYPlot = makeWidthFlexible(XYPlot)
  */
 
 class LineChart extends PureComponent {
+  state = {
+    crosshairValues: [],
+  }
+
+  onMouseLeave = () => {
+    this.setState({ crosshairValues: [] })
+  }
+
+  onNearestX = value => {
+    const { data } = this.props
+
+    if (isEmpty(data)) {
+      return
+    }
+
+    this.setState({ crosshairValues: [{ x: value.x, y: value.y }] })
+  }
+
+  handleTitleFormat = () => null
+
+  handleItemsFormat = values => [{ title: 'X', value: values[0].x }, { title: 'Y', value: values[0].y }]
+
   render() {
     const { data, classes, color, baseColor } = this.props
+    const { crosshairValues } = this.state
 
     if (isEmpty(data)) {
       return null
     }
 
+    if (data.length < 2) {
+      return (
+        <CircularProgress classes={{ root: classes.loadingContainer, colorPrimary: classes.loadingColor }} size={25} />
+      )
+    }
+
     const hasSeries = !isEmpty(data.series)
+    const axisStyle = !isEmpty(baseColor) ? { stroke: baseColor } : {}
 
     return (
-      <FlexibleXYPlot height={300} className={classes.linePlot} xType="time">
-        <XAxis style={baseColor ? { stroke: baseColor } : {}} />
-        <YAxis style={baseColor ? { stroke: baseColor } : {}} />
-        {!hasSeries && <LineMarkSeries curve={'curveMonotoneX'} data={data} color={color} size={2} />}
+      <FlexibleXYPlot onMouseLeave={this.onMouseLeave} height={300} className={classes.linePlot} xType="time">
+        <XAxis style={axisStyle} />
+        <YAxis style={axisStyle} />
+        <HorizontalGridLines />
+        <VerticalGridLines />
+        {!hasSeries && (
+          <LineMarkSeries curve="curveMonotoneX" data={data} color={color} size={2} onNearestX={this.onNearestX} />
+        )}
         {hasSeries &&
           data.series.map((series, index) => (
-            <LineMarkSeries key={index} curve={'curveMonotoneX'} data={series.data} size={2} />
+            <LineMarkSeries key={index} curve="curveMonotoneX" data={series.data} size={2} />
           ))}
-        {/* TO DO: INCLUDE THESE LATER WITH PROPER STYLES 
-          <HorizontalGridLines />
-          <VerticalGridLines /> 
-          <ChartLabel text="X Axis" className="alt-x-label" includeMargin={false} xPercent={0.025} yPercent={1.01} />
-          <ChartLabel
-            text="Y Axis"
-            className="alt-y-label"
-            includeMargin={false}
-            xPercent={0.06}
-            yPercent={0.06}
-            style={{
-              transform: 'rotate(-90)',
-              textAnchor: 'end',
-            }}
-          /> 
-        */}
+        <Crosshair values={crosshairValues} titleFormat={this.handleTitleFormat} itemsFormat={this.handleItemsFormat} />
       </FlexibleXYPlot>
     )
   }
@@ -68,9 +89,17 @@ class LineChart extends PureComponent {
  */
 
 const styles = {
+  loadingContainer: {
+    margin: 50,
+  },
+
+  loadingColor: {
+    color: Colors.OFF_BLUE,
+  },
+
   linePlot: {
     marginTop: 15,
-    fontFamily: 'Roboto',
+    fontFamily: 'Roboto, Sans-serif',
   },
 }
 
