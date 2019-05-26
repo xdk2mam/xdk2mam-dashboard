@@ -186,8 +186,6 @@ class Home extends Component {
                             const maxValue = getMaxYValue(data.data)
                             const minValue = getMinYValue(data.data)
 
-                            console.log('data', data)
-
                             return (
                               <MaxMinLabels
                                 key={index}
