@@ -126,8 +126,8 @@ export const formatDataForCharts = data => {
     },
   ]
 
-  data.map((item, index) => {
-    item.xdk2mam.map((sensor, j) => {
+  data.map((item) => {
+    return item.xdk2mam.map((sensor, j) => {
       if (j === 0 || j === 4) {
         // Weather or Ambient Light sensors
         sensor.data.map((datum, i) => {
@@ -137,7 +137,7 @@ export const formatDataForCharts = data => {
           }
           dataEntry.x = parseInt(item.timestamp)
           dataEntry.y = parseInt(datum.value)
-          formattedData[j].series[i].data.push(dataEntry)
+          return formattedData[j].series[i].data.push(dataEntry)
         })
       } else {
         // Rest of the available sensors
@@ -149,7 +149,7 @@ export const formatDataForCharts = data => {
 
           dataEntry.x = parseInt(item.timestamp)
           dataEntry.y = parseInt(datum.value)
-          formattedData[j].series[i].data.push(dataEntry)
+          return formattedData[j].series[i].data.push(dataEntry)
         })
       }
     })
@@ -164,11 +164,11 @@ export const formatDataForTable = data => {
   data.map(item => {
     let itemData = []
     item.xdk2mam.map(sensor => {
-      sensor.data.map((item, index) => {
-        itemData.push(item.value)
+      return sensor.data.map((item) => {
+        return itemData.push(item.value)
       })
     })
-    formattedData.unshift(itemData)
+    return formattedData.unshift(itemData)
   })
 
   return formattedData
