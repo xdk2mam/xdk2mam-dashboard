@@ -203,11 +203,12 @@ class Home extends Component {
               })}
           </Grid>
         )}
-
-        <Grid item xs={12} classes={{ item: classes.tableContainer }}>
-          <Paper className={classes.tablePaper} elevation={0}>
-            <Table data={tableData} />
-          </Paper>
+        <Grid container className={classes.baseGrid}>
+          <Grid item xs={12} classes={{ item: classes.gridInner }}>
+            <Paper className={classes.tablePaper} elevation={0}>
+              <Table data={tableData} />
+            </Paper>
+          </Grid>
         </Grid>
       </Layout>
     )
@@ -228,6 +229,7 @@ Home.propTypes = {
 
 const styles = {
   tabsRoot: {
+    backgroundColor: Colors.COMP_PURPLE,
     borderBottom: `1px solid ${Colors.WHITE}`,
   },
 
@@ -263,10 +265,6 @@ const styles = {
     },
   },
 
-  baseGrid: {
-    backgroundColor: Colors.FAFAFA,
-  },
-
   gridInner: {
     padding: '1%',
   },
@@ -275,10 +273,6 @@ const styles = {
     padding: 10,
     fontFamily: 'Roboto',
     textAlign: 'center',
-  },
-
-  tableContainer: {
-    padding: 20,
   },
 
   tablePaper: {
