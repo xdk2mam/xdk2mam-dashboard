@@ -173,8 +173,7 @@ class Home extends Component {
           <Grid container className={classes.baseGrid}>
             {weatherData &&
               weatherData.map((sensors, i) => {
-                if (i !== 0 && i !== 4) {
-                  return (
+                return i !== 0 && i !== 4 && (
                     <Grid item sm={6} xs={12} key={i} className={classes.gridInner}>
                       <Grid item xs={12}>
                         <Paper className={classes.paper} elevation={0}>
@@ -200,7 +199,7 @@ class Home extends Component {
                     </Grid>
                   )
                 }
-              })}
+              )}
           </Grid>
         )}
         <Grid container className={classes.baseGrid}>
