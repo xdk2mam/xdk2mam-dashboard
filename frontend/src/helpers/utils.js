@@ -1,5 +1,6 @@
 import generateRandomData from '../helpers/randomData.js'
 import axios from 'axios'
+import moment from 'moment'
 
 export const getLast = number => {
   return new Promise(async (res, rej) => {
@@ -163,6 +164,8 @@ export const formatDataForTable = data => {
 
   data.map(item => {
     let itemData = []
+    const date = moment(item.timestamp).format('hh:mm:ss')
+    itemData.push(date)
     item.xdk2mam.map(sensor => {
       return sensor.data.map((item) => {
         return itemData.push(item.value)
