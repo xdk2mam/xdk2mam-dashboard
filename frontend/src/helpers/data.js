@@ -4,7 +4,7 @@ const data = [
       {
         sensorType: 'Weather',
         data: [
-          { name: 'Pressure', value: '100801' },
+          { name: 'Pressure', value: '1001' },
           { name: 'Temperature', value: '27' },
           { name: 'Humidity', value: '62' },
         ],
