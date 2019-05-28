@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
 import { withStyles } from '@material-ui/core/styles'
 import { Tab, Tabs, Paper, Grid, Typography } from '@material-ui/core'
+import { isEmpty } from 'lodash'
 
 import Colors from '../helpers/colors.js'
 import { formatDataForCharts, formatDataForTable, getLast, getMinYValue, getMaxYValue } from '../helpers/utils.js'
@@ -12,6 +12,8 @@ import Layout from '../components/Layout'
 import LineChart from '../components/LineChart'
 import Table from '../components/Table.js'
 import MaxMinLabels from '../components/MaxMinLabels'
+import FullscreenButton from '../components/FullscreenButton.js'
+import FullscreenModal from '../components/FullscreenModal.js'
 
 /**
  * Constants
@@ -30,6 +32,7 @@ class Home extends Component {
     rawChartData: null,
     tableData: [],
     selectedTab: 0,
+    selectedChart: null,
   }
 
   componentDidMount() {
@@ -97,10 +100,20 @@ class Home extends Component {
 
   handleTabChange = (event, value) => this.setState({ selectedTab: value })
 
+  handleFullscreenButton = data => {
+    /** @todo: we should show the entire data of this chart and not the fragmented one */
+    this.setState({ selectedChart: data })
+  }
+
+  handleCloseFullscreenButton = () => this.setState({ selectedChart: null })
+
   render() {
     const { classes } = this.props
-    const { infoSensor: weatherData, selectedTab, tableData } = this.state
+    const { infoSensor: weatherData, selectedTab, tableData, selectedChart } = this.state
 
+    console.log('selectedChart', selectedChart)
+
+    /** @todo: This should be in a constant file and each series should have its unique color assigned */
     const colorPalette = [Colors.LOGO_GREEN, Colors.DARKEST_BLUE, Colors.COMP_YELLOW]
 
     return (
@@ -132,9 +145,12 @@ class Home extends Component {
                   <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
                     <Grid item xs={12}>
                       <Paper className={classes.paper} elevation={0}>
-                        <Typography variant="subheading" color="inherit">
-                          {data.seriesName}
-                        </Typography>
+                        <div className={classes.lineChartHeader}>
+                          <Typography variant="subheading" color="inherit">
+                            {data.seriesName}
+                          </Typography>
+                          <FullscreenButton onClick={() => this.handleFullscreenButton(data)} />
+                        </div>
                         <LineChart data={data.data} color={colorPalette[index]} />
                         <MaxMinLabels maxValue={maxValue} minValue={minValue} />
                       </Paper>
@@ -172,15 +188,16 @@ class Home extends Component {
         {selectedTab === 2 && (
           <Grid container className={classes.baseGrid}>
             {weatherData &&
-              weatherData.map((sensors, i) => {
-                return i !== 0 && i !== 4 && (
-                    <Grid item sm={6} xs={12} key={i} className={classes.gridInner}>
+              weatherData.map((sensors, index) => {
+                if (index !== 0 && index !== 4) {
+                  return (
+                    <Grid item sm={6} xs={12} key={index} className={classes.gridInner}>
                       <Grid item xs={12}>
                         <Paper className={classes.paper} elevation={0}>
                           <Typography variant="subheading" color="inherit">
                             {sensors.sensorName}
                           </Typography>
-                          <LineChart data={sensors} color={colorPalette[i]} />
+                          <LineChart data={sensors} color={colorPalette[index]} />
                           {sensors.series.map((data, index) => {
                             const maxValue = getMaxYValue(data.data)
                             const minValue = getMinYValue(data.data)
@@ -199,7 +216,7 @@ class Home extends Component {
                     </Grid>
                   )
                 }
-              )}
+              })}
           </Grid>
         )}
         <Grid container className={classes.baseGrid}>
@@ -209,6 +226,10 @@ class Home extends Component {
             </Paper>
           </Grid>
         </Grid>
+
+        {!isEmpty(selectedChart) && (
+          <FullscreenModal selectedChart={selectedChart} onCloseClick={this.handleCloseFullscreenButton} />
+        )}
       </Layout>
     )
   }
@@ -277,6 +298,13 @@ const styles = {
   tablePaper: {
     width: '100%',
     height: 400,
+  },
+
+  lineChartHeader: {
+    display: 'flex',
+    position: 'relative',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 }
 
