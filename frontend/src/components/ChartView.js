@@ -16,7 +16,7 @@ import { getMaxYValue, getMinYValue } from '../helpers/utils.js'
 
 class ChartView extends PureComponent {
   render() {
-    const { classes, data, onFullscreenPress, title } = this.props
+    const { classes, data, onFullscreenClick, title } = this.props
 
     let maxValue = null
     let minValue = null
@@ -32,7 +32,7 @@ class ChartView extends PureComponent {
           <Typography variant="subtitle1" align="left" color="inherit">
             {title}
           </Typography>
-          <FullscreenButton onClick={onFullscreenPress} />
+          <FullscreenButton onClick={onFullscreenClick} />
         </div>
         <LineChart data={data} color={ChartColors[title]} />
         {!isEmpty(data.series) ? (

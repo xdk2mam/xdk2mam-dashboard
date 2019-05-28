@@ -4,7 +4,7 @@ import { Paper, Grid, Typography } from '@material-ui/core'
 
 import LineChart from './LineChart'
 import FullscreenExitButton from './FullscreenExitButton'
-import Colors from '../helpers/colors'
+import Colors, { ChartColors } from '../helpers/colors'
 
 /**
  * FullscreenButton
@@ -21,7 +21,7 @@ const FullscreenButton = ({ classes, onCloseClick, selectedChart }) => {
             </Typography>
             <FullscreenExitButton onClick={onCloseClick} />
           </div>
-          <LineChart data={selectedChart.data} height={600} />
+          <LineChart data={selectedChart.data} color={ChartColors[selectedChart.seriesName]} height={600} />
         </Paper>
       </Grid>
     </div>
