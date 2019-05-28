@@ -4,15 +4,7 @@ import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import TableCell from '@material-ui/core/TableCell'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized'
-
-/**
- * Constants
- */
-
-const MULTI_LEVEL_HEADER_HEIGHT = 56
 
 /**
  * VirtualizedTable
@@ -70,25 +62,11 @@ class VirtualizedTable extends PureComponent {
     const { classes, columns, ...tableProps } = this.props
     return (
       <React.Fragment>
-        {/** @todo: Add table header */}
-
-        {/*
-        <TableHead className={classNames(classes.table, classes.tableHeader)}>
-          <TableRow>
-            <TableCell>Weather</TableCell>
-            <TableCell>Gyroscope</TableCell>
-            <TableCell>Accelerometer</TableCell>
-            <TableCell>Inertial</TableCell>
-            <TableCell>Magnetometer</TableCell>
-          </TableRow>
-        </TableHead>
-        */}
-
         <AutoSizer>
           {({ height, width }) => (
             <Table
               className={classes.table}
-              height={height - MULTI_LEVEL_HEADER_HEIGHT}
+              height={height}
               width={width}
               {...tableProps}
               rowClassName={classes.flexContainer}
