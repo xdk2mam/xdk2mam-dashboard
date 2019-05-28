@@ -21,8 +21,16 @@ const Colors = Object.freeze({
   FAFAFA: '#FAFAFA',
 })
 
+const ChartColors = Object.freeze({
+  Pressure: Colors.LOGO_GREEN,
+  Temperature: Colors.DARKEST_BLUE,
+  Humidity: Colors.COMP_YELLOW,
+  Light: Colors.LOGO_GREEN,
+})
+
 /*
  * Exports
  */
 
+export { ChartColors }
 export default Colors

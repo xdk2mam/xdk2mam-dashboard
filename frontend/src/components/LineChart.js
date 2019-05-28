@@ -54,9 +54,12 @@ class LineChart extends PureComponent {
 
   handleTitleFormat = () => null
 
-  handleItemsFormat = values => [{ title: 'X', value: moment(values[0].x).format('hh:mm:ss') }, { title: 'Y', value: values[0].y }]
+  handleItemsFormat = values => [
+    { title: 'X', value: moment(values[0].x).format('hh:mm:ss') },
+    { title: 'Y', value: values[0].y },
+  ]
 
-  handleXAxisFormat = value => (`${moment(value).format('mm:ss')}`)
+  handleXAxisFormat = value => `${moment(value).format('mm:ss')}`
 
   render() {
     const { data, classes, color, baseColor, height } = this.props
@@ -71,7 +74,6 @@ class LineChart extends PureComponent {
         <div className={classes.loadingContainer}>
           <CircularProgress classes={{ root: classes.loadingSpinner, colorPrimary: classes.loadingColor }} size={25} />
         </div>
-        
       )
     }
 
@@ -100,8 +102,7 @@ class LineChart extends PureComponent {
         {hasSeries &&
           data.series.map((series, index) => (
             <LineMarkSeries key={index} curve={CURVE_TYPE} data={series.data} size={LINE_SIZE} />
-          ))
-        }
+          ))}
       </FlexibleXYPlot>
     )
   }

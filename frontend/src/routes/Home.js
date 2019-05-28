@@ -1,19 +1,18 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-import { Tab, Tabs, Paper, Grid, Typography } from '@material-ui/core'
+import { Paper, Grid } from '@material-ui/core'
 import { isEmpty } from 'lodash'
 
-import Colors from '../helpers/colors.js'
 import { formatDataForCharts, formatDataForTable, getLast, getMinYValue, getMaxYValue } from '../helpers/utils.js'
 import generateRandomData from '../helpers/randomData.js'
 import data from '../helpers/data.js'
 import Layout from '../components/Layout'
-import LineChart from '../components/LineChart'
 import Table from '../components/Table.js'
-import MaxMinLabels from '../components/MaxMinLabels'
-import FullscreenButton from '../components/FullscreenButton.js'
 import FullscreenModal from '../components/FullscreenModal.js'
+import ChartView from '../components/ChartView.js'
+import SensorTypes from '../constants/SensorTypes.js'
+import TabNavigator from '../components/TabNavigator.js'
 
 /**
  * Constants
@@ -83,7 +82,7 @@ class Home extends Component {
     }
 
     return infoSensor.map(info => {
-      if (info.xdk2mam[0].sensorType !== 'Environmental') {
+      if (info.xdk2mam[0].sensorType !== SensorTypes.ENVIRONMENTAL) {
         return null
       }
 
@@ -109,49 +108,28 @@ class Home extends Component {
 
   render() {
     const { classes } = this.props
-    const { infoSensor: weatherData, selectedTab, tableData, selectedChart } = this.state
-
-    /** @todo: This should be in a constant file and each series should have its unique color assigned */
-    const colorPalette = [Colors.LOGO_GREEN, Colors.DARKEST_BLUE, Colors.COMP_YELLOW]
+    const { infoSensor, selectedTab, tableData, selectedChart } = this.state
 
     return (
       <Layout>
         <Grid item xs={12}>
-          <Tabs
-            value={selectedTab}
-            onChange={this.handleTabChange}
-            classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-          >
-            <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="Weather" />
-            <Tab
-              disableRipple
-              classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-              label="Environmental"
-            />
-            <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="Inertial" />
-          </Tabs>
+          <TabNavigator selected={selectedTab} onChange={this.handleTabChange} />
         </Grid>
 
         {selectedTab === 0 && (
           <Grid container className={classes.baseGrid}>
-            {weatherData &&
-              weatherData[0].series.map((data, index) => {
-                const maxValue = getMaxYValue(data.data)
-                const minValue = getMinYValue(data.data)
+            {infoSensor &&
+              infoSensor[0].series.map((data, index) => {
+                const title = data.seriesName
 
                 return (
                   <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
                     <Grid item xs={12}>
-                      <Paper className={classes.paper} elevation={0}>
-                        <div className={classes.lineChartHeader}>
-                          <Typography variant="subtitle1" align="left" color="inherit">
-                            {data.seriesName}
-                          </Typography>
-                          <FullscreenButton onClick={() => this.handleFullscreenButton(data)} />
-                        </div>
-                        <LineChart data={data.data} color={colorPalette[index]} />
-                        <MaxMinLabels maxValue={maxValue} minValue={minValue} />
-                      </Paper>
+                      <ChartView
+                        title={title}
+                        data={data.data}
+                        onFullscreenClick={() => this.handleFullscreenButton(data)}
+                      />
                     </Grid>
                   </Grid>
                 )
@@ -161,21 +139,18 @@ class Home extends Component {
 
         {selectedTab === 1 && (
           <Grid container className={classes.baseGrid}>
-            {weatherData &&
-              weatherData[4].series.map((data, index) => {
-                const maxValue = getMaxYValue(data.data)
-                const minValue = getMinYValue(data.data)
+            {infoSensor &&
+              infoSensor[4].series.map((data, index) => {
+                const title = infoSensor[4].sensorName
 
                 return (
                   <Grid item xs={12} key={index} className={classes.gridInner}>
                     <Grid item xs={12}>
-                      <Paper className={classes.paper} elevation={0}>
-                        <Typography variant="subtitle1" align="left" color="inherit">
-                          {weatherData[4].sensorName}
-                        </Typography>
-                        <LineChart data={data.data} color={colorPalette[index]} />
-                        <MaxMinLabels maxValue={maxValue} minValue={minValue} />
-                      </Paper>
+                      <ChartView
+                        title={title}
+                        data={data.data}
+                        onFullscreenClick={() => this.handleFullscreenButton(data)}
+                      />
                     </Grid>
                   </Grid>
                 )
@@ -185,31 +160,17 @@ class Home extends Component {
 
         {selectedTab === 2 && (
           <Grid container className={classes.baseGrid}>
-            {weatherData &&
-              weatherData.map((sensors, index) => {
+            {infoSensor &&
+              infoSensor.map((sensors, index) => {
                 if (index !== 0 && index !== 4) {
                   return (
                     <Grid item sm={6} xs={12} key={index} className={classes.gridInner}>
                       <Grid item xs={12}>
-                        <Paper className={classes.paper} elevation={0}>
-                          <Typography variant="subtitle1" align="left" color="inherit">
-                            {sensors.sensorName}
-                          </Typography>
-                          <LineChart data={sensors} color={colorPalette[index]} />
-                          {sensors.series.map((data, index) => {
-                            const maxValue = getMaxYValue(data.data)
-                            const minValue = getMinYValue(data.data)
-
-                            return (
-                              <MaxMinLabels
-                                key={index}
-                                title={data.seriesName}
-                                maxValue={maxValue}
-                                minValue={minValue}
-                              />
-                            )
-                          })}
-                        </Paper>
+                        <ChartView
+                          title={sensors.sensorName}
+                          data={sensors}
+                          onFullscreenClick={() => this.handleFullscreenButton(data)}
+                        />
                       </Grid>
                     </Grid>
                   )
@@ -246,43 +207,6 @@ Home.propTypes = {
  */
 
 const styles = {
-  tabsRoot: {
-    backgroundColor: Colors.COMP_PURPLE,
-    borderBottom: `1px solid ${Colors.WHITE}`,
-  },
-
-  tabsIndicator: {
-    backgroundColor: Colors.COMP_YELLOW,
-  },
-
-  tabRoot: {
-    color: Colors.WHITE,
-    textTransform: 'initial',
-    minWidth: 72,
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '&:hover': {
-      color: Colors.WHITE,
-      opacity: 1,
-    },
-    '&$tabSelected': {
-      color: Colors.WHITE,
-    },
-    '&:focus': {
-      color: Colors.WHITE,
-    },
-  },
-
   gridInner: {
     padding: '1%',
   },
@@ -296,13 +220,6 @@ const styles = {
   tablePaper: {
     width: '100%',
     height: 400,
-  },
-
-  lineChartHeader: {
-    display: 'flex',
-    position: 'relative',
-    flexDirection: 'row',
-    justifyContent: 'center',
   },
 }
 
