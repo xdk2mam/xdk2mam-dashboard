@@ -48,7 +48,8 @@ export default function generateRandomData() {
       },
     ],
     device: 'XDKDevice1',
-    timestamp: new Date() / 1000,
+    timestamp: new Date().getTime(),
   }
+  
   return data
 }

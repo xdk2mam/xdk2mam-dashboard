@@ -12,6 +12,7 @@ import {
 import { isEmpty } from 'lodash'
 import { CircularProgress, withStyles } from '@material-ui/core'
 import '../../node_modules/react-vis/dist/style.css'
+import moment from 'moment'
 
 import Colors from '../helpers/colors'
 
@@ -53,7 +54,9 @@ class LineChart extends PureComponent {
 
   handleTitleFormat = () => null
 
-  handleItemsFormat = values => [{ title: 'X', value: values[0].x }, { title: 'Y', value: values[0].y }]
+  handleItemsFormat = values => [{ title: 'X', value: moment(values[0].x).format('hh:mm:ss') }, { title: 'Y', value: values[0].y }]
+
+  handleXAxisFormat = value => (`${moment(value).format('mm:ss')}`)
 
   render() {
     const { data, classes, color, baseColor, height } = this.props
@@ -65,7 +68,10 @@ class LineChart extends PureComponent {
 
     if (data.length < 2) {
       return (
-        <CircularProgress classes={{ root: classes.loadingContainer, colorPrimary: classes.loadingColor }} size={25} />
+        <div className={classes.loadingContainer}>
+          <CircularProgress classes={{ root: classes.loadingSpinner, colorPrimary: classes.loadingColor }} size={25} />
+        </div>
+        
       )
     }
 
@@ -74,10 +80,14 @@ class LineChart extends PureComponent {
 
     return (
       <FlexibleXYPlot onMouseLeave={this.handleMouseLeave} height={height} className={classes.linePlot} xType="time">
-        <XAxis style={axisStyle} />
+        <XAxis style={axisStyle} tickLabelAngle={-45} tickFormat={this.handleXAxisFormat} />
         <YAxis style={axisStyle} />
+
         <HorizontalGridLines />
         <VerticalGridLines />
+
+        <Crosshair values={crosshairValues} titleFormat={this.handleTitleFormat} itemsFormat={this.handleItemsFormat} />
+
         {!hasSeries && (
           <LineMarkSeries
             curve={CURVE_TYPE}
@@ -90,8 +100,8 @@ class LineChart extends PureComponent {
         {hasSeries &&
           data.series.map((series, index) => (
             <LineMarkSeries key={index} curve={CURVE_TYPE} data={series.data} size={LINE_SIZE} />
-          ))}
-        <Crosshair values={crosshairValues} titleFormat={this.handleTitleFormat} itemsFormat={this.handleItemsFormat} />
+          ))
+        }
       </FlexibleXYPlot>
     )
   }
@@ -111,6 +121,13 @@ LineChart.defaultProps = {
 
 const styles = {
   loadingContainer: {
+    height: 300,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  loadingSpinner: {
     margin: 50,
   },
 
