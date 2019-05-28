@@ -28,7 +28,7 @@ const data = [
       },
     ],
     device: 'XDKDevice1',
-    timestamp: new Date() / 1000,
+    timestamp: new Date().getTime(),
   },
 ]
 

@@ -66,7 +66,7 @@ class Home extends Component {
       })
 
       // this.getLastInfo(5)
-    }, 2000)
+    }, 5000)
   }
 
   getLastInfo = num => {
@@ -111,8 +111,6 @@ class Home extends Component {
     const { classes } = this.props
     const { infoSensor: weatherData, selectedTab, tableData, selectedChart } = this.state
 
-    console.log('selectedChart', selectedChart)
-
     /** @todo: This should be in a constant file and each series should have its unique color assigned */
     const colorPalette = [Colors.LOGO_GREEN, Colors.DARKEST_BLUE, Colors.COMP_YELLOW]
 
@@ -146,7 +144,7 @@ class Home extends Component {
                     <Grid item xs={12}>
                       <Paper className={classes.paper} elevation={0}>
                         <div className={classes.lineChartHeader}>
-                          <Typography variant="subheading" color="inherit">
+                          <Typography variant="subtitle1" align="left" color="inherit">
                             {data.seriesName}
                           </Typography>
                           <FullscreenButton onClick={() => this.handleFullscreenButton(data)} />
@@ -172,7 +170,7 @@ class Home extends Component {
                   <Grid item xs={12} key={index} className={classes.gridInner}>
                     <Grid item xs={12}>
                       <Paper className={classes.paper} elevation={0}>
-                        <Typography variant="subheading" color="inherit">
+                        <Typography variant="subtitle1" align="left" color="inherit">
                           {weatherData[4].sensorName}
                         </Typography>
                         <LineChart data={data.data} color={colorPalette[index]} />
@@ -194,7 +192,7 @@ class Home extends Component {
                     <Grid item sm={6} xs={12} key={index} className={classes.gridInner}>
                       <Grid item xs={12}>
                         <Paper className={classes.paper} elevation={0}>
-                          <Typography variant="subheading" color="inherit">
+                          <Typography variant="subtitle1" align="left" color="inherit">
                             {sensors.sensorName}
                           </Typography>
                           <LineChart data={sensors} color={colorPalette[index]} />

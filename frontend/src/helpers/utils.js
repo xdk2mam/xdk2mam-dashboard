@@ -136,7 +136,7 @@ export const formatDataForCharts = data => {
             x: 0,
             y: 0,
           }
-          dataEntry.x = parseInt(item.timestamp)
+          dataEntry.x = item.timestamp
           dataEntry.y = parseInt(datum.value)
           return formattedData[j].series[i].data.push(dataEntry)
         })
