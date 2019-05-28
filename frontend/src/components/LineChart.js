@@ -16,6 +16,13 @@ import '../../node_modules/react-vis/dist/style.css'
 import Colors from '../helpers/colors'
 
 /**
+ * Constants
+ */
+
+const LINE_SIZE = 2
+const CURVE_TYPE = 'curveMonotoneX'
+
+/**
  * Helpers
  */
 
@@ -30,11 +37,11 @@ class LineChart extends PureComponent {
     crosshairValues: [],
   }
 
-  onMouseLeave = () => {
+  handleMouseLeave = () => {
     this.setState({ crosshairValues: [] })
   }
 
-  onNearestX = value => {
+  handleNearestX = value => {
     const { data } = this.props
 
     if (isEmpty(data)) {
@@ -49,7 +56,7 @@ class LineChart extends PureComponent {
   handleItemsFormat = values => [{ title: 'X', value: values[0].x }, { title: 'Y', value: values[0].y }]
 
   render() {
-    const { data, classes, color, baseColor } = this.props
+    const { data, classes, color, baseColor, height } = this.props
     const { crosshairValues } = this.state
 
     if (isEmpty(data)) {
@@ -66,22 +73,36 @@ class LineChart extends PureComponent {
     const axisStyle = !isEmpty(baseColor) ? { stroke: baseColor } : {}
 
     return (
-      <FlexibleXYPlot onMouseLeave={this.onMouseLeave} height={300} className={classes.linePlot} xType="time">
+      <FlexibleXYPlot onMouseLeave={this.handleMouseLeave} height={height} className={classes.linePlot} xType="time">
         <XAxis style={axisStyle} />
         <YAxis style={axisStyle} />
         <HorizontalGridLines />
         <VerticalGridLines />
         {!hasSeries && (
-          <LineMarkSeries curve="curveMonotoneX" data={data} color={color} size={2} onNearestX={this.onNearestX} />
+          <LineMarkSeries
+            curve={CURVE_TYPE}
+            data={data}
+            color={color}
+            size={LINE_SIZE}
+            onNearestX={this.handleNearestX}
+          />
         )}
         {hasSeries &&
           data.series.map((series, index) => (
-            <LineMarkSeries key={index} curve="curveMonotoneX" data={series.data} size={2} />
+            <LineMarkSeries key={index} curve={CURVE_TYPE} data={series.data} size={LINE_SIZE} />
           ))}
         <Crosshair values={crosshairValues} titleFormat={this.handleTitleFormat} itemsFormat={this.handleItemsFormat} />
       </FlexibleXYPlot>
     )
   }
+}
+
+/**
+ * PropTypes
+ */
+
+LineChart.defaultProps = {
+  height: 300,
 }
 
 /**
