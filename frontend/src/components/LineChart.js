@@ -2,9 +2,7 @@ import React, { PureComponent } from 'react'
 import {
   XYPlot,
   makeWidthFlexible,
-  LineMarkSeries,
-  VerticalGridLines,
-  HorizontalGridLines,
+  LineSeries,
   XAxis,
   YAxis,
   Crosshair,
@@ -20,8 +18,8 @@ import Colors from '../helpers/colors'
  * Constants
  */
 
-const LINE_SIZE = 2
-const CURVE_TYPE = 'curveMonotoneX'
+const LINE_SIZE = 1
+const CURVE_TYPE = 'curveBasis'
 
 /**
  * Helpers
@@ -81,17 +79,14 @@ class LineChart extends PureComponent {
     const axisStyle = !isEmpty(baseColor) ? { stroke: baseColor } : {}
 
     return (
-      <FlexibleXYPlot onMouseLeave={this.handleMouseLeave} height={height} className={classes.linePlot} xType="time">
+      <FlexibleXYPlot yPadding={80} onMouseLeave={this.handleMouseLeave} height={height} className={classes.linePlot} xType="time" margin={{left: 50, right: 10, top: 10, bottom: 50}}>
         <XAxis style={axisStyle} tickLabelAngle={-45} tickFormat={this.handleXAxisFormat} />
         <YAxis style={axisStyle} />
-
-        <HorizontalGridLines />
-        <VerticalGridLines />
 
         <Crosshair values={crosshairValues} titleFormat={this.handleTitleFormat} itemsFormat={this.handleItemsFormat} />
 
         {!hasSeries && (
-          <LineMarkSeries
+          <LineSeries
             curve={CURVE_TYPE}
             data={data}
             color={color}
@@ -101,7 +96,7 @@ class LineChart extends PureComponent {
         )}
         {hasSeries &&
           data.series.map((series, index) => (
-            <LineMarkSeries key={index} curve={CURVE_TYPE} data={series.data} size={LINE_SIZE} />
+            <LineSeries key={index} curve={CURVE_TYPE} data={series.data} size={LINE_SIZE} />
           ))}
       </FlexibleXYPlot>
     )
