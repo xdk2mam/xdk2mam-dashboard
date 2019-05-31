@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Fragment, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Grid } from '@material-ui/core'
@@ -13,6 +13,7 @@ import FullscreenModal from '../components/FullscreenModal.js'
 import ChartView from '../components/ChartView.js'
 import TabNavigator from '../components/TabNavigator.js'
 import SubHeader from '../components/SubHeader.js'
+import NoDataMessage from '../components/NoDataMessage.js'
 
 /**
  * Constants
@@ -24,7 +25,7 @@ const VISIBLE_VALUES_ON_CHART = 25
  * Home
  */
 
-class Home extends Component {
+class Home extends PureComponent {
   state = {
     infoSensor: null,
     rawData: null,
@@ -86,91 +87,96 @@ class Home extends Component {
 
   render() {
     const { classes } = this.props
-    const { infoSensor, selectedTab, tableData, selectedChart, selectedTimeInterval } = this.state
+    const { selectedTab, infoSensor, tableData, selectedChart, selectedTimeInterval } = this.state
 
     return (
       <Layout>
-        <Grid item xs={12}>
-          <SubHeader
-            deviceName="XDK110"
-            onTimeIntervalClick={this.handleSelectTimeInterval}
-            selectedTimeInterval={selectedTimeInterval}
-          />
-          <TabNavigator selected={selectedTab} onChange={this.handleTabChange} />
-        </Grid>
+        {isEmpty(infoSensor) && <NoDataMessage />}
+        {!isEmpty(infoSensor) && (
+          <Fragment>
+            <Grid item xs={12}>
+              <SubHeader
+                deviceName="XDK110"
+                onTimeIntervalClick={this.handleSelectTimeInterval}
+                selectedTimeInterval={selectedTimeInterval}
+              />
+              <TabNavigator selected={selectedTab} onChange={this.handleTabChange} />
+            </Grid>
 
-        {selectedTab === 0 && (
-          <Grid container>
-            {infoSensor &&
-              infoSensor[0].series.map((data, index) => {
-                const title = data.seriesName
+            {selectedTab === 0 && (
+              <Grid container>
+                {infoSensor &&
+                  infoSensor[0].series.map((data, index) => {
+                    const title = data.seriesName
 
-                return (
-                  <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
-                    <Grid item xs={12}>
-                      <ChartView
-                        title={title}
-                        data={data.data}
-                        onFullscreenClick={() => this.handleFullscreenButton(data)}
-                      />
-                    </Grid>
-                  </Grid>
-                )
-              })}
-          </Grid>
-        )}
-
-        {selectedTab === 1 && (
-          <Grid container>
-            {infoSensor &&
-              infoSensor[4].series.map((data, index) => {
-                const title = infoSensor[4].sensorName
-
-                return (
-                  <Grid item xs={12} key={index} className={classes.gridInner}>
-                    <Grid item xs={12}>
-                      <ChartView
-                        title={title}
-                        data={data.data}
-                        onFullscreenClick={() => this.handleFullscreenButton(data)}
-                      />
-                    </Grid>
-                  </Grid>
-                )
-              })}
-          </Grid>
-        )}
-
-        {selectedTab === 2 && (
-          <Grid container>
-            {infoSensor &&
-              infoSensor.map((sensors, index) => {
-                if (index !== 0 && index !== 4) {
-                  return (
-                    <Grid item sm={6} xs={12} key={index} className={classes.gridInner}>
-                      <Grid item xs={12}>
-                        <ChartView
-                          title={sensors.sensorName}
-                          data={sensors}
-                          onFullscreenClick={() => this.handleFullscreenButton(data)}
-                        />
+                    return (
+                      <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
+                        <Grid item xs={12}>
+                          <ChartView
+                            title={title}
+                            data={data.data}
+                            onFullscreenClick={() => this.handleFullscreenButton(data)}
+                          />
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  )
-                }
-              })}
-          </Grid>
-        )}
-        <Grid container>
-          <Grid item xs={12} classes={{ item: classes.gridInner }}>
-            <Paper className={classes.tablePaper} elevation={0}>
-              <Table data={tableData} />
-            </Paper>
-          </Grid>
-        </Grid>
+                    )
+                  })}
+              </Grid>
+            )}
 
-        {!isEmpty(selectedChart) && (
-          <FullscreenModal selectedChart={selectedChart} onCloseClick={this.handleCloseFullscreenButton} />
+            {selectedTab === 1 && (
+              <Grid container>
+                {infoSensor &&
+                  infoSensor[4].series.map((data, index) => {
+                    const title = infoSensor[4].sensorName
+
+                    return (
+                      <Grid item xs={12} key={index} className={classes.gridInner}>
+                        <Grid item xs={12}>
+                          <ChartView
+                            title={title}
+                            data={data.data}
+                            onFullscreenClick={() => this.handleFullscreenButton(data)}
+                          />
+                        </Grid>
+                      </Grid>
+                    )
+                  })}
+              </Grid>
+            )}
+
+            {selectedTab === 2 && (
+              <Grid container>
+                {infoSensor &&
+                  infoSensor.map((sensors, index) => {
+                    if (index !== 0 && index !== 4) {
+                      return (
+                        <Grid item sm={6} xs={12} key={index} className={classes.gridInner}>
+                          <Grid item xs={12}>
+                            <ChartView
+                              title={sensors.sensorName}
+                              data={sensors}
+                              onFullscreenClick={() => this.handleFullscreenButton(data)}
+                            />
+                          </Grid>
+                        </Grid>
+                      )
+                    }
+                  })}
+              </Grid>
+            )}
+            <Grid container>
+              <Grid item xs={12} classes={{ item: classes.gridInner }}>
+                <Paper className={classes.tablePaper} elevation={0}>
+                  <Table data={tableData} />
+                </Paper>
+              </Grid>
+            </Grid>
+
+            {!isEmpty(selectedChart) && (
+              <FullscreenModal selectedChart={selectedChart} onCloseClick={this.handleCloseFullscreenButton} />
+            )}
+          </Fragment>
         )}
       </Layout>
     )
