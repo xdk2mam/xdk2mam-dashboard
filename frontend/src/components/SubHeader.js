@@ -80,6 +80,7 @@ const styles = {
 
   timeIntervals: {
     display: 'flex',
+    alignItems: 'center',
   },
 
   timeIntervalsTitle: {
