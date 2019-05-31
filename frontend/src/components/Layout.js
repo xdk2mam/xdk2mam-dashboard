@@ -25,7 +25,7 @@ class Layout extends PureComponent {
     const { isDrawerOpen } = this.state
 
     return (
-      <div className={classes.root}>
+      <div className={classes.container}>
         <CssBaseline />
 
         <Drawer open={isDrawerOpen} onClose={this.handleDrawerClose} />
@@ -39,13 +39,21 @@ class Layout extends PureComponent {
   }
 }
 
+/**
+ * PropTypes
+ */
+
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
 }
 
+/**
+ * Styles
+ */
+
 const styles = {
-  root: {
+  container: {
     display: 'flex',
     backgroundColor: Colors.FAFAFA,
     height: '100vh',

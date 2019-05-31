@@ -4,15 +4,15 @@ import { withStyles } from '@material-ui/core/styles'
 import { Paper, Grid } from '@material-ui/core'
 import { isEmpty } from 'lodash'
 
-import { formatDataForCharts, formatDataForTable, getLast, getMinYValue, getMaxYValue } from '../helpers/utils.js'
+import { formatDataForCharts, formatDataForTable, getLast } from '../helpers/utils.js'
 import generateRandomData from '../helpers/randomData.js'
 import data from '../helpers/data.js'
 import Layout from '../components/Layout'
 import Table from '../components/Table.js'
 import FullscreenModal from '../components/FullscreenModal.js'
 import ChartView from '../components/ChartView.js'
-import SensorTypes from '../constants/SensorTypes.js'
 import TabNavigator from '../components/TabNavigator.js'
+import SubHeader from '../components/SubHeader.js'
 
 /**
  * Constants
@@ -32,6 +32,7 @@ class Home extends Component {
     tableData: [],
     selectedTab: 0,
     selectedChart: null,
+    selectedTimeInterval: '',
   }
 
   componentDidMount() {
@@ -63,37 +64,12 @@ class Home extends Component {
         rawData: newRawData,
         rawChartData: newChartData,
       })
-
-      // this.getLastInfo(5)
     }, 5000)
   }
 
   getLastInfo = num => {
     getLast(num).then(({ data }) => {
       this.setState({ infoSensor: data.info })
-    })
-  }
-
-  getEnvironmentInfo = () => {
-    const { infoSensor } = this.state
-
-    if (!infoSensor || infoSensor.length < 0) {
-      return null
-    }
-
-    return infoSensor.map(info => {
-      if (info.xdk2mam[0].sensorType !== SensorTypes.ENVIRONMENTAL) {
-        return null
-      }
-
-      return (
-        <div>
-          <h4 key={`${info.timestamp}`}>
-            Pressure: {info.xdk2mam[0].data[0].value} - Temperature: {info.xdk2mam[0].data[1].value} - Humidity:{' '}
-            {info.xdk2mam[0].data[2].value} - Device: {info.device} - Timestamp: {info.timestamp}
-          </h4>
-        </div>
-      )
     })
   }
 
@@ -106,18 +82,25 @@ class Home extends Component {
 
   handleCloseFullscreenButton = () => this.setState({ selectedChart: null })
 
+  handleSelectTimeInterval = selectedTimeInterval => this.setState({ selectedTimeInterval })
+
   render() {
     const { classes } = this.props
-    const { infoSensor, selectedTab, tableData, selectedChart } = this.state
+    const { infoSensor, selectedTab, tableData, selectedChart, selectedTimeInterval } = this.state
 
     return (
       <Layout>
         <Grid item xs={12}>
+          <SubHeader
+            deviceName="XDK110"
+            onTimeIntervalClick={this.handleSelectTimeInterval}
+            selectedTimeInterval={selectedTimeInterval}
+          />
           <TabNavigator selected={selectedTab} onChange={this.handleTabChange} />
         </Grid>
 
         {selectedTab === 0 && (
-          <Grid container className={classes.baseGrid}>
+          <Grid container>
             {infoSensor &&
               infoSensor[0].series.map((data, index) => {
                 const title = data.seriesName
@@ -138,7 +121,7 @@ class Home extends Component {
         )}
 
         {selectedTab === 1 && (
-          <Grid container className={classes.baseGrid}>
+          <Grid container>
             {infoSensor &&
               infoSensor[4].series.map((data, index) => {
                 const title = infoSensor[4].sensorName
@@ -159,7 +142,7 @@ class Home extends Component {
         )}
 
         {selectedTab === 2 && (
-          <Grid container className={classes.baseGrid}>
+          <Grid container>
             {infoSensor &&
               infoSensor.map((sensors, index) => {
                 if (index !== 0 && index !== 4) {
@@ -178,7 +161,7 @@ class Home extends Component {
               })}
           </Grid>
         )}
-        <Grid container className={classes.baseGrid}>
+        <Grid container>
           <Grid item xs={12} classes={{ item: classes.gridInner }}>
             <Paper className={classes.tablePaper} elevation={0}>
               <Table data={tableData} />
