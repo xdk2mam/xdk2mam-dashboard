@@ -97,6 +97,7 @@ class Home extends PureComponent {
             <Grid item xs={12}>
               <SubHeader
                 deviceName="XDK110"
+                activeDataset="Garden 01"
                 onTimeIntervalClick={this.handleSelectTimeInterval}
                 selectedTimeInterval={selectedTimeInterval}
               />
