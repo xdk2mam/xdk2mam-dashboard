@@ -43,7 +43,7 @@ class SubHeader extends PureComponent {
             const selected = selectedTimeInterval === option.value
 
             return (
-              <Fragment>
+              <Fragment key={`${option}-${index}`}>
                 <span
                   className={classnames(classes.text, classes.button, selected && classes.selectedButton)}
                   onClick={() => this.handleTimeIntervalClick(option.value)}
