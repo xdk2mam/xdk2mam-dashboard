@@ -7,6 +7,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel'
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized'
 
 import { TABLE_COLUMNS } from './helpers'
+import Colors from '../../helpers/colors'
 
 /**
  * VirtualizedTable
@@ -16,10 +17,12 @@ class VirtualizedTable extends PureComponent {
   cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
     const { classes, data, rowHeight, onRowClick } = this.props
 
+    const isNotEvenIndex = rowIndex % 2 !== 0
+
     return (
       <TableCell
         component="div"
-        className={classNames(classes.tableCell, classes.flexContainer, {
+        className={classNames(classes.tableCell, classes.flexContainer, isNotEvenIndex && classes.row, {
           [classes.noClick]: onRowClick == null,
         })}
         variant="body"
@@ -63,48 +66,46 @@ class VirtualizedTable extends PureComponent {
   render() {
     const { classes, columns, ...tableProps } = this.props
     return (
-      <Fragment>
-        <AutoSizer>
-          {({ height, width }) => (
-            <Table
-              className={classes.table}
-              height={height}
-              width={width}
-              {...tableProps}
-              rowClassName={classes.flexContainer}
-            >
-              {columns.map(({ cellContentRenderer = null, className, dataKey, ...other }, index) => {
-                let renderer
-                if (cellContentRenderer != null) {
-                  renderer = cellRendererProps =>
-                    this.cellRenderer({
-                      cellData: cellContentRenderer(cellRendererProps),
+      <AutoSizer>
+        {({ height, width }) => (
+          <Table
+            className={classes.table}
+            height={height}
+            width={width}
+            {...tableProps}
+            rowClassName={classes.flexContainer}
+          >
+            {columns.map(({ cellContentRenderer = null, className, dataKey, ...other }, index) => {
+              let renderer
+              if (cellContentRenderer != null) {
+                renderer = cellRendererProps =>
+                  this.cellRenderer({
+                    cellData: cellContentRenderer(cellRendererProps),
+                    columnIndex: index,
+                  })
+              } else {
+                renderer = this.cellRenderer
+              }
+
+              return (
+                <Column
+                  key={dataKey}
+                  headerRenderer={headerProps =>
+                    this.headerRenderer({
+                      ...headerProps,
                       columnIndex: index,
                     })
-                } else {
-                  renderer = this.cellRenderer
-                }
-
-                return (
-                  <Column
-                    key={dataKey}
-                    headerRenderer={headerProps =>
-                      this.headerRenderer({
-                        ...headerProps,
-                        columnIndex: index,
-                      })
-                    }
-                    className={classNames(classes.flexContainer, className)}
-                    cellRenderer={renderer}
-                    dataKey={dataKey}
-                    {...other}
-                  />
-                )
-              })}
-            </Table>
-          )}
-        </AutoSizer>
-      </Fragment>
+                  }
+                  className={classNames(classes.flexContainer, className)}
+                  cellRenderer={renderer}
+                  dataKey={dataKey}
+                  {...other}
+                />
+              )
+            })}
+          </Table>
+        )}
+      </AutoSizer>
     )
   }
 }
@@ -130,8 +131,8 @@ VirtualizedTable.propTypes = {
 }
 
 VirtualizedTable.defaultProps = {
-  headerHeight: 56,
-  rowHeight: 56,
+  headerHeight: 45,
+  rowHeight: 45,
 }
 
 /**
@@ -160,6 +161,10 @@ const styles = theme => ({
   noClick: {
     cursor: 'initial',
   },
+
+  row: {
+    backgroundColor: Colors.GREY,
+  },
 })
 
 /**
@@ -169,13 +174,15 @@ const styles = theme => ({
 const WrappedVirtualizedTable = withStyles(styles)(VirtualizedTable)
 
 const ReactVirtualizedTable = props => (
-  <WrappedVirtualizedTable
-    data={props.data}
-    rowCount={props.data.length}
-    rowGetter={({ index }) => props.data[index]}
-    onRowClick={() => {}}
-    columns={TABLE_COLUMNS}
-  />
+  <Fragment>
+    <WrappedVirtualizedTable
+      data={props.data}
+      rowCount={props.data.length}
+      rowGetter={({ index }) => props.data[index]}
+      onRowClick={() => {}}
+      columns={TABLE_COLUMNS}
+    />
+  </Fragment>
 )
 
 export default ReactVirtualizedTable
