@@ -1,7 +1,7 @@
 import React, { Fragment, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-import { Paper, Grid } from '@material-ui/core'
+import { Paper, Grid, Typography } from '@material-ui/core'
 import { isEmpty } from 'lodash'
 
 import { formatDataForCharts, formatDataForTable, getLast } from '../helpers/utils'
@@ -168,6 +168,9 @@ class Home extends PureComponent {
             )}
             <Grid container>
               <Grid item xs={12} classes={{ item: classes.gridInner }}>
+                <Typography variant="h5" classes={{ root: classes.tableTitle }}>
+                  Live Data
+                </Typography>
                 <Paper className={classes.tablePaper} elevation={0}>
                   <Table data={tableData} />
                 </Paper>
@@ -205,6 +208,10 @@ const styles = {
     padding: 10,
     fontFamily: 'Roboto',
     textAlign: 'center',
+  },
+
+  tableTitle: {
+    marginBottom: 10,
   },
 
   tablePaper: {
