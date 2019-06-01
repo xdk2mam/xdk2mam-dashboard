@@ -4,16 +4,16 @@ import { withStyles } from '@material-ui/core/styles'
 import { Paper, Grid } from '@material-ui/core'
 import { isEmpty } from 'lodash'
 
-import { formatDataForCharts, formatDataForTable, getLast } from '../helpers/utils.js'
-import generateRandomData from '../helpers/randomData.js'
-import data from '../helpers/data.js'
+import { formatDataForCharts, formatDataForTable, getLast } from '../helpers/utils'
+import generateRandomData from '../helpers/randomData'
+import data from '../helpers/data'
 import Layout from '../components/Layout'
-import Table from '../components/Table.js'
-import FullscreenModal from '../components/FullscreenModal.js'
-import ChartView from '../components/ChartView.js'
-import TabNavigator from '../components/TabNavigator.js'
-import SubHeader from '../components/SubHeader.js'
-import NoDataMessage from '../components/NoDataMessage.js'
+import Table from '../components/Table/Table'
+import FullscreenModal from '../components/FullscreenModal'
+import ChartView from '../components/ChartView'
+import TabNavigator from '../components/TabNavigator'
+import SubHeader from '../components/SubHeader'
+import NoDataMessage from '../components/NoDataMessage'
 
 /**
  * Constants
@@ -65,7 +65,7 @@ class Home extends PureComponent {
         rawData: newRawData,
         rawChartData: newChartData,
       })
-    }, 5000)
+    }, 200)
   }
 
   getLastInfo = num => {

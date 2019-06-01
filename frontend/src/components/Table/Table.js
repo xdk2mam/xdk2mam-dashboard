@@ -1,10 +1,12 @@
-import React, { PureComponent } from 'react'
+import React, { Fragment, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import TableCell from '@material-ui/core/TableCell'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized'
+
+import { TABLE_COLUMNS } from './helpers'
 
 /**
  * VirtualizedTable
@@ -61,7 +63,7 @@ class VirtualizedTable extends PureComponent {
   render() {
     const { classes, columns, ...tableProps } = this.props
     return (
-      <React.Fragment>
+      <Fragment>
         <AutoSizer>
           {({ height, width }) => (
             <Table
@@ -102,10 +104,14 @@ class VirtualizedTable extends PureComponent {
             </Table>
           )}
         </AutoSizer>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }
+
+/**
+ * PropTypes
+ */
 
 VirtualizedTable.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -127,6 +133,10 @@ VirtualizedTable.defaultProps = {
   headerHeight: 56,
   rowHeight: 56,
 }
+
+/**
+ * Styles
+ */
 
 const styles = theme => ({
   table: {
@@ -152,133 +162,20 @@ const styles = theme => ({
   },
 })
 
+/**
+ * Exports
+ */
+
 const WrappedVirtualizedTable = withStyles(styles)(VirtualizedTable)
 
-const columns = [
-  {
-    width: 90,
-    flexGrow: 1.0,
-    label: 'Date',
-    dataKey: 'timestamp',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Pres.',
-    dataKey: 'pressure',
-    numeric: true,
-  },
-  {
-    width: 90,
-    flexGrow: 1.0,
-    label: 'Temp.',
-    dataKey: 'temperature',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Hum.',
-    dataKey: 'humidity',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Gyro X',
-    dataKey: 'gyroscopeX',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Gyro Y',
-    dataKey: 'gyroscopeY',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Gyro Z',
-    dataKey: 'gyroscopeZ',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Acc. X',
-    dataKey: 'accelerometerX',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Acc. Y',
-    dataKey: 'accelerometerY',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Acc. Z',
-    dataKey: 'accelerometerZ',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Iner. X',
-    dataKey: 'inertialX',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Iner. Y',
-    dataKey: 'inertialY',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Iner. Z',
-    dataKey: 'inertialZ',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Magn. X',
-    dataKey: 'magnetometerX',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Magn. Y',
-    dataKey: 'magnetometerY',
-    numeric: true,
-  },
-  {
-    width: 100,
-    flexGrow: 1.0,
-    label: 'Magn. Z',
-    dataKey: 'magnetometerZ',
-    numeric: true,
-  },
-]
-
-function ReactVirtualizedTable(props) {
-  return (
-    <WrappedVirtualizedTable
-      data={props.data}
-      rowCount={props.data.length}
-      rowGetter={({ index }) => props.data[index]}
-      onRowClick={event => console.log(event)}
-      columns={columns}
-    />
-  )
-}
+const ReactVirtualizedTable = props => (
+  <WrappedVirtualizedTable
+    data={props.data}
+    rowCount={props.data.length}
+    rowGetter={({ index }) => props.data[index]}
+    onRowClick={() => {}}
+    columns={TABLE_COLUMNS}
+  />
+)
 
 export default ReactVirtualizedTable
