@@ -25,12 +25,14 @@ class SubHeader extends PureComponent {
   }
 
   render() {
-    const { classes, deviceName, selectedTimeInterval } = this.props
+    const { classes, deviceName, selectedTimeInterval, activeDataset } = this.props
+
     return (
       <div className={classes.container}>
         <div>
           <Typography variant={TYPOGRAPHY_VARIANT} color={TYPOGRAPHY_COLOR}>
-            Device Name: <span className={classes.deviceName}>{deviceName}</span>
+            Device Name: <span className={classnames(classes.info, classes.deviceText)}>{deviceName}</span> / Active
+            Dataset: <span className={classes.info}>{activeDataset}</span>
           </Typography>
         </div>
         <div className={classes.timeIntervals}>
@@ -74,7 +76,7 @@ const styles = {
     color: Colors.WHITE,
   },
 
-  deviceName: {
+  info: {
     fontWeight: 'bold',
   },
 
