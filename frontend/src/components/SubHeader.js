@@ -1,6 +1,6 @@
 import React, { Fragment, PureComponent } from 'react'
 import classnames from 'classnames'
-import { Typography } from '@material-ui/core'
+import { Typography, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { isEmpty } from 'lodash'
 
@@ -25,7 +25,7 @@ class SubHeader extends PureComponent {
   }
 
   render() {
-    const { classes, deviceName, selectedTimeInterval, activeDataset } = this.props
+    const { classes, deviceName, selectedTimeInterval, activeDataset, onFinishDatasetClick } = this.props
 
     return (
       <div className={classes.container}>
@@ -35,6 +35,7 @@ class SubHeader extends PureComponent {
             Dataset: <span className={classes.info}>{activeDataset}</span>
           </Typography>
         </div>
+        {/** @todo Move time intervals to line charts as quantity intervals */}
         <div className={classes.timeIntervals}>
           <span className={classes.timeIntervalsTitle}>Time interval:</span>
 
@@ -55,6 +56,9 @@ class SubHeader extends PureComponent {
             )
           })}
         </div>
+        <Button variant="outlined" size="small" className={classes.finishDatasetButton} onClick={onFinishDatasetClick}>
+          Finish Dataset
+        </Button>
       </div>
     )
   }
@@ -99,6 +103,13 @@ const styles = {
 
   button: {
     cursor: 'pointer',
+  },
+
+  finishDatasetButton: {
+    fontFamily: 'Roboto, sans-serif',
+    textTransform: 'uppercase',
+    color: Colors.WHITE,
+    borderColor: Colors.WHITE,
   },
 
   selectedButton: {
