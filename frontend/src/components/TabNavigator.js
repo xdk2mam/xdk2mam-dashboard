@@ -42,19 +42,8 @@ const styles = {
   tabRoot: {
     color: Colors.WHITE,
     textTransform: 'initial',
-    minWidth: 72,
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
+    minWidth: 103,
+    fontFamily: 'Roboto, sans-serif',
     '&:hover': {
       color: Colors.WHITE,
       opacity: 1,
