@@ -14,6 +14,7 @@ import ChartView from '../components/ChartView'
 import TabNavigator from '../components/TabNavigator'
 import SubHeader from '../components/SubHeader'
 import NoDataMessage from '../components/NoDataMessage'
+import NoActiveDataset from '../components/NoActiveDataset'
 
 /**
  * Constants
@@ -27,23 +28,17 @@ const VISIBLE_VALUES_ON_CHART = 25
 
 class Home extends PureComponent {
   state = {
-    infoSensor: null,
-    rawData: null,
-    rawChartData: null,
-    tableData: [],
+    infoSensor: formatDataForCharts(data),
+    rawData: data,
+    rawChartData: data,
+    tableData: formatDataForTable(data),
     selectedTab: 0,
     selectedChart: null,
     selectedTimeInterval: '',
+    activeDataset: null,
   }
 
-  componentDidMount() {
-    this.setState({
-      infoSensor: formatDataForCharts(data),
-      tableData: formatDataForTable(data),
-      rawData: data,
-      rawChartData: data,
-    })
-
+  startDataset = () => {
     this.interval = setInterval(() => {
       const { rawData, rawChartData } = this.state
 
@@ -65,7 +60,7 @@ class Home extends PureComponent {
         rawData: newRawData,
         rawChartData: newChartData,
       })
-    }, 200)
+    }, 1000)
   }
 
   getLastInfo = num => {
@@ -85,19 +80,28 @@ class Home extends PureComponent {
 
   handleSelectTimeInterval = selectedTimeInterval => this.setState({ selectedTimeInterval })
 
+  handleCreateDataset = (name, deviceName, description) => {
+    this.setState({ activeDataset: { name, deviceName, description } })
+    this.startDataset()
+  }
+
   render() {
     const { classes } = this.props
-    const { selectedTab, infoSensor, tableData, selectedChart, selectedTimeInterval } = this.state
+    const { selectedTab, infoSensor, tableData, selectedChart, selectedTimeInterval, activeDataset } = this.state
+
+    const showNoDataMessage = !isEmpty(activeDataset) && isEmpty(infoSensor)
+    const showDashboard = !isEmpty(activeDataset) && !isEmpty(infoSensor)
 
     return (
       <Layout>
-        {isEmpty(infoSensor) && <NoDataMessage />}
-        {!isEmpty(infoSensor) && (
+        {isEmpty(activeDataset) && <NoActiveDataset onCreateDataset={this.handleCreateDataset} />}
+        {showNoDataMessage && <NoDataMessage />}
+        {showDashboard && (
           <Fragment>
             <Grid item xs={12}>
               <SubHeader
-                deviceName="XDK110"
-                activeDataset="Garden 01"
+                deviceName={activeDataset.deviceName}
+                activeDataset={activeDataset.name}
                 onTimeIntervalClick={this.handleSelectTimeInterval}
                 selectedTimeInterval={selectedTimeInterval}
               />

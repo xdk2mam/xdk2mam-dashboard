@@ -4,14 +4,14 @@ import ReportIcon from '@material-ui/icons/Report'
 import { withStyles } from '@material-ui/core/styles'
 
 /**
- * Constants
+ * NoDataMessage
  */
 
 const NoDataMessage = ({ classes }) => (
   <div className={classes.container}>
     <ReportIcon className={classes.icon} />
     <Typography className={classes.text} variant="h4">
-      No device connected
+      No data available
     </Typography>
   </div>
 )
