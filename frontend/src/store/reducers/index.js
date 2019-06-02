@@ -1,15 +1,10 @@
 import { combineReducers } from 'redux'
 
-const initialSettingsState = {}
-
-const settings = (state = initialSettingsState, action) => {
-  switch (action.type) {
-    default:
-      return state
-  }
-}
+import dataset from './dataset'
+import settings from './settings'
 
 const rootReducer = combineReducers({
+  dataset,
   settings,
 })
 
