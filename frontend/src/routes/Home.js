@@ -22,24 +22,32 @@ import NoActiveDataset from '../components/NoActiveDataset'
 
 const VISIBLE_VALUES_ON_CHART = 25
 
+const initialState = {
+  infoSensor: formatDataForCharts(data),
+  rawData: data,
+  rawChartData: data,
+  tableData: formatDataForTable(data),
+  selectedTab: 0,
+  selectedChart: null,
+  selectedTimeInterval: '',
+  activeDataset: null,
+}
+
 /**
  * Home
  */
 
 class Home extends PureComponent {
-  state = {
-    infoSensor: formatDataForCharts(data),
-    rawData: data,
-    rawChartData: data,
-    tableData: formatDataForTable(data),
-    selectedTab: 0,
-    selectedChart: null,
-    selectedTimeInterval: '',
-    activeDataset: null,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      ...initialState,
+    }
   }
 
   startDataset = () => {
-    this.interval = setInterval(() => {
+    this.intervalId = setInterval(() => {
       const { rawData, rawChartData } = this.state
 
       const newRandomData = generateRandomData()
@@ -85,6 +93,11 @@ class Home extends PureComponent {
     this.startDataset()
   }
 
+  handleFinishDatasetClick = () => {
+    clearInterval(this.intervalId)
+    this.setState(initialState)
+  }
+
   render() {
     const { classes } = this.props
     const { selectedTab, infoSensor, tableData, selectedChart, selectedTimeInterval, activeDataset } = this.state
@@ -103,6 +116,7 @@ class Home extends PureComponent {
                 deviceName={activeDataset.deviceName}
                 activeDataset={activeDataset.name}
                 onTimeIntervalClick={this.handleSelectTimeInterval}
+                onFinishDatasetClick={this.handleFinishDatasetClick}
                 selectedTimeInterval={selectedTimeInterval}
               />
               <TabNavigator selected={selectedTab} onChange={this.handleTabChange} />
