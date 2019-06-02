@@ -3,7 +3,10 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Grid, Typography } from '@material-ui/core'
 import { isEmpty } from 'lodash'
+import { connect } from 'react-redux'
 
+import { createDatasetDispatcher, clearActiveDatasetIdDispatcher } from '../store/actions/dataset'
+import { getActiveDataset } from '../store/selectors/dataset'
 import { formatDataForCharts, formatDataForTable, getLast } from '../helpers/utils'
 import generateRandomData from '../helpers/randomData'
 import data from '../helpers/data'
@@ -30,7 +33,6 @@ const initialState = {
   selectedTab: 0,
   selectedChart: null,
   selectedTimeInterval: '',
-  activeDataset: null,
 }
 
 /**
@@ -43,6 +45,13 @@ class Home extends PureComponent {
 
     this.state = {
       ...initialState,
+    }
+  }
+
+  componentDidMount() {
+    /** @todo: REMOVE THIS. only for dev purposes until backend is ready */
+    if (!isEmpty(this.props.activeDataset)) {
+      this.startDataset()
     }
   }
 
@@ -89,18 +98,21 @@ class Home extends PureComponent {
   handleSelectTimeInterval = selectedTimeInterval => this.setState({ selectedTimeInterval })
 
   handleCreateDataset = (name, deviceName, description) => {
-    this.setState({ activeDataset: { name, deviceName, description } })
+    this.props.dispatchCreateDataset({ name, deviceName, description }, true)
     this.startDataset()
   }
 
   handleFinishDatasetClick = () => {
     clearInterval(this.intervalId)
+    this.props.dispatchClearActiveDatasetId()
     this.setState(initialState)
   }
 
   render() {
-    const { classes } = this.props
-    const { selectedTab, infoSensor, tableData, selectedChart, selectedTimeInterval, activeDataset } = this.state
+    const { classes, activeDataset } = this.props
+    const { selectedTab, infoSensor, tableData, selectedChart, selectedTimeInterval } = this.state
+
+    console.log('activeDataseet', activeDataset)
 
     const showNoDataMessage = !isEmpty(activeDataset) && isEmpty(infoSensor)
     const showDashboard = !isEmpty(activeDataset) && !isEmpty(infoSensor)
@@ -239,7 +251,24 @@ const styles = {
 }
 
 /**
+ * Connect
+ */
+
+const mapStateToProps = state => ({
+  datasets: state.dataset.datasets,
+  activeDataset: getActiveDataset(state),
+})
+
+const mapDispatchToProps = dispatch => ({
+  dispatchCreateDataset: createDatasetDispatcher(dispatch),
+  dispatchClearActiveDatasetId: clearActiveDatasetIdDispatcher(dispatch),
+})
+
+/**
  * Exports
  */
 
-export default withStyles(styles)(Home)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Home))
