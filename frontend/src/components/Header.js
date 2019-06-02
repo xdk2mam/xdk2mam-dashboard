@@ -51,6 +51,7 @@ const styles = {
   },
 
   menuButton: {
+    display: 'flex',
     cursor: 'pointer',
     padding: 12,
   },
