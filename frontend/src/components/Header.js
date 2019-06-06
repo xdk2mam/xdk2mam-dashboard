@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -21,9 +22,11 @@ class Header extends PureComponent {
           <div className={classes.menuButton} color="inherit" aria-label="Open drawer" onClick={onMenuButtonClick}>
             <MenuIcon />
           </div>
-          <Typography variant="h6" color="inherit">
-            <img src={logo} alt="Logo" className={classes.logo} />
-          </Typography>
+          <Link to="/">
+            <Typography variant="h6" color="inherit">
+              <img src={logo} alt="Logo" className={classes.logo} />
+            </Typography>
+          </Link>
         </Toolbar>
       </AppBar>
     )

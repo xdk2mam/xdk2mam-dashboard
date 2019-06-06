@@ -6,6 +6,7 @@ import { getActiveDataset } from '../store/selectors/dataset'
 import { createDatasetDispatcher, setActiveDatasetIdDispatcher } from '../store/actions/dataset'
 
 import Layout from '../components/Layout'
+import CreateDatasetButton from '../components/CreateDatasetButton'
 import CreateDatasetDialog from '../components/CreateDatasetDialog'
 
 /**
@@ -43,17 +44,11 @@ class Datasets extends PureComponent {
 
     return (
       <Layout>
-        <Grid item xs={10} className={classes.gridInner}>
-          <Typography variant="h6" color="inherit">
-            Datasets
-          </Typography>
-        </Grid>
-        <Grid item xs={2} className={classes.gridInner}>
-          <Button variant="outlined" color="primary" onClick={this.handleOpenDialog}>
-            Create Dataset
-          </Button>
-        </Grid>
         <Grid item xs={12} className={classes.gridInner}>
+          <div className={classes.sectionHeader}>
+            <Typography variant="h5">Datasets</Typography>
+            <CreateDatasetButton onClick={this.handleOpenDialog} />
+          </div>
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
@@ -61,9 +56,9 @@ class Datasets extends PureComponent {
                   {DATASET_HEADERS.map((header, i) => {
                     if (i === 0) {
                       return <TableCell>{header}</TableCell>
-                    } else {
-                      return <TableCell align="right">{header}</TableCell>
                     }
+
+                    return <TableCell align="right">{header}</TableCell>
                   })}
                 </TableRow>
               </TableHead>
@@ -77,7 +72,7 @@ class Datasets extends PureComponent {
                     <TableCell align="right">{dataset.description}</TableCell>
                     <TableCell align="right">{dataset.deviceName}</TableCell>
                     <TableCell align="right">N/A</TableCell>
-                    <TableCell align="right">{dataset.id === activeDataset ? 'true' : 'false'}</TableCell>
+                    <TableCell align="right">{dataset.id === activeDataset ? 'Yes' : 'No'}</TableCell>
                     <TableCell align="right">
                       <Button
                         color="primary"
@@ -108,9 +103,14 @@ class Datasets extends PureComponent {
  */
 
 const styles = {
+  sectionHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+
   root: {
     width: '100%',
-    marginTop: 30,
+    marginTop: 15,
     overflowX: 'auto',
   },
 
