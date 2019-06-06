@@ -131,8 +131,8 @@ VirtualizedTable.propTypes = {
 }
 
 VirtualizedTable.defaultProps = {
-  headerHeight: 45,
-  rowHeight: 45,
+  headerHeight: 40,
+  rowHeight: 40,
 }
 
 /**
