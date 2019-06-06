@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
 import { Grid, Paper, Button, TableRow, TableHead, TableCell, TableBody, Table, Typography } from '@material-ui/core'
 import { getActiveDataset } from '../store/selectors/dataset'
-import { createDatasetDispatcher } from '../store/actions/dataset'
+import { createDatasetDispatcher, setActiveDatasetIdDispatcher } from '../store/actions/dataset'
 
 import Layout from '../components/Layout'
 import CreateDatasetDialog from '../components/CreateDatasetDialog'
@@ -12,7 +12,7 @@ import CreateDatasetDialog from '../components/CreateDatasetDialog'
  * Constants
  */
 
-const DATASET_HEADERS = ['Id', 'Name', 'Description', 'Device Name', 'End Date', 'Active']
+const DATASET_HEADERS = ['Id', 'Name', 'Description', 'Device Name', 'End Date', 'Active', 'Actions']
 
 /**
  * Datasets
@@ -33,6 +33,11 @@ class Datasets extends PureComponent {
     this.props.dispatchCreateDataset({ name, deviceName, description }, true)
   }
 
+  handleViewDataset = datasetId => {
+    this.props.dispatchSetActiveDatasetId(datasetId)
+    this.props.history.push('/')
+  }
+
   render() {
     const { classes, datasets, activeDataset } = this.props
 
@@ -44,12 +49,7 @@ class Datasets extends PureComponent {
           </Typography>
         </Grid>
         <Grid item xs={2} className={classes.gridInner}>
-          <Button
-            variant="outlined"
-            color="primary"
-            className={classes.createDatasetButton}
-            onClick={this.handleOpenDialog}
-          >
+          <Button variant="outlined" color="primary" onClick={this.handleOpenDialog}>
             Create Dataset
           </Button>
         </Grid>
@@ -78,6 +78,15 @@ class Datasets extends PureComponent {
                     <TableCell align="right">{dataset.deviceName}</TableCell>
                     <TableCell align="right">N/A</TableCell>
                     <TableCell align="right">{dataset.id === activeDataset ? 'true' : 'false'}</TableCell>
+                    <TableCell align="right">
+                      <Button
+                        color="primary"
+                        className={classes.viewDatasetButton}
+                        onClick={() => this.handleViewDataset(dataset.id)}
+                      >
+                        View
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -112,6 +121,11 @@ const styles = {
   gridInner: {
     padding: '1%',
   },
+
+  viewDatasetButton: {
+    padding: 0,
+    minWidth: 0,
+  },
 }
 
 /**
@@ -125,6 +139,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   dispatchCreateDataset: createDatasetDispatcher(dispatch),
+  dispatchSetActiveDatasetId: setActiveDatasetIdDispatcher(dispatch),
 })
 
 /**
