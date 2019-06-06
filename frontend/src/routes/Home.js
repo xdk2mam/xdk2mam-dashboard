@@ -97,8 +97,8 @@ class Home extends PureComponent {
 
   handleSelectTimeInterval = selectedTimeInterval => this.setState({ selectedTimeInterval })
 
-  handleCreateDataset = (name, deviceName, description) => {
-    this.props.dispatchCreateDataset({ name, deviceName, description }, true)
+  handleCreateDataset = (name, deviceName, description, endDate) => {
+    this.props.dispatchCreateDataset({ name, deviceName, description, endDate }, true)
     this.startDataset()
   }
 

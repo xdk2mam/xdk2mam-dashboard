@@ -6,6 +6,8 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import MomentUtils from '@date-io/moment'
 
 import Colors from '../helpers/colors'
 
@@ -18,6 +20,7 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
     name: '',
     description: '',
     deviceName: '',
+    endDate: new Date(),
   })
 
   const handleChange = name => event => {
@@ -25,8 +28,8 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
   }
 
   const handleCreateClick = () => {
-    const { name, deviceName, description } = values
-    onCreate(name, deviceName, description)
+    const { name, deviceName, description, endDate } = values
+    onCreate(name, deviceName, description, endDate)
   }
 
   return (
@@ -34,6 +37,9 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
       <DialogTitle>Create Dataset</DialogTitle>
       <DialogContent>
         <TextField
+          inputProps={{
+            maxLength: 50,
+          }}
           onChange={handleChange('name')}
           value={values.name}
           autoFocus
@@ -44,6 +50,9 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
           fullWidth
         />
         <TextField
+          inputProps={{
+            maxLength: 100,
+          }}
           onChange={handleChange('description')}
           value={values.description}
           margin="dense"
@@ -51,8 +60,12 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
           label="Description"
           type="text"
           fullWidth
+          maxLength={2}
         />
         <TextField
+          inputProps={{
+            maxLength: 50,
+          }}
           onChange={handleChange('deviceName')}
           value={values.deviceName}
           margin="dense"
@@ -61,6 +74,11 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
           type="text"
           fullWidth
         />
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <div className={classes.field}>
+            <DateTimePicker label="End date" value={values.endDate} onChange={handleChange('endDate')} />
+          </div>
+        </MuiPickersUtilsProvider>
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel} color="primary">
@@ -127,6 +145,10 @@ const styles = {
       backgroundColor: Colors.COMP_PURPLE,
       borderColor: Colors.PURPLE,
     },
+  },
+
+  field: {
+    marginTop: 8,
   },
 }
 

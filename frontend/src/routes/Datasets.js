@@ -2,9 +2,11 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
 import { Grid, Paper, Button, TableRow, TableHead, TableCell, TableBody, Table, Typography } from '@material-ui/core'
-import { getActiveDataset } from '../store/selectors/dataset'
-import { createDatasetDispatcher, setActiveDatasetIdDispatcher } from '../store/actions/dataset'
+import moment from 'moment'
+import { get, isEmpty } from 'lodash'
 
+import { datasetsSelector, getActiveDataset } from '../store/selectors/dataset'
+import { createDatasetDispatcher, setActiveDatasetIdDispatcher } from '../store/actions/dataset'
 import Layout from '../components/Layout'
 import CreateDatasetButton from '../components/CreateDatasetButton'
 import CreateDatasetDialog from '../components/CreateDatasetDialog'
@@ -29,14 +31,16 @@ class Datasets extends PureComponent {
 
   handleCancelDialog = () => this.setState({ openDialog: false })
 
-  handleCreateDataset = (name, deviceName, description) => {
+  handleCreateDataset = (name, deviceName, description, endDate) => {
     this.setState({ openDialog: false })
-    this.props.dispatchCreateDataset({ name, deviceName, description }, true)
+    this.props.dispatchCreateDataset({ name, deviceName, description, endDate }, true)
   }
 
   handleViewDataset = datasetId => {
-    this.props.dispatchSetActiveDatasetId(datasetId)
-    this.props.history.push('/')
+    const { dispatchSetActiveDatasetId, history } = this.props
+
+    dispatchSetActiveDatasetId(datasetId)
+    history.push('/')
   }
 
   render() {
@@ -55,35 +59,47 @@ class Datasets extends PureComponent {
                 <TableRow>
                   {DATASET_HEADERS.map((header, i) => {
                     if (i === 0) {
-                      return <TableCell>{header}</TableCell>
+                      return <TableCell key={`${header}-${i}`}>{header}</TableCell>
                     }
 
-                    return <TableCell align="right">{header}</TableCell>
+                    return (
+                      <TableCell key={`${header}-${i}`} align="right">
+                        {header}
+                      </TableCell>
+                    )
                   })}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {datasets.map(dataset => (
-                  <TableRow key={dataset.name}>
-                    <TableCell component="th" scope="dataset">
-                      {dataset.id}
-                    </TableCell>
-                    <TableCell align="right">{dataset.name}</TableCell>
-                    <TableCell align="right">{dataset.description}</TableCell>
-                    <TableCell align="right">{dataset.deviceName}</TableCell>
-                    <TableCell align="right">N/A</TableCell>
-                    <TableCell align="right">{dataset.id === activeDataset ? 'Yes' : 'No'}</TableCell>
-                    <TableCell align="right">
-                      <Button
-                        color="primary"
-                        className={classes.viewDatasetButton}
-                        onClick={() => this.handleViewDataset(dataset.id)}
-                      >
-                        View
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {datasets.map(dataset => {
+                  const { name, description, deviceName, id, endDate } = dataset
+
+                  const dateText = !isEmpty(endDate) ? moment(endDate).format('Y/M/D hh:mm') : 'N/A'
+                  const activeDatasetId = get(activeDataset, 'id', undefined)
+                  const activeDatasetText = id === activeDatasetId ? 'Yes' : 'No'
+
+                  return (
+                    <TableRow key={`${deviceName}-${id}`}>
+                      <TableCell component="th" scope="dataset">
+                        {id}
+                      </TableCell>
+                      <TableCell align="right">{name}</TableCell>
+                      <TableCell align="right">{description}</TableCell>
+                      <TableCell align="right">{deviceName}</TableCell>
+                      <TableCell align="right">{dateText}</TableCell>
+                      <TableCell align="right">{activeDatasetText}</TableCell>
+                      <TableCell align="right">
+                        <Button
+                          color="primary"
+                          className={classes.viewDatasetButton}
+                          onClick={() => this.handleViewDataset(id)}
+                        >
+                          View
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </Paper>
@@ -133,7 +149,7 @@ const styles = {
  */
 
 const mapStateToProps = state => ({
-  datasets: state.dataset.datasets,
+  datasets: datasetsSelector(state),
   activeDataset: getActiveDataset(state),
 })
 

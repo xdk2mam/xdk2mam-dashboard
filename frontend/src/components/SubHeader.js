@@ -1,9 +1,8 @@
-import React, { Fragment, PureComponent } from 'react'
+import React, { PureComponent } from 'react'
 import classnames from 'classnames'
 import { Typography, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
-import { isEmpty } from 'lodash'
-
+// import { isEmpty } from 'lodash'
 import Colors from '../helpers/colors'
 
 /**
@@ -12,7 +11,7 @@ import Colors from '../helpers/colors'
 
 const TYPOGRAPHY_VARIANT = 'subtitle1'
 const TYPOGRAPHY_COLOR = 'inherit'
-const TIME_INTERVALS = [{ value: '1m' }, { value: '5m' }, { value: '10m' }, { value: '30m' }, { value: 'All' }]
+// const TIME_INTERVALS = [{ value: '1m' }, { value: '5m' }, { value: '10m' }, { value: '30m' }, { value: 'All' }]
 
 /**
  * SubHeader
@@ -25,7 +24,7 @@ class SubHeader extends PureComponent {
   }
 
   render() {
-    const { classes, deviceName, selectedTimeInterval, activeDataset, onFinishDatasetClick } = this.props
+    const { classes, deviceName, activeDataset, onFinishDatasetClick } = this.props
 
     return (
       <div className={classes.container}>
@@ -36,15 +35,15 @@ class SubHeader extends PureComponent {
           </Typography>
         </div>
         {/** @todo Move time intervals to line charts as quantity intervals */}
-        <div className={classes.timeIntervals}>
+        {/* <div className={classes.timeIntervals}>
           <span className={classes.timeIntervalsTitle}>Time interval:</span>
 
           {TIME_INTERVALS.map((option, index) => {
             const separator = index === TIME_INTERVALS.length - 1 ? '' : ' / '
-            const selected = selectedTimeInterval === option.value
+            const selected = this.props.selectedTimeInterval === option.value
 
             return (
-              <Fragment key={`${option}-${index}`}>
+              <React.Fragment key={`${option}-${index}`}>
                 <span
                   className={classnames(classes.text, classes.button, selected && classes.selectedButton)}
                   onClick={() => this.handleTimeIntervalClick(option.value)}
@@ -52,10 +51,10 @@ class SubHeader extends PureComponent {
                   {option.value}
                 </span>
                 {!isEmpty(separator) && <span className={classes.separator}>{separator}</span>}
-              </Fragment>
+              </React.Fragment>
             )
           })}
-        </div>
+        </div> */}
         <Button variant="outlined" size="small" className={classes.finishDatasetButton} onClick={onFinishDatasetClick}>
           Finish Dataset
         </Button>

@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 /**
  * Types
  */
@@ -40,6 +42,7 @@ export const createDatasetDispatcher = dispatch => (dataset, setAsActive = false
   const datasetToCreate = {
     id: Math.floor(Math.random() * 100000 + 1) /** TEMPORARY */,
     ...dataset,
+    endDate: moment(dataset.endDate).format(),
   }
   // dataset is an object with name, description, device name and end date
   // we should write an api client with the object validations besides doing client validation
