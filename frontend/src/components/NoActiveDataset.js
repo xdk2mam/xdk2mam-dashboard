@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Typography, Button } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
-import Colors from '../helpers/colors'
+import CreateDatasetButton from './CreateDatasetButton'
 import CreateDatasetDialog from './CreateDatasetDialog'
 
 /**
@@ -26,9 +26,7 @@ const NoActiveDataset = ({ classes, onCreateDataset }) => {
       <Typography className={classes.text} variant="h4">
         No active dataset
       </Typography>
-      <Button variant="contained" color="primary" className={classes.button} onClick={handleOpenDialog}>
-        Create Dataset
-      </Button>
+      <CreateDatasetButton style={classes.button} onClick={handleOpenDialog} />
       <CreateDatasetDialog open={openDialog} onCancel={handleCancelDialog} onCreate={handleCreateDataset} />
     </div>
   )
@@ -58,24 +56,7 @@ const styles = {
 
   button: {
     margin: 20,
-    boxShadow: 'none',
-    textTransform: 'uppercase',
     fontSize: 16,
-    padding: '6px 12px',
-    border: '1px solid',
-    lineHeight: 1.5,
-    fontFamily: 'Roboto, sans-serif',
-    backgroundColor: Colors.BLUE,
-    borderColor: Colors.BLUE,
-    '&:hover': {
-      backgroundColor: Colors.BLEU,
-      borderColor: Colors.BLEU,
-    },
-    '&:active': {
-      boxShadow: 'none',
-      backgroundColor: Colors.COMP_PURPLE,
-      borderColor: Colors.PURPLE,
-    },
   },
 }
 
