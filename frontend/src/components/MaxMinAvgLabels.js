@@ -5,10 +5,10 @@ import { withStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 
 /**
- * MaxMinLabels
+ * MaxMinAvgLabels
  */
 
-const MaxMinLabels = ({ classes, title, maxValue, minValue }) => (
+const MaxMinAvgLabels = ({ classes, title, maxValue, minValue, avgValue }) => (
   <div className={classes.container}>
     {!isEmpty(title) && (
       <Typography variant="caption" color="inherit" className={classes.title}>
@@ -25,6 +25,11 @@ const MaxMinLabels = ({ classes, title, maxValue, minValue }) => (
         {`Min: ${minValue}`}
       </Typography>
     </div>
+    <div className={classes.value}>
+      <Typography variant="caption" color="inherit" align="left">
+        {`Avg: ${avgValue}`}
+      </Typography>
+    </div>
   </div>
 )
 
@@ -32,14 +37,15 @@ const MaxMinLabels = ({ classes, title, maxValue, minValue }) => (
  * PropTypes
  */
 
-MaxMinLabels.propTypes = {
+MaxMinAvgLabels.propTypes = {
   title: PropTypes.string,
   maxValue: PropTypes.number.isRequired,
   minValue: PropTypes.number.isRequired,
+  avgValue: PropTypes.number.isRequired,
   classes: PropTypes.object.isRequired,
 }
 
-MaxMinLabels.defaultProps = {
+MaxMinAvgLabels.defaultProps = {
   title: null,
 }
 
@@ -74,4 +80,4 @@ const styles = {
  * Exports
  */
 
-export default withStyles(styles)(MaxMinLabels)
+export default withStyles(styles)(MaxMinAvgLabels)

@@ -111,6 +111,7 @@ class Home extends PureComponent {
   render() {
     const { classes, activeDataset } = this.props
     const { selectedTab, infoSensor, tableData, selectedChart, selectedTimeInterval } = this.state
+
     const showNoDataMessage = !isEmpty(activeDataset) && isEmpty(infoSensor)
     const showDashboard = !isEmpty(activeDataset) && !isEmpty(infoSensor)
 
