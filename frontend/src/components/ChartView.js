@@ -6,9 +6,9 @@ import { isEmpty } from 'lodash'
 
 import Colors, { ChartColors } from '../helpers/colors.js'
 import LineChart from '../components/LineChart'
-import MaxMinLabels from '../components/MaxMinLabels'
+import MaxMinAvgLabels from '../components/MaxMinAvgLabels'
 import FullscreenButton from '../components/FullscreenButton.js'
-import { getMaxYValue, getMinYValue } from '../helpers/utils.js'
+import { getMaxYValue, getMinYValue, getAvgYValue } from '../helpers/utils.js'
 
 /**
  * ChartView
@@ -20,10 +20,12 @@ class ChartView extends PureComponent {
 
     let maxValue = null
     let minValue = null
+    let avgValue = null
 
     if (isEmpty(data.series)) {
       maxValue = getMaxYValue(data)
       minValue = getMinYValue(data)
+      avgValue = getAvgYValue(data)
     }
 
     return (
@@ -39,13 +41,20 @@ class ChartView extends PureComponent {
           data.series.map((data, index) => {
             const seriesMaxValue = getMaxYValue(data.data)
             const seriesMinValue = getMinYValue(data.data)
+            const seriesAvgValue = getAvgYValue(data.data)
 
             return (
-              <MaxMinLabels key={index} title={data.seriesName} maxValue={seriesMaxValue} minValue={seriesMinValue} />
+              <MaxMinAvgLabels
+                key={index}
+                title={data.seriesName}
+                maxValue={seriesMaxValue}
+                minValue={seriesMinValue}
+                avgValue={seriesAvgValue}
+              />
             )
           })
         ) : (
-          <MaxMinLabels maxValue={maxValue} minValue={minValue} />
+          <MaxMinAvgLabels maxValue={maxValue} minValue={minValue} avgValue={avgValue} />
         )}
       </Paper>
     )

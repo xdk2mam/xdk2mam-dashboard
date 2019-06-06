@@ -1,11 +1,14 @@
 import generateRandomData from '../helpers/randomData.js'
 import axios from 'axios'
 import moment from 'moment'
+import { meanBy } from 'lodash'
+
+const API_BASE_PATH = 'http://localhost:8081/api'
 
 export const getLast = number => {
   return new Promise(async (res, rej) => {
     try {
-      const respDB = await axios.get(`http://localhost:8081/api/getLast/${number}`)
+      const respDB = await axios.get(`${API_BASE_PATH}/getLast/${number}`)
       const data = respDB.data
 
       res({ data })
@@ -19,7 +22,7 @@ export const putRandomData = () => {
   const randomData = generateRandomData()
   return new Promise(async (res, rej) => {
     try {
-      const respDB = await axios.post('http://localhost:8081/api/putData/', randomData)
+      const respDB = await axios.post(`${API_BASE_PATH}/putData/`, randomData)
       const data = respDB.data
 
       res({ data })
@@ -127,7 +130,7 @@ export const formatDataForCharts = data => {
     },
   ]
 
-  data.map((item) => {
+  data.map(item => {
     return item.xdk2mam.map((sensor, j) => {
       if (j === 0 || j === 4) {
         // Weather or Ambient Light sensors
@@ -167,7 +170,7 @@ export const formatDataForTable = data => {
     const date = moment(item.timestamp).format('hh:mm:ss')
     itemData.push(date)
     item.xdk2mam.map(sensor => {
-      return sensor.data.map((item) => {
+      return sensor.data.map(item => {
         return itemData.push(item.value)
       })
     })
@@ -180,3 +183,5 @@ export const formatDataForTable = data => {
 export const getMaxYValue = data => Math.max.apply(Math, data.map(item => item.y))
 
 export const getMinYValue = data => Math.min.apply(Math, data.map(item => item.y))
+
+export const getAvgYValue = data => meanBy(data, 'y').toFixed(1)
