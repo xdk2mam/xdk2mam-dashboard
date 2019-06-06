@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
-import { Grid, Paper, TableRow, TableHead, TableCell, TableBody, Table, Typography } from '@material-ui/core'
+import { Grid, Paper, Button, TableRow, TableHead, TableCell, TableBody, Table, Typography } from '@material-ui/core'
 import { getActiveDataset } from '../store/selectors/dataset'
+import { createDatasetDispatcher } from '../store/actions/dataset'
 
 import Layout from '../components/Layout'
+import CreateDatasetDialog from '../components/CreateDatasetDialog'
 
 /**
  * Constants
@@ -17,15 +19,41 @@ const DATASET_HEADERS = ['Id', 'Name', 'Description', 'Device Name', 'End Date',
  */
 
 class Datasets extends PureComponent {
+  state = {
+    openDialog: false,
+    setOpenDialog: false,
+  }
+
+  handleOpenDialog = () => this.setState({ openDialog: true })
+
+  handleCancelDialog = () => this.setState({ openDialog: false })
+
+  handleCreateDataset = (name, deviceName, description) => {
+    this.setState({ openDialog: false })
+    this.props.dispatchCreateDataset({ name, deviceName, description }, true)
+  }
+
   render() {
     const { classes, datasets, activeDataset } = this.props
 
     return (
       <Layout>
-        <Grid item xs={12} className={classes.gridInner}>
+        <Grid item xs={10} className={classes.gridInner}>
           <Typography variant="h6" color="inherit">
             Datasets
           </Typography>
+        </Grid>
+        <Grid item xs={2} className={classes.gridInner}>
+          <Button
+            variant="outlined"
+            color="primary"
+            className={classes.createDatasetButton}
+            onClick={this.handleOpenDialog}
+          >
+            Create Dataset
+          </Button>
+        </Grid>
+        <Grid item xs={12} className={classes.gridInner}>
           <Paper className={classes.root}>
             <Table className={classes.table}>
               <TableHead>
@@ -55,6 +83,11 @@ class Datasets extends PureComponent {
               </TableBody>
             </Table>
           </Paper>
+          <CreateDatasetDialog
+            open={this.state.openDialog}
+            onCancel={this.handleCancelDialog}
+            onCreate={this.handleCreateDataset}
+          />
         </Grid>
       </Layout>
     )
@@ -90,8 +123,15 @@ const mapStateToProps = state => ({
   activeDataset: getActiveDataset(state),
 })
 
+const mapDispatchToProps = dispatch => ({
+  dispatchCreateDataset: createDatasetDispatcher(dispatch),
+})
+
 /**
  * Exports
  */
 
-export default connect(mapStateToProps)(withStyles(styles)(Datasets))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Datasets))
