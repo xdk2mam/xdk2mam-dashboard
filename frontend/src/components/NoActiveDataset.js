@@ -16,9 +16,9 @@ const NoActiveDataset = ({ classes, onCreateDataset }) => {
 
   const handleCancelDialog = () => setOpenDialog(false)
 
-  const handleCreateDataset = (name, deviceName, description) => {
+  const handleCreateDataset = (name, deviceName, description, endDate) => {
     setOpenDialog(false)
-    onCreateDataset(name, deviceName, description)
+    onCreateDataset(name, deviceName, description, endDate)
   }
 
   return (
