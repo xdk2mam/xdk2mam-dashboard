@@ -1,49 +1,57 @@
+var connectionService = require('./../service/connectionService.js')
+var q = require('q')
 
-var connectionService = require('./../service/connectionService.js');
-var q = require('q');
+var DataRepository = function() {
+  this.putData = function(dataSensors) {
+    var query
+    var deferred = q.defer()
 
-var DataRepository = function () {
+    query = 'INSERT INTO information ' + '(data, tangle)' + " VALUES ('" + JSON.stringify(dataSensors) + "', " + 0 + ')'
 
+    connectionService.getConnectionRequest(query, function(err, data) {
+      if (err) {
+        deferred.reject(err)
+      } else {
+        deferred.resolve(data)
+      }
+    })
 
-    this.putData = function (dataSensors) {
-        var query;
-        var deferred = q.defer();
+    return deferred.promise
+  }
 
-        query = "INSERT INTO information "+
-                "(data, tangle)" +
-                " VALUES ('"+JSON.stringify(dataSensors)+"', "+ 0 +")";
+  this.getLast = function(last) {
+    var query
+    var deferred = q.defer()
 
-        connectionService.getConnectionRequest(query, function(err, data) {
-            if (err) {
-                deferred.reject(err);
-            } else {
-                deferred.resolve(data);
-            }
-        });
+    query = 'SELECT * FROM information ' + 'WHERE tangle = 0 ' + 'ORDER BY id DESC LIMIT ' + last + ''
 
-        return deferred.promise;
-    };
+    connectionService.getConnectionRequest(query, function(err, data) {
+      if (err) {
+        deferred.reject(err)
+      } else {
+        deferred.resolve(data)
+      }
+    })
 
-    
-    this.getLast = function (last) {
-        var query;
-        var deferred = q.defer();
+    return deferred.promise
+  }
 
-        query = "SELECT * FROM information "+
-                "WHERE tangle = 0 "+
-                "ORDER BY id DESC LIMIT "+last+"";
+  this.getData = function() {
+    var query
+    var deferred = q.defer()
 
-        connectionService.getConnectionRequest(query, function(err, data) {
-            if (err) {
-                deferred.reject(err);
-            } else {
-                deferred.resolve(data);
-            }
-        });
+    query = 'SELECT * FROM information ' + 'WHERE tangle = 0 ' + 'ORDER BY id DESC'
 
-        return deferred.promise;
-    };
+    connectionService.getConnectionRequest(query, function(err, data) {
+      if (err) {
+        deferred.reject(err)
+      } else {
+        deferred.resolve(data)
+      }
+    })
 
-};
+    return deferred.promise
+  }
+}
 
-module.exports = new DataRepository();
+module.exports = new DataRepository()

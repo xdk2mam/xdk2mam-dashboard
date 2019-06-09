@@ -1,22 +1,14 @@
+var mysql = require('mysql')
+var dbConfig = require('../dbConfig.json')
 
-var level = require('level')
-var xdk2mamDB = level('xdk2mam-db')
-const delay = require('delay');
-var moment = require('moment');
+var con = mysql.createConnection(dbConfig)
 
-var mysql = require('mysql');
-var dbConfig = require('../dbConfig.json');
+var ConnectionService = function() {
+  this.getConnectionRequest = async function(query, callback) {
+    con.query(query, function(err, data) {
+      callback(err, data)
+    })
+  }
+}
 
-var con = mysql.createConnection(dbConfig);
-  
-
-var ConnectionService = function () {   
-
-    this.getConnectionRequest = async function(query, callback) { 
-        con.query(query, function(err, data) {
-            callback(err,data)
-        });
-    }
-};
-
-module.exports = new ConnectionService();
+module.exports = new ConnectionService()
