@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import TableCell from '@material-ui/core/TableCell'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
+import LinkIcon from '@material-ui/icons/Link'
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized'
 
 import { TABLE_COLUMNS } from './helpers'
@@ -29,7 +30,13 @@ class VirtualizedTable extends PureComponent {
         style={{ height: rowHeight }}
         align="right"
       >
-        {data[rowIndex][columnIndex]}
+        {columnIndex === 17 ? (
+          <a className={classes.rootLink} href="about:blank" target="blank">
+            <LinkIcon />
+          </a>
+        ) : (
+          data[rowIndex][columnIndex]
+        )}
       </TableCell>
     )
   }
@@ -164,6 +171,11 @@ const styles = theme => ({
 
   row: {
     backgroundColor: Colors.GREY,
+  },
+
+  rootLink: {
+    color: Colors.BLACK,
+    paddingTop: 5,
   },
 })
 
