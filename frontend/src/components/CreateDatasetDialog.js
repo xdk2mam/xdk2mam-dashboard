@@ -60,7 +60,6 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
           label="Description"
           type="text"
           fullWidth
-          maxLength={2}
         />
         <TextField
           inputProps={{
