@@ -15,7 +15,7 @@ import Colors from '../../helpers/colors'
  */
 
 class VirtualizedTable extends PureComponent {
-  cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
+  cellRenderer = ({ columnIndex, rowIndex }) => {
     const { classes, data, rowHeight, onRowClick } = this.props
 
     const isNotEvenIndex = rowIndex % 2 !== 0
@@ -30,7 +30,7 @@ class VirtualizedTable extends PureComponent {
         style={{ height: rowHeight }}
         align="right"
       >
-        {columnIndex === 17 ? (
+        {columnIndex === 18 ? (
           <a className={classes.rootLink} href="about:blank" target="blank">
             <LinkIcon />
           </a>

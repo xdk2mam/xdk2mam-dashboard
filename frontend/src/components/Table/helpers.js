@@ -24,7 +24,8 @@ const TABLE_COLUMNS = [
   generateTableColumnData('Magn. X', 'magnetometerX', 100),
   generateTableColumnData('Magn. Y', 'magnetometerY', 100),
   generateTableColumnData('Magn. Z', 'magnetometerZ', 100),
-  generateTableColumnData('View on Tangle', 'root', 100),
+  generateTableColumnData('Acou.', 'acoustic', 100),
+  generateTableColumnData('Root', 'root', 100),
 ]
 
 export { TABLE_COLUMNS }

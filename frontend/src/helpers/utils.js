@@ -42,7 +42,7 @@ export const formatDataForCharts = data => {
           data: [],
         },
         {
-          seriesName: 'Temperature',
+          seriesName: 'Temp',
           data: [],
         },
         {
@@ -55,15 +55,15 @@ export const formatDataForCharts = data => {
       sensorName: 'Accelerometer',
       series: [
         {
-          seriesName: 'AccelerometerX',
+          seriesName: 'x',
           data: [],
         },
         {
-          seriesName: 'AccelerometerY',
+          seriesName: 'y',
           data: [],
         },
         {
-          seriesName: 'AccelerometerZ',
+          seriesName: 'z',
           data: [],
         },
       ],
@@ -72,15 +72,15 @@ export const formatDataForCharts = data => {
       sensorName: 'Gyroscope',
       series: [
         {
-          seriesName: 'GyroscopeX',
+          seriesName: 'x',
           data: [],
         },
         {
-          seriesName: 'GyroscopeY',
+          seriesName: 'y',
           data: [],
         },
         {
-          seriesName: 'GyroscopeZ',
+          seriesName: 'z',
           data: [],
         },
       ],
@@ -89,15 +89,15 @@ export const formatDataForCharts = data => {
       sensorName: 'Inertial',
       series: [
         {
-          seriesName: 'InertialX',
+          seriesName: 'x',
           data: [],
         },
         {
-          seriesName: 'InertialY',
+          seriesName: 'y',
           data: [],
         },
         {
-          seriesName: 'InertialZ',
+          seriesName: 'z',
           data: [],
         },
       ],
@@ -106,7 +106,7 @@ export const formatDataForCharts = data => {
       sensorName: 'Light',
       series: [
         {
-          seriesName: 'Millilux',
+          seriesName: 'milliLux',
           data: [],
         },
       ],
@@ -115,15 +115,24 @@ export const formatDataForCharts = data => {
       sensorName: 'Magnetometer',
       series: [
         {
-          seriesName: 'MagnetometerX',
+          seriesName: 'x',
           data: [],
         },
         {
-          seriesName: 'MagnetometerY',
+          seriesName: 'y',
           data: [],
         },
         {
-          seriesName: 'MagnetometerZ',
+          seriesName: 'z',
+          data: [],
+        },
+      ],
+    },
+    {
+      sensorName: 'Acoustic',
+      series: [
+        {
+          seriesName: 'mp',
           data: [],
         },
       ],
@@ -131,8 +140,9 @@ export const formatDataForCharts = data => {
   ]
 
   data.map(item => {
+    console.log(item)
     return item.xdk2mam.map((sensor, j) => {
-      if (j === 0 || j === 4) {
+      if (j === 0 || j === 4 || j === 6) {
         // Weather or Ambient Light sensors
         sensor.data.map((datum, i) => {
           let dataEntry = {
@@ -140,7 +150,7 @@ export const formatDataForCharts = data => {
             y: 0,
           }
           dataEntry.x = item.timestamp
-          dataEntry.y = parseInt(datum.value)
+          dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName])
           return formattedData[j].series[i].data.push(dataEntry)
         })
       } else {
@@ -150,9 +160,8 @@ export const formatDataForCharts = data => {
             x: 0,
             y: 0,
           }
-
-          dataEntry.x = parseInt(item.timestamp)
-          dataEntry.y = parseInt(datum.value)
+          dataEntry.x = item.timestamp
+          dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName])
           return formattedData[j].series[i].data.push(dataEntry)
         })
       }
@@ -164,14 +173,119 @@ export const formatDataForCharts = data => {
 
 export const formatDataForTable = data => {
   let formattedData = []
+  let dataShape = [
+    {
+      sensorName: 'Weather',
+      series: [
+        {
+          seriesName: 'Pressure',
+          data: [],
+        },
+        {
+          seriesName: 'Temp',
+          data: [],
+        },
+        {
+          seriesName: 'Humidity',
+          data: [],
+        },
+      ],
+    },
+    {
+      sensorName: 'Accelerometer',
+      series: [
+        {
+          seriesName: 'x',
+          data: [],
+        },
+        {
+          seriesName: 'y',
+          data: [],
+        },
+        {
+          seriesName: 'z',
+          data: [],
+        },
+      ],
+    },
+    {
+      sensorName: 'Gyroscope',
+      series: [
+        {
+          seriesName: 'x',
+          data: [],
+        },
+        {
+          seriesName: 'y',
+          data: [],
+        },
+        {
+          seriesName: 'z',
+          data: [],
+        },
+      ],
+    },
+    {
+      sensorName: 'Inertial',
+      series: [
+        {
+          seriesName: 'x',
+          data: [],
+        },
+        {
+          seriesName: 'y',
+          data: [],
+        },
+        {
+          seriesName: 'z',
+          data: [],
+        },
+      ],
+    },
+    {
+      sensorName: 'Light',
+      series: [
+        {
+          seriesName: 'milliLux',
+          data: [],
+        },
+      ],
+    },
+    {
+      sensorName: 'Magnetometer',
+      series: [
+        {
+          seriesName: 'x',
+          data: [],
+        },
+        {
+          seriesName: 'y',
+          data: [],
+        },
+        {
+          seriesName: 'z',
+          data: [],
+        },
+      ],
+    },
+    {
+      sensorName: 'Acoustic',
+      series: [
+        {
+          seriesName: 'mp',
+          data: [],
+        },
+      ],
+    },
+  ]
 
   data.map(item => {
     let itemData = []
     const date = moment(item.timestamp).format('hh:mm:ss')
     itemData.push(date)
-    item.xdk2mam.map(sensor => {
-      return sensor.data.map(item => {
-        return itemData.push(item.value)
+    item.xdk2mam.map((sensor, j) => {
+      return sensor.data.map((item, i) => {
+        return itemData.push(parseInt(item[dataShape[j].series[i].seriesName]))
       })
     })
     return formattedData.unshift(itemData)
