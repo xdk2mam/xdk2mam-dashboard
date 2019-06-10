@@ -23,13 +23,15 @@ import NoActiveDataset from '../components/NoActiveDataset'
  * Constants
  */
 
+const USE_FAKE_DATA = true
+
 const VISIBLE_VALUES_ON_CHART = 25
 
 const initialState = {
-  infoSensor: formatDataForCharts(data),
-  rawData: data,
-  rawChartData: data,
-  tableData: formatDataForTable(data),
+  infoSensor: [],
+  rawData: [],
+  rawChartData: [],
+  tableData: [],
   selectedTab: 0,
   selectedChart: null,
   selectedTimeInterval: '',
@@ -56,16 +58,23 @@ class Home extends PureComponent {
   }
 
   startDataset = () => {
-    this.intervalId = setInterval(() => {
+    this.intervalId = setInterval(async () => {
       const { rawData, rawChartData } = this.state
+      let sensorData = []
 
-      const newRandomData = generateRandomData()
+      if (USE_FAKE_DATA) {
+        sensorData = generateRandomData()
+      } else {
+        sensorData = await getLast(1)
+      }
+
+      const parsedData = USE_FAKE_DATA ? sensorData.data[0].data : JSON.parse(sensorData.data[0].data)
 
       let newRawData = rawData.slice(0)
       let newChartData = rawChartData.slice(0)
 
-      newRawData.push(newRandomData)
-      newChartData.push(newRandomData)
+      newRawData.push(parsedData)
+      newChartData.push(parsedData)
 
       if (newChartData.length >= VISIBLE_VALUES_ON_CHART) {
         newChartData.shift()
@@ -160,7 +169,23 @@ class Home extends PureComponent {
                     const title = infoSensor[4].sensorName
 
                     return (
-                      <Grid item xs={12} key={index} className={classes.gridInner}>
+                      <Grid item xs={6} key={index} className={classes.gridInner}>
+                        <Grid item xs={12}>
+                          <ChartView
+                            title={title}
+                            data={data.data}
+                            onFullscreenClick={() => this.handleFullscreenButton(data)}
+                          />
+                        </Grid>
+                      </Grid>
+                    )
+                  })}
+                {infoSensor &&
+                  infoSensor[6].series.map((data, index) => {
+                    const title = infoSensor[6].sensorName
+
+                    return (
+                      <Grid item xs={6} key={index} className={classes.gridInner}>
                         <Grid item xs={12}>
                           <ChartView
                             title={title}
@@ -178,7 +203,7 @@ class Home extends PureComponent {
               <Grid container>
                 {infoSensor &&
                   infoSensor.map((sensors, index) => {
-                    if (index !== 0 && index !== 4) {
+                    if (index !== 0 && index !== 4 && index !== 6) {
                       return (
                         <Grid item sm={6} xs={12} key={index} className={classes.gridInner}>
                           <Grid item xs={12}>
