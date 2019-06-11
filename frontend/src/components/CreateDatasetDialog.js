@@ -9,8 +9,6 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
 
-import Colors from '../helpers/colors'
-
 /**
  * CreateDatasetDialog
  */
@@ -33,7 +31,7 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
   }
 
   return (
-    <Dialog open={open} onClose={onCancel} classes={{ paper: classes.dialogPaper }}>
+    <Dialog open={open} onClose={onCancel}>
       <DialogTitle>Create Dataset</DialogTitle>
       <DialogContent>
         <TextField
@@ -96,56 +94,6 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
  */
 
 const styles = {
-  container: {
-    display: 'flex',
-    flexGrow: 1,
-    height: '85vh',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  icon: {
-    fontSize: 50,
-  },
-
-  text: {
-    marginTop: 10,
-  },
-
-  button: {
-    margin: 20,
-    boxShadow: 'none',
-    textTransform: 'uppercase',
-    fontSize: 16,
-    padding: '6px 12px',
-    border: '1px solid',
-    lineHeight: 1.5,
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    backgroundColor: Colors.BLUE,
-    borderColor: Colors.BLUE,
-    '&:hover': {
-      backgroundColor: Colors.BLEU,
-      borderColor: Colors.BLEU,
-    },
-    '&:active': {
-      boxShadow: 'none',
-      backgroundColor: Colors.COMP_PURPLE,
-      borderColor: Colors.PURPLE,
-    },
-  },
-
   field: {
     marginTop: 8,
   },
