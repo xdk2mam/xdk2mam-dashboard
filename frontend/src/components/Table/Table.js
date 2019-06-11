@@ -2,8 +2,7 @@ import React, { Fragment, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
-import TableCell from '@material-ui/core/TableCell'
-import TableSortLabel from '@material-ui/core/TableSortLabel'
+import { TableCell, TableSortLabel, Tooltip } from '@material-ui/core'
 import LinkIcon from '@material-ui/icons/Link'
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized'
 
@@ -31,9 +30,11 @@ class VirtualizedTable extends PureComponent {
         align="right"
       >
         {columnIndex === 18 ? (
-          <a className={classes.rootLink} href="about:blank" target="blank">
-            <LinkIcon />
-          </a>
+          <Tooltip title="View on tangle" placement="top" classes={{ tooltipPlacementTop: classes.tooltip }}>
+            <a className={classes.rootLink} href="about:blank" target="blank">
+              <LinkIcon />
+            </a>
+          </Tooltip>
         ) : (
           data[rowIndex][columnIndex]
         )}
@@ -176,6 +177,10 @@ const styles = theme => ({
   rootLink: {
     color: Colors.BLACK,
     paddingTop: 5,
+  },
+
+  tooltip: {
+    marginBottom: 0,
   },
 })
 
