@@ -46,10 +46,6 @@ const styles = {
     justifyContent: 'center',
   },
 
-  icon: {
-    fontSize: 50,
-  },
-
   text: {
     marginTop: 10,
   },
