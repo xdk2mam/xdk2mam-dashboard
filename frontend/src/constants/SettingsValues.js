@@ -3,11 +3,13 @@ const SettingsValues = Object.freeze({
     label: 'Email',
     dialogLabel: 'Email',
     value: 'email',
+    type: 'email',
   },
   fullNodeIotaUrl: {
     label: 'URL',
     dialogLabel: 'Full Node Iota URL',
     value: 'fullNodeIotaUrl',
+    type: 'url',
   },
 })
 

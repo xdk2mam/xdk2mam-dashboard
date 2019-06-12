@@ -1,62 +1,80 @@
-import React, { useState, useEffect } from 'react'
+import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { Button } from '@material-ui/core'
+import { Button, Typography } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import { isEmpty } from 'lodash'
+import { get, isEmpty } from 'lodash'
+import { Formik, Field } from 'formik'
+
+import Colors from '../helpers/colors'
+import SettingsValues from '../constants/SettingsValues'
+import { SettingEmailSchema, SettingFullNodeIotaUrlSchema } from '../helpers/validation'
 
 /**
  * SettingDialog
  */
 
 const SettingDialog = ({ classes, onCancel, onSave, open, selectedSetting, value }) => {
-  const [settingValue, setSettingValue] = useState(value)
-
-  useEffect(() => setSettingValue(value), [value])
-
-  const handleChange = () => event => {
-    setSettingValue(event.target.value)
-  }
-
-  const handleSaveClick = () => {
-    onSave(settingValue)
-  }
-
   const actionText = isEmpty(value) ? 'Add' : 'Edit'
   const titleText = `${actionText} ${selectedSetting.dialogLabel}`
+  const isEmailSetting = selectedSetting.value === SettingsValues.email.value
+  const validationSchema = isEmailSetting ? SettingEmailSchema : SettingFullNodeIotaUrlSchema
+  const type = get(SettingsValues[selectedSetting.value], 'type', '')
 
   return (
     <Dialog open={open} onClose={onCancel} fullWidth maxWidth="xs">
-      <DialogTitle disableTypography classes={{ root: classes.titleContainer }}>
-        <h4 className={classes.titleText}>{titleText}</h4>
-      </DialogTitle>
-      <DialogContent>
-        <TextField
-          inputProps={{
-            maxLength: 50,
-          }}
-          onChange={handleChange(settingValue)}
-          value={settingValue}
-          autoFocus
-          margin="dense"
-          id={selectedSetting.value}
-          label={selectedSetting.label}
-          type="email"
-          fullWidth
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onCancel} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={handleSaveClick} color="primary">
-          Save
-        </Button>
-      </DialogActions>
+      <Formik
+        validationSchema={validationSchema}
+        validateOnChange
+        initialValues={{ settingValue: value }}
+        onSubmit={(values, actions) => {
+          actions.setSubmitting(true)
+          onSave(values[selectedSetting.value])
+          actions.setSubmitting(false)
+        }}
+        render={({ handleChange, handleBlur, handleSubmit, isValid, errors, touched }) => (
+          <Fragment>
+            <DialogTitle disableTypography classes={{ root: classes.titleContainer }}>
+              <h4 className={classes.titleText}>{titleText}</h4>
+            </DialogTitle>
+            <DialogContent>
+              <div className={classes.field}>
+                <Field
+                  component={TextField}
+                  inputProps={{
+                    maxLength: 50,
+                  }}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  autoFocus
+                  margin="dense"
+                  id={selectedSetting.value}
+                  label={selectedSetting.label}
+                  type={type}
+                  fullWidth
+                />
+                {errors[selectedSetting.value] && touched[selectedSetting.value] ? (
+                  <Typography variant="caption" classes={{ root: classes.error }}>
+                    {errors[selectedSetting.value]}
+                  </Typography>
+                ) : null}
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={onCancel} color="primary">
+                Cancel
+              </Button>
+              <Button disabled={!isValid} onClick={handleSubmit} color="primary">
+                Save
+              </Button>
+            </DialogActions>
+          </Fragment>
+        )}
+      />
     </Dialog>
   )
 }
@@ -90,6 +108,20 @@ const styles = {
 
   titleText: {
     marginBottom: 0,
+  },
+
+  field: {
+    height: 72,
+  },
+
+  endDateField: {
+    marginTop: 10,
+  },
+
+  error: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    color: Colors.RED,
   },
 }
 
