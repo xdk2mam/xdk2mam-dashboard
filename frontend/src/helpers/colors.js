@@ -22,6 +22,7 @@ const Colors = Object.freeze({
   GREY: '#E3E3E3',
   TRANSPARENT: 'transparent',
   TEXT_GREY: '#A1A1A1',
+  RED: '#d11f1f',
 })
 
 const ChartColors = Object.freeze({
