@@ -9,6 +9,7 @@
     "@material-ui/pickers": "3.1.0",
     "axios": "0.18.0",
     "classnames": "2.2.6",
+    "formik": "^1.5.7",
     "lodash": "4.17.11",
     "moment": "2.24.0",
     "react": "16.8.2",
@@ -23,7 +24,8 @@
     "redux-logger": "3.0.6",
     "redux-persist": "5.10.0",
     "redux-thunk": "2.3.0",
-    "reselect": "4.0.0"
+    "reselect": "4.0.0",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "babel-eslint": "10.0.1",
