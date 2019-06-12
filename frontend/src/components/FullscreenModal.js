@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Grid, Typography } from '@material-ui/core'
 
@@ -7,10 +8,10 @@ import FullscreenExitButton from './FullscreenExitButton'
 import Colors, { ChartColors } from '../helpers/colors'
 
 /**
- * FullscreenButton
+ * FullscreenModal
  */
 
-const FullscreenButton = ({ classes, onCloseClick, selectedChart }) => {
+const FullscreenModal = ({ classes, onCloseClick, selectedChart }) => {
   return (
     <div className={classes.container}>
       <Grid item xs={12}>
@@ -26,6 +27,16 @@ const FullscreenButton = ({ classes, onCloseClick, selectedChart }) => {
       </Grid>
     </div>
   )
+}
+
+/**
+ * PropTypes
+ */
+
+FullscreenModal.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onCloseClick: PropTypes.func.isRequired,
+  selectedChart: PropTypes.object.isRequired,
 }
 
 /**
@@ -63,4 +74,4 @@ const styles = {
  * Exports
  */
 
-export default withStyles(styles)(FullscreenButton)
+export default withStyles(styles)(FullscreenModal)

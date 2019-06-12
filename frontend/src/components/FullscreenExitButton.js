@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import FullscreenIcon from '@material-ui/icons/FullscreenExit'
 
@@ -8,10 +9,19 @@ import FullscreenIcon from '@material-ui/icons/FullscreenExit'
 
 const FullscreenExitButton = ({ classes, onClick }) => {
   return (
-    <div className={classes.container} onClick={onClick}>
+    <div tabIndex={0} role="button" className={classes.container} onClick={onClick}>
       <FullscreenIcon />
     </div>
   )
+}
+
+/**
+ * PropTypes
+ */
+
+FullscreenExitButton.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
 }
 
 /**

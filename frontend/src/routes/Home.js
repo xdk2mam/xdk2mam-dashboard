@@ -70,8 +70,8 @@ class Home extends PureComponent {
 
       const parsedData = USE_FAKE_DATA ? sensorData.data[0].data : JSON.parse(sensorData.data[0].data)
 
-      let newRawData = rawData.slice(0)
-      let newChartData = rawChartData.slice(0)
+      const newRawData = rawData.slice(0)
+      const newChartData = rawChartData.slice(0)
 
       newRawData.push(parsedData)
       newChartData.push(parsedData)
@@ -89,10 +89,9 @@ class Home extends PureComponent {
     }, 1000)
   }
 
-  getLastInfo = num => {
-    getLast(num).then(({ data }) => {
-      this.setState({ infoSensor: data.info })
-    })
+  getLastInfo = async num => {
+    const lastData = await getLast(num)
+    this.setState({ infoSensor: lastData.info })
   }
 
   handleTabChange = (event, value) => this.setState({ selectedTab: value })
@@ -246,6 +245,13 @@ class Home extends PureComponent {
 
 Home.propTypes = {
   classes: PropTypes.object.isRequired,
+  activeDataset: PropTypes.object,
+  dispatchCreateDataset: PropTypes.func.isRequired,
+  dispatchClearActiveDatasetId: PropTypes.func.isRequired,
+}
+
+Home.defaultProps = {
+  activeDataset: null,
 }
 
 /**

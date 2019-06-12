@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { Typography } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
@@ -30,6 +31,15 @@ const NoActiveDataset = ({ classes, onCreateDataset }) => {
       <CreateDatasetDialog open={openDialog} onCancel={handleCancelDialog} onCreate={handleCreateDataset} />
     </div>
   )
+}
+
+/**
+ * PropTypes
+ */
+
+NoActiveDataset.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onCreateDataset: PropTypes.func.isRequired,
 }
 
 /**

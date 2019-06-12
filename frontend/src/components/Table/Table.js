@@ -73,6 +73,7 @@ class VirtualizedTable extends PureComponent {
 
   render() {
     const { classes, columns, ...tableProps } = this.props
+
     return (
       <AutoSizer>
         {({ height, width }) => (
@@ -123,6 +124,7 @@ class VirtualizedTable extends PureComponent {
  */
 
 VirtualizedTable.propTypes = {
+  data: PropTypes.array.isRequired,
   classes: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(
     PropTypes.shape({
@@ -201,5 +203,9 @@ const ReactVirtualizedTable = props => (
     />
   </Fragment>
 )
+
+ReactVirtualizedTable.propTypes = {
+  data: PropTypes.array.isRequired,
+}
 
 export default ReactVirtualizedTable

@@ -1,12 +1,6 @@
 import React, { PureComponent } from 'react'
-import {
-  XYPlot,
-  makeWidthFlexible,
-  LineSeries,
-  XAxis,
-  YAxis,
-  Crosshair,
-} from 'react-vis'
+import PropTypes from 'prop-types'
+import { XYPlot, makeWidthFlexible, LineSeries, XAxis, YAxis, Crosshair } from 'react-vis'
 import { isEmpty } from 'lodash'
 import { CircularProgress, withStyles } from '@material-ui/core'
 import '../../node_modules/react-vis/dist/style.css'
@@ -79,20 +73,21 @@ class LineChart extends PureComponent {
     const axisStyle = !isEmpty(baseColor) ? { stroke: baseColor } : {}
 
     return (
-      <FlexibleXYPlot yPadding={80} onMouseLeave={this.handleMouseLeave} height={height} className={classes.linePlot} xType="time" margin={{left: 50, right: 10, top: 10, bottom: 50}}>
+      <FlexibleXYPlot
+        yPadding={80}
+        onMouseLeave={this.handleMouseLeave}
+        height={height}
+        className={classes.linePlot}
+        xType="time"
+        margin={{ left: 50, right: 10, top: 10, bottom: 50 }}
+      >
         <XAxis style={axisStyle} tickLabelAngle={-45} tickFormat={this.handleXAxisFormat} />
         <YAxis style={axisStyle} />
 
         <Crosshair values={crosshairValues} titleFormat={this.handleTitleFormat} itemsFormat={this.handleItemsFormat} />
 
         {!hasSeries && (
-          <LineSeries
-            curve={CURVE_TYPE}
-            data={data}
-            color={color}
-            size={LINE_SIZE}
-            onNearestX={this.handleNearestX}
-          />
+          <LineSeries curve={CURVE_TYPE} data={data} color={color} size={LINE_SIZE} onNearestX={this.handleNearestX} />
         )}
         {hasSeries &&
           data.series.map((series, index) => (
@@ -106,6 +101,15 @@ class LineChart extends PureComponent {
 /**
  * PropTypes
  */
+
+LineChart.propTypes = {
+  // Data returns one line chart or three line charts
+  data: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  height: PropTypes.number,
+  classes: PropTypes.object.isRequired,
+  color: PropTypes.string,
+  baseColor: PropTypes.string,
+}
 
 LineChart.defaultProps = {
   height: 300,

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import { Grid, Paper, Typography, Menu, MenuItem } from '@material-ui/core'
@@ -20,7 +21,15 @@ import SettingItem from '../components/SettingItem'
  * Settings
  */
 
-const Settings = props => {
+const Settings = ({
+  dispatchSetEmail,
+  dispatchSetFullNodeIotaUrl,
+  dispatchClearEmail,
+  dispatchClearFullNodeIotaUrl,
+  classes,
+  email,
+  fullNodeIotaUrl,
+}) => {
   const initialSelectedSetting = {
     label: '',
     dialogLabel: '',
@@ -57,8 +66,6 @@ const Settings = props => {
   }
 
   const handleSave = value => {
-    const { dispatchSetEmail, dispatchSetFullNodeIotaUrl } = props
-
     const selectedSettingValue = selectedSetting.value
 
     if (selectedSettingValue === SettingsValues.email.value) {
@@ -73,8 +80,6 @@ const Settings = props => {
   }
 
   const handleRemove = value => {
-    const { dispatchClearEmail, dispatchClearFullNodeIotaUrl } = props
-
     const selectedSettingValue = selectedSetting.value
 
     if (selectedSettingValue === SettingsValues.email.value) {
@@ -92,8 +97,6 @@ const Settings = props => {
     setOpenDialog(true)
     handleCloseMenu()
   }
-
-  const { classes, email, fullNodeIotaUrl } = props
 
   const dialogValue =
     (selectedSetting.value === SettingsValues.email.value && email) ||
@@ -146,6 +149,25 @@ const Settings = props => {
       </Menu>
     </Layout>
   )
+}
+
+/**
+ * PropTypes
+ */
+
+Settings.propTypes = {
+  dispatchSetEmail: PropTypes.func.isRequired,
+  dispatchSetFullNodeIotaUrl: PropTypes.func.isRequired,
+  dispatchClearEmail: PropTypes.func.isRequired,
+  dispatchClearFullNodeIotaUrl: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
+  email: PropTypes.string,
+  fullNodeIotaUrl: PropTypes.string,
+}
+
+Settings.defaultProps = {
+  email: '',
+  fullNodeIotaUrl: '',
 }
 
 /**
