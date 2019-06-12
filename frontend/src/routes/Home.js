@@ -57,6 +57,10 @@ class Home extends PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    clearInterval(this.intervalId)
+  }
+
   startDataset = () => {
     this.intervalId = setInterval(async () => {
       const { rawData, rawChartData } = this.state
@@ -96,9 +100,9 @@ class Home extends PureComponent {
 
   handleTabChange = (event, value) => this.setState({ selectedTab: value })
 
-  handleFullscreenButton = data => {
+  handleFullscreenButton = selectedChart => {
     /** @todo: we should show the entire data of this chart and not the fragmented one */
-    this.setState({ selectedChart: data })
+    this.setState({ selectedChart })
   }
 
   handleCloseFullscreenButton = () => this.setState({ selectedChart: null })

@@ -20,6 +20,7 @@ const Colors = Object.freeze({
   LOGO_GREEN: 'rgb(7, 188, 239)',
   FAFAFA: '#FAFAFA',
   GREY: '#E3E3E3',
+  RED: '#d11f1f',
 })
 
 const ChartColors = Object.freeze({
