@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
 import { Grid, Paper, Button, TableRow, TableHead, TableCell, TableBody, Table, Typography } from '@material-ui/core'
@@ -24,7 +25,6 @@ const DATASET_HEADERS = ['Id', 'Name', 'Description', 'Device Name', 'End Date',
 class Datasets extends PureComponent {
   state = {
     openDialog: false,
-    setOpenDialog: false,
   }
 
   handleOpenDialog = () => this.setState({ openDialog: true })
@@ -112,6 +112,24 @@ class Datasets extends PureComponent {
       </Layout>
     )
   }
+}
+
+/**
+ * PropTypes
+ */
+
+Datasets.propTypes = {
+  classes: PropTypes.object.isRequired,
+  dispatchCreateDataset: PropTypes.func.isRequired,
+  dispatchSetActiveDatasetId: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+  datasets: PropTypes.array,
+  activeDataset: PropTypes.object,
+}
+
+Datasets.defaultProps = {
+  datasets: [],
+  activeDataset: null,
 }
 
 /**

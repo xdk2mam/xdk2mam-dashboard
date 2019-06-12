@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Typography, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
@@ -64,7 +65,24 @@ class SubHeader extends PureComponent {
 }
 
 /**
- * Styless
+ * PropTypes
+ */
+
+SubHeader.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onFinishDatasetClick: PropTypes.func.isRequired,
+  onTimeIntervalClick: PropTypes.func.isRequired,
+  deviceName: PropTypes.string,
+  activeDataset: PropTypes.string,
+}
+
+SubHeader.defaultProps = {
+  deviceName: '',
+  activeDataset: '',
+}
+
+/**
+ * Styles
  */
 
 const styles = {

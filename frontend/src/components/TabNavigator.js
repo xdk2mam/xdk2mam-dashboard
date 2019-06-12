@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Tabs, Tab } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
@@ -24,6 +25,16 @@ const TabNavigator = ({ selected, classes, onChange }) => (
     />
   </Tabs>
 )
+
+/**
+ * PropTypes
+ */
+
+TabNavigator.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
+  selected: PropTypes.number.isRequired,
+}
 
 /**
  * Styles

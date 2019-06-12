@@ -10,6 +10,10 @@ import Typography from '@material-ui/core/Typography'
 import logo from '../assets/logo.png'
 import Colors from '../helpers/colors'
 
+/**
+ * Header
+ */
+
 class Header extends PureComponent {
   handleClick = () => this.props.onMenuButtonClick(true)
 
@@ -19,7 +23,14 @@ class Header extends PureComponent {
     return (
       <AppBar position="static" elevation={0} classes={{ root: classes.root }}>
         <Toolbar classes={{ root: classes.toolbar }}>
-          <div className={classes.menuButton} color="inherit" aria-label="Open drawer" onClick={onMenuButtonClick}>
+          <div
+            tabIndex={0}
+            role="button"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="Open drawer"
+            onClick={onMenuButtonClick}
+          >
             <MenuIcon />
           </div>
           <Link to="/">
@@ -33,10 +44,18 @@ class Header extends PureComponent {
   }
 }
 
+/**
+ * PropTypes
+ */
+
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
   onMenuButtonClick: PropTypes.func.isRequired,
 }
+
+/**
+ * Styles
+ */
 
 const styles = {
   root: {
@@ -59,5 +78,9 @@ const styles = {
     padding: 12,
   },
 }
+
+/**
+ * Exports
+ */
 
 export default withStyles(styles)(Header)

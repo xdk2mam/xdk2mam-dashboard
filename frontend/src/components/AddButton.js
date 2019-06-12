@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Button } from '@material-ui/core'
 
@@ -11,6 +12,15 @@ const AddButton = ({ classes, onClick }) => (
     Add
   </Button>
 )
+
+/**
+ * PropTypes
+ */
+
+AddButton.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+}
 
 /**
  * Styles

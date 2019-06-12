@@ -1,7 +1,8 @@
-import generateRandomData from '../helpers/randomData.js'
 import axios from 'axios'
 import moment from 'moment'
 import { meanBy } from 'lodash'
+
+import generateRandomData from './randomData'
 
 const API_BASE_PATH = 'http://localhost:8081/api'
 
@@ -20,6 +21,7 @@ export const getLast = number => {
 
 export const putRandomData = () => {
   const randomData = generateRandomData()
+
   return new Promise(async (res, rej) => {
     try {
       const respDB = await axios.post(`${API_BASE_PATH}/putData/`, randomData)
@@ -33,7 +35,7 @@ export const putRandomData = () => {
 }
 
 export const formatDataForCharts = data => {
-  let formattedData = [
+  const formattedData = [
     {
       sensorName: 'Weather',
       series: [
@@ -140,28 +142,29 @@ export const formatDataForCharts = data => {
   ]
 
   data.map(item => {
-    console.log(item)
     return item.xdk2mam.map((sensor, j) => {
       if (j === 0 || j === 4 || j === 6) {
         // Weather or Ambient Light sensors
         sensor.data.map((datum, i) => {
-          let dataEntry = {
+          const dataEntry = {
             x: 0,
             y: 0,
           }
           dataEntry.x = item.timestamp
           dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName])
+
           return formattedData[j].series[i].data.push(dataEntry)
         })
       } else {
         // Rest of the available sensors
         sensor.data.map((datum, i) => {
-          let dataEntry = {
+          const dataEntry = {
             x: 0,
             y: 0,
           }
           dataEntry.x = item.timestamp
           dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName])
+
           return formattedData[j].series[i].data.push(dataEntry)
         })
       }
@@ -172,8 +175,8 @@ export const formatDataForCharts = data => {
 }
 
 export const formatDataForTable = data => {
-  let formattedData = []
-  let dataShape = [
+  const formattedData = []
+  const dataShape = [
     {
       sensorName: 'Weather',
       series: [
@@ -280,14 +283,15 @@ export const formatDataForTable = data => {
   ]
 
   data.map(item => {
-    let itemData = []
+    const itemData = []
     const date = moment(item.timestamp).format('hh:mm:ss')
     itemData.push(date)
     item.xdk2mam.map((sensor, j) => {
-      return sensor.data.map((item, i) => {
-        return itemData.push(parseInt(item[dataShape[j].series[i].seriesName]))
+      return sensor.data.map((dataItem, i) => {
+        return itemData.push(parseInt(dataItem[dataShape[j].series[i].seriesName]))
       })
     })
+
     return formattedData.unshift(itemData)
   })
 

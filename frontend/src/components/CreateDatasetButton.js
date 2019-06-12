@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
@@ -14,6 +15,16 @@ const CreateDatasetButton = ({ classes, onClick, style }) => (
     Create Dataset
   </Button>
 )
+
+/**
+ * PropTypes
+ */
+
+CreateDatasetButton.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+  style: PropTypes.string,
+}
 
 /**
  * Styles

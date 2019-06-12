@@ -35,6 +35,7 @@ class Drawer extends PureComponent {
 Drawer.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
 }
 
 /**

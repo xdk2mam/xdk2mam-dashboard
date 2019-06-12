@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Typography } from '@material-ui/core'
 import ReportIcon from '@material-ui/icons/Report'
 import { withStyles } from '@material-ui/core/styles'
@@ -15,6 +16,14 @@ const NoDataMessage = ({ classes }) => (
     </Typography>
   </div>
 )
+
+/**
+ * PropTypes
+ */
+
+NoDataMessage.propTypes = {
+  classes: PropTypes.object.isRequired,
+}
 
 /**
  * Styles

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -87,6 +88,17 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
       </DialogActions>
     </Dialog>
   )
+}
+
+/**
+ * PropTypes
+ */
+
+CreateDatasetDialog.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onCreate: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
 }
 
 /**

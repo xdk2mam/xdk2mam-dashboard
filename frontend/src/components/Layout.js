@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Grid, CssBaseline } from '@material-ui/core'
 
-import Drawer from '../components/Drawer'
-import Header from '../components/Header'
+import Drawer from './Drawer'
+import Header from './Header'
 import Colors from '../helpers/colors'
 
 /**

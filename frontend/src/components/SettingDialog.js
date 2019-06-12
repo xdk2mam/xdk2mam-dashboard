@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -17,7 +18,7 @@ const SettingDialog = ({ classes, onCancel, onSave, open, selectedSetting, value
 
   useEffect(() => setSettingValue(value), [value])
 
-  const handleChange = name => event => {
+  const handleChange = () => event => {
     setSettingValue(event.target.value)
   }
 
@@ -58,6 +59,24 @@ const SettingDialog = ({ classes, onCancel, onSave, open, selectedSetting, value
       </DialogActions>
     </Dialog>
   )
+}
+
+/**
+ * PropTypes
+ */
+
+SettingDialog.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  selectedSetting: PropTypes.object,
+  value: PropTypes.string,
+}
+
+SettingDialog.defaultProps = {
+  selectedSetting: {},
+  value: '',
 }
 
 /**
