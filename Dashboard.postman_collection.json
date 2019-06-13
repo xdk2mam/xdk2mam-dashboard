@@ -1,0 +1,173 @@
+{
+	"info": {
+		"_postman_id": "8903134b-e8f5-484d-827b-d66d7a0585f8",
+		"name": "Dashboard",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8081/api/dataset/create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Name\": \"dataset_02_02_2019\",\n\t\"Desc\": \"Dataset para xdk-ale\",\n\t\"DatasetEnd\": 12412412,\n\t\"DatasetInterval\": 30000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/dataset/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"dataset",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/dataset/terminate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 4\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/dataset/terminate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"dataset",
+						"terminate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/dataset/get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/dataset/get",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"dataset",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/putData",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"xdk2mam\": [\n        {\n            \"sensor\": \"Environmental\",\n            \"data\": [\n                {\n                    \"Pressure\": \"101212\"\n                },\n                {\n                    \"Temp\": \"24240\"\n                },\n                {\n                    \"Humidity\": \"56\"\n                }\n            ]\n        },\n        {\n            \"sensor\": \"Accelerometer\",\n            \"data\": [\n                {\n                    \"x\": \"36\"\n                },\n                {\n                    \"y\": \"14\"\n                },\n                {\n                    \"z\": \"1025\"\n                }\n            ]\n        },\n        {\n            \"sensor\": \"Gyroscope\",\n            \"data\": [\n                {\n                    \"x\": \"4514\"\n                },\n                {\n                    \"y\": \"244\"\n                },\n                {\n                    \"z\": \"-1830\"\n                }\n            ]\n        },\n        {\n            \"sensor\": \"Inertial\",\n            \"data\": [\n                {\n                    \"x\": \"427\"\n                },\n                {\n                    \"y\": \"305\"\n                },\n                {\n                    \"z\": \"488\"\n                }\n            ]\n        },\n        {\n            \"sensor\": \"Light\",\n            \"data\": [\n                {\n                    \"milliLux\": \"71640\"\n                }\n            ]\n        },\n        {\n            \"sensor\": \"Magnetometer\",\n            \"data\": [\n                {\n                    \"x\": \"36\"\n                },\n                {\n                    \"y\": \"51\"\n                },\n                {\n                    \"z\": \"28\"\n                }\n            ]\n        },\n        {\n            \"sensor\": \"Acoustic\",\n            \"data\": [\n                {\n                    \"mp\": \"0.138581\"\n                }\n            ]\n        }\n    ],\n    \"device\": \"XDK-ALE\",\n    \"timestamp\": \"1558511111\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/putData",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"putData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/getData/12/0",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/getData/13/0?limit=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"getData",
+						"13",
+						"0"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/publish",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/publish",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"publish"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
