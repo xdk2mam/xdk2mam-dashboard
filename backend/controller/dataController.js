@@ -3,8 +3,11 @@ var _ = require('underscore-node')
 
 var DataController = function() {
   this.getData = function(req, res) {
+
+    const { id, interval } = req.params
+    const limit = req.query.limit
     dataService
-      .getData(req.query.timestamp)
+      .getData(id,interval,limit)
       .then(function(data) {
         res.status(200).json(data)
       })
@@ -35,6 +38,19 @@ var DataController = function() {
         res.status(400).send(err)
       })
   }
+
+  this.startPublish = function(req, res) {
+
+    dataService
+      .publish()
+      .then(function(data) {
+        res.status(200).json(data)
+      })
+      .catch(function(err) {
+        res.status(400).send(err)
+      })
+  }
+
 }
 
 module.exports = new DataController()
