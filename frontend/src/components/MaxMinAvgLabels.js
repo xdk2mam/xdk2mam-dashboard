@@ -4,32 +4,23 @@ import { isEmpty } from 'lodash'
 import { withStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 
+import LabelItem from './MaxMinAvgLabelItem'
+
 /**
  * MaxMinAvgLabels
  */
 
 const MaxMinAvgLabels = ({ classes, title, maxValue, minValue, avgValue }) => (
   <div className={classes.container}>
+    {console.log(title)}
     {!isEmpty(title) && (
       <Typography variant="caption" color="inherit" className={classes.title}>
         {title}
       </Typography>
     )}
-    <div className={classes.value}>
-      <Typography variant="caption" color="inherit" className={classes.maxValue} align="left">
-        {`Max: ${maxValue}`}
-      </Typography>
-    </div>
-    <div className={classes.value}>
-      <Typography variant="caption" color="inherit" align="left">
-        {`Min: ${minValue}`}
-      </Typography>
-    </div>
-    <div className={classes.value}>
-      <Typography variant="caption" color="inherit" align="left">
-        {`Avg: ${avgValue}`}
-      </Typography>
-    </div>
+    <LabelItem label={'Max'} value={maxValue} />
+    <LabelItem label={'Min'} value={minValue} />
+    <LabelItem label={'Avg'} value={avgValue} />
   </div>
 )
 
@@ -57,7 +48,7 @@ const styles = {
   container: {
     display: 'flex',
     flexDirection: 'row',
-    paddingLeft: 40,
+    justifyContent: 'space-evenly',
     paddingTop: 5,
     paddingBottom: 5,
   },
@@ -65,14 +56,6 @@ const styles = {
   title: {
     fontWeight: 'bold',
     paddingRight: 20,
-  },
-
-  value: {
-    minWidth: 90,
-  },
-
-  maxValue: {
-    paddingRight: 15,
   },
 }
 
