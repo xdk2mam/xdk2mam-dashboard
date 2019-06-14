@@ -2,13 +2,14 @@ import React, { Fragment, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Grid, Typography } from '@material-ui/core'
-import { isEmpty } from 'lodash'
+import { isEmpty, find } from 'lodash'
 import { connect } from 'react-redux'
 
 import { createDatasetDispatcher, clearActiveDatasetIdDispatcher } from '../store/actions/dataset'
 import { getActiveDataset } from '../store/selectors/dataset'
 import { formatDataForCharts, formatDataForTable, getLast } from '../helpers/utils'
 import generateRandomData from '../helpers/randomData'
+import { ChartColors } from '../helpers/colors.js'
 import data from '../helpers/data'
 import Layout from '../components/Layout'
 import Table from '../components/Table/Table'
@@ -27,6 +28,8 @@ const USE_FAKE_DATA = true
 
 const VISIBLE_VALUES_ON_CHART = 25
 
+const HUMIDITY_Y_DOMAIN = [0, 100]
+
 const initialState = {
   infoSensor: [],
   rawData: [],
@@ -36,6 +39,41 @@ const initialState = {
   selectedChart: null,
   selectedTimeInterval: '',
 }
+
+const INERTIAL_LEGENDS = [
+  {
+    sensor: 'Accelerometer',
+    legends: [
+      { title: 'AccelerometerX', color: ChartColors['x'] },
+      { title: 'AccelerometerY', color: ChartColors['y'] },
+      { title: 'AccelerometerZ', color: ChartColors['z'] },
+    ],
+  },
+  {
+    sensor: 'Gyroscope',
+    legends: [
+      { title: 'GyroscopeX', color: ChartColors['x'] },
+      { title: 'GyroscopeY', color: ChartColors['y'] },
+      { title: 'GyroscopeZ', color: ChartColors['z'] },
+    ],
+  },
+  {
+    sensor: 'Inertial',
+    legends: [
+      { title: 'InertialX', color: ChartColors['x'] },
+      { title: 'InertialY', color: ChartColors['y'] },
+      { title: 'InertialZ', color: ChartColors['z'] },
+    ],
+  },
+  {
+    sensor: 'Magnetometer',
+    legends: [
+      { title: 'MagnetometerX', color: ChartColors['x'] },
+      { title: 'MagnetometerY', color: ChartColors['y'] },
+      { title: 'MagnetometerZ', color: ChartColors['z'] },
+    ],
+  },
+]
 
 /**
  * Home
@@ -145,14 +183,22 @@ class Home extends PureComponent {
                 {infoSensor &&
                   infoSensor[0].series.map((data, index) => {
                     const title = data.seriesName
+                    const legendItems = [
+                      {
+                        title,
+                        color: ChartColors[title],
+                      },
+                    ]
 
                     return (
                       <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
                         <Grid item xs={12}>
                           <ChartView
                             title={title}
+                            legendItems={legendItems}
                             data={data.data}
                             onFullscreenClick={() => this.handleFullscreenButton(data)}
+                            yDomain={title === 'Humidity' ? HUMIDITY_Y_DOMAIN : undefined}
                           />
                         </Grid>
                       </Grid>
@@ -166,12 +212,19 @@ class Home extends PureComponent {
                 {infoSensor &&
                   infoSensor[4].series.map((data, index) => {
                     const title = infoSensor[4].sensorName
+                    const legendItems = [
+                      {
+                        title,
+                        color: ChartColors[title],
+                      },
+                    ]
 
                     return (
                       <Grid item xs={6} key={index} className={classes.gridInner}>
                         <Grid item xs={12}>
                           <ChartView
                             title={title}
+                            legendItems={legendItems}
                             data={data.data}
                             onFullscreenClick={() => this.handleFullscreenButton(data)}
                           />
@@ -182,12 +235,19 @@ class Home extends PureComponent {
                 {infoSensor &&
                   infoSensor[6].series.map((data, index) => {
                     const title = infoSensor[6].sensorName
+                    const legendItems = [
+                      {
+                        title,
+                        color: ChartColors[title],
+                      },
+                    ]
 
                     return (
                       <Grid item xs={6} key={index} className={classes.gridInner}>
                         <Grid item xs={12}>
                           <ChartView
                             title={title}
+                            legendItems={legendItems}
                             data={data.data}
                             onFullscreenClick={() => this.handleFullscreenButton(data)}
                           />
@@ -202,19 +262,27 @@ class Home extends PureComponent {
               <Grid container>
                 {infoSensor &&
                   infoSensor.map((sensors, index) => {
-                    if (index !== 0 && index !== 4 && index !== 6) {
-                      return (
+                    if (index === 0 || index === 4 || index === 6) {
+                      return false
+                    }
+                    const legendItems = find(INERTIAL_LEGENDS, ['sensor', sensors.sensorName]).legends
+
+                    return (
+                      index !== 0 &&
+                      index !== 4 &&
+                      index !== 6 && (
                         <Grid item sm={6} xs={12} key={index} className={classes.gridInner}>
                           <Grid item xs={12}>
                             <ChartView
                               title={sensors.sensorName}
+                              legendItems={legendItems}
                               data={sensors}
                               onFullscreenClick={() => this.handleFullscreenButton(data)}
                             />
                           </Grid>
                         </Grid>
                       )
-                    }
+                    )
                   })}
               </Grid>
             )}

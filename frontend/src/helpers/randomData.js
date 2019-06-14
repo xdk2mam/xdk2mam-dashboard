@@ -12,8 +12,8 @@ export default function generateRandomData() {
             {
               sensorType: 'Weather',
               data: [
-                { Pressure: getRandomInt(1000, 1085) },
-                { Temp: getRandomInt(15, 30) },
+                { Pressure: getRandomInt(1000, 1085) * 100 },
+                { Temp: getRandomInt(23, 25) * 1000 },
                 { Humidity: getRandomInt(56, 56) },
               ],
             },

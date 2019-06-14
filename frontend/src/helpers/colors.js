@@ -24,9 +24,12 @@ const Colors = Object.freeze({
 
 const ChartColors = Object.freeze({
   Pressure: Colors.LOGO_GREEN,
-  Temperature: Colors.DARKEST_BLUE,
+  Temp: Colors.DARKEST_BLUE,
   Humidity: Colors.COMP_YELLOW,
   Light: Colors.LOGO_GREEN,
+  x: Colors.LOGO_GREEN,
+  y: Colors.DARKEST_BLUE,
+  z: Colors.COMP_YELLOW,
 })
 
 /*
