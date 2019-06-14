@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Typography } from '@material-ui/core'
-import { isEmpty } from 'lodash'
+import { isEmpty, remove } from 'lodash'
 
 import { ChartColors } from '../helpers/colors'
 import { getMaxYValue, getMinYValue, getAvgYValue } from '../helpers/utils'
@@ -15,17 +15,41 @@ import FullscreenButton from './FullscreenButton'
  */
 
 class ChartView extends PureComponent {
+  state = {
+    disabledSeries: [],
+  }
+
+  legendClickHandler = item => {
+    const { disabledSeries } = this.state
+    const { title } = item
+
+    item.disabled = !item.disabled
+
+    if (item.disabled) {
+      disabledSeries.push(title)
+      this.setState({ disabledSeries })
+    } else {
+      remove(disabledSeries, seriesName => seriesName === item.title)
+      this.setState({ disabledSeries })
+    }
+  }
+
   render() {
-    const { classes, data, onFullscreenClick, title } = this.props
+    const { classes, data, onFullscreenClick, title, ...props } = this.props
+    const { disabledSeries } = this.state
 
     let maxValue = null
     let minValue = null
     let avgValue = null
+    let chartColors = null
 
     if (isEmpty(data.series)) {
       maxValue = getMaxYValue(data)
       minValue = getMinYValue(data)
       avgValue = getAvgYValue(data)
+      chartColors = ChartColors[title]
+    } else {
+      chartColors = [ChartColors['x'], ChartColors['y'], ChartColors['z']]
     }
 
     return (
@@ -36,7 +60,13 @@ class ChartView extends PureComponent {
           </Typography>
           <FullscreenButton onClick={onFullscreenClick} />
         </div>
-        <LineChart data={data} color={ChartColors[title]} />
+        <LineChart
+          data={data}
+          color={chartColors}
+          onLegendClick={this.legendClickHandler}
+          disabledSeries={disabledSeries}
+          {...props}
+        />
         {!isEmpty(data.series) ? (
           data.series.map(item => {
             const seriesMaxValue = getMaxYValue(item.data)

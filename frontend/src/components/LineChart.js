@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { XYPlot, makeWidthFlexible, LineSeries, XAxis, YAxis, Crosshair } from 'react-vis'
+import { XYPlot, makeWidthFlexible, LineSeries, XAxis, YAxis, Crosshair, Borders, DiscreteColorLegend } from 'react-vis'
 import { isEmpty } from 'lodash'
 import { CircularProgress, withStyles } from '@material-ui/core'
 import '../../node_modules/react-vis/dist/style.css'
@@ -14,6 +14,8 @@ import Colors from '../helpers/colors'
 
 const LINE_SIZE = 1
 const CURVE_TYPE = 'curveBasis'
+const Y_PADDING = 80
+const DEFAULT_MARGINS = { left: 65, right: 10, top: 10, bottom: 50 }
 
 /**
  * Helpers
@@ -54,7 +56,7 @@ class LineChart extends PureComponent {
   handleXAxisFormat = value => `${moment(value).format('mm:ss')}`
 
   render() {
-    const { data, classes, color, baseColor, height } = this.props
+    const { data, classes, color, baseColor, height, yDomain, legendItems, onLegendClick, disabledSeries } = this.props
     const { crosshairValues } = this.state
 
     if (isEmpty(data)) {
@@ -68,31 +70,61 @@ class LineChart extends PureComponent {
         </div>
       )
     }
-
     const hasSeries = !isEmpty(data.series)
     const axisStyle = !isEmpty(baseColor) ? { stroke: baseColor } : {}
 
     return (
       <FlexibleXYPlot
-        yPadding={80}
+        yPadding={Y_PADDING}
+        yDomain={yDomain}
         onMouseLeave={this.handleMouseLeave}
         height={height}
         className={classes.linePlot}
         xType="time"
-        margin={{ left: 50, right: 10, top: 10, bottom: 50 }}
+        margin={DEFAULT_MARGINS}
       >
+        {!hasSeries && (
+          <LineSeries
+            curve={CURVE_TYPE}
+            data={data}
+            color={disabledSeries.length > 0 ? 'transparent' : color}
+            size={LINE_SIZE}
+            onNearestX={this.handleNearestX}
+          />
+        )}
+        {hasSeries &&
+          data.series.map((series, index) => {
+            const name = `${data.sensorName}${series.seriesName.toUpperCase()}`
+            const isDisabled = disabledSeries.find(i => i === name)
+
+            return (
+              <LineSeries
+                key={index}
+                curve={CURVE_TYPE}
+                color={isDisabled ? 'transparent' : color[index]}
+                data={series.data}
+                size={LINE_SIZE}
+              />
+            )
+          })}
+        {/* Borders are necessary to avoid displaying values outside of the default domain 
+            cfr.: https://github.com/uber/react-vis/issues/543
+            Note: Place it immediately below all <****Series> components
+        */}
+        <Borders
+          style={{
+            all: { fill: '#fff' },
+          }}
+        />
+        <DiscreteColorLegend
+          items={legendItems}
+          orientation="horizontal"
+          onItemClick={hasSeries ? onLegendClick : undefined}
+        />
         <XAxis style={axisStyle} tickLabelAngle={-45} tickFormat={this.handleXAxisFormat} />
         <YAxis style={axisStyle} />
 
         <Crosshair values={crosshairValues} titleFormat={this.handleTitleFormat} itemsFormat={this.handleItemsFormat} />
-
-        {!hasSeries && (
-          <LineSeries curve={CURVE_TYPE} data={data} color={color} size={LINE_SIZE} onNearestX={this.handleNearestX} />
-        )}
-        {hasSeries &&
-          data.series.map((series, index) => (
-            <LineSeries key={index} curve={CURVE_TYPE} data={series.data} size={LINE_SIZE} />
-          ))}
       </FlexibleXYPlot>
     )
   }
@@ -137,6 +169,7 @@ const styles = {
 
   linePlot: {
     marginTop: 15,
+    marginBottom: 50,
     fontFamily: 'Roboto, Sans-serif',
   },
 }
