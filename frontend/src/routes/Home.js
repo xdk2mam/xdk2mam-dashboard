@@ -24,7 +24,7 @@ import { ChartColors } from '../helpers/colors'
  * Constants
  */
 
-const USE_FAKE_DATA = true
+const USE_FAKE_DATA = false
 
 const VISIBLE_VALUES_ON_CHART = 25
 

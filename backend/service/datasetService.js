@@ -3,7 +3,6 @@ var q = require('q')
 var _ = require('underscore-node')
 
 var DatasetService = function() {
-
   this.create = function(datasetInfo) {
     var deferred = q.defer()
     datasetRepository
@@ -46,7 +45,6 @@ var DatasetService = function() {
       })
     return deferred.promise
   }
-
 }
 
 module.exports = new DatasetService()
