@@ -8,6 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import moment from 'moment'
 import MomentUtils from '@date-io/moment'
 
 /**
@@ -19,15 +20,20 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
     name: '',
     description: '',
     deviceName: '',
-    endDate: new Date(),
   })
+
+  const [endDate, setEndDate] = useState(moment().add(1, 'hour'))
 
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value })
   }
 
+  const handleChangeDate = date => {
+    setEndDate(date)
+  }
+
   const handleCreateClick = () => {
-    const { name, deviceName, description, endDate } = values
+    const { name, deviceName, description } = values
     onCreate(name, deviceName, description, endDate)
   }
 
@@ -74,7 +80,7 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => {
         />
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <div className={classes.field}>
-            <DateTimePicker label="End date" value={values.endDate} onChange={handleChange('endDate')} />
+            <DateTimePicker label="End date" value={endDate} onChange={handleChangeDate} />
           </div>
         </MuiPickersUtilsProvider>
       </DialogContent>
