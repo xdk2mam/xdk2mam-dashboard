@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Typography, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
-// import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import Colors from '../helpers/colors'
 
 /**
@@ -12,7 +12,7 @@ import Colors from '../helpers/colors'
 
 const TYPOGRAPHY_VARIANT = 'subtitle1'
 const TYPOGRAPHY_COLOR = 'inherit'
-// const TIME_INTERVALS = [{ value: '1m' }, { value: '5m' }, { value: '10m' }, { value: '30m' }, { value: 'All' }]
+const TIME_INTERVALS = [{ value: '1m' }, { value: '5m' }, { value: '10m' }, { value: '30m' }, { value: 'All' }]
 
 /**
  * SubHeader
@@ -25,18 +25,27 @@ class SubHeader extends PureComponent {
   }
 
   render() {
-    const { classes, deviceName, activeDataset, onFinishDatasetClick } = this.props
+    const {
+      classes,
+      // deviceName,
+      activeDataset,
+      activeDataset: { dataset_name_table: name, name: displayName },
+      onFinishDatasetClick,
+    } = this.props
+
+    const isRecording = !isEmpty(activeDataset) && activeDataset.status === 1
 
     return (
       <div className={classes.container}>
         <div>
           <Typography variant={TYPOGRAPHY_VARIANT} color={TYPOGRAPHY_COLOR}>
-            Device Name: <span className={classnames(classes.info, classes.deviceText)}>{deviceName}</span> / Active
-            Dataset: <span className={classes.info}>{activeDataset}</span>
+            {/** @todo: add deviceName to the backend */}
+            {/* Device Name: <span className={classnames(classes.info, classes.deviceText)}>{deviceName}</span> /  */}
+            Active Dataset: <span className={classes.info}>{name || displayName}</span>
+            {isRecording && <span className={classes.info}> | Recording</span>}
           </Typography>
         </div>
-        {/** @todo Move time intervals to line charts as quantity intervals */}
-        {/* <div className={classes.timeIntervals}>
+        <div className={classes.timeIntervals}>
           <span className={classes.timeIntervalsTitle}>Time interval:</span>
 
           {TIME_INTERVALS.map((option, index) => {
@@ -55,10 +64,17 @@ class SubHeader extends PureComponent {
               </React.Fragment>
             )
           })}
-        </div> */}
-        <Button variant="outlined" size="small" className={classes.finishDatasetButton} onClick={onFinishDatasetClick}>
-          Finish Dataset
-        </Button>
+        </div>
+        {isRecording && (
+          <Button
+            variant="outlined"
+            size="small"
+            className={classes.finishDatasetButton}
+            onClick={onFinishDatasetClick}
+          >
+            Finish Dataset
+          </Button>
+        )}
       </div>
     )
   }
