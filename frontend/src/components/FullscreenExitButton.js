@@ -31,9 +31,10 @@ FullscreenExitButton.propTypes = {
 const styles = {
   container: {
     position: 'absolute',
-    top: 0,
-    right: 0,
+    top: 20,
+    right: 20,
     cursor: 'pointer',
+    zIndex: 9999,
   },
 }
 
