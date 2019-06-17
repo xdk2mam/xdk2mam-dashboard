@@ -113,7 +113,7 @@ class LineChart extends PureComponent {
         */}
         <Borders
           style={{
-            all: { fill: '#fff' },
+            all: { fill: Colors.WHITE },
           }}
         />
         <DiscreteColorLegend
