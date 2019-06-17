@@ -35,6 +35,18 @@ class Datasets extends PureComponent {
     openDialog: false,
   }
 
+  componentDidMount() {
+    this.props.dispatchGetDatasets()
+  }
+
+  componentDidUpdate(prevProps) {
+    const { activeDataset, dispatchGetDatasets } = this.props
+
+    if (activeDataset && activeDataset.id !== prevProps.activeDataset.id) {
+      dispatchGetDatasets()
+    }
+  }
+
   handleOpenDialog = () => this.setState({ openDialog: true })
 
   handleCancelDialog = () => this.setState({ openDialog: false })
@@ -49,17 +61,6 @@ class Datasets extends PureComponent {
 
     dispatchSetActiveDatasetId(datasetId)
     history.push('/')
-  }
-
-  componentDidMount() {
-    this.props.dispatchGetDatasets()
-  }
-
-  componentDidUpdate(prevProps) {
-    const { activeDataset } = this.props
-    if (activeDataset && activeDataset.id !== prevProps.activeDataset.id) {
-      this.props.dispatchGetDatasets()
-    }
   }
 
   render() {
@@ -100,7 +101,7 @@ class Datasets extends PureComponent {
                     dataset_end: endDate,
                   } = dataset
 
-                  const dateText = !isNil(endDate) ? moment(endDate).format('Y/M/D hh:mm') : 'N/A'
+                  const dateText = !isNil(endDate) ? moment.unix(endDate).format('Y/M/D hh:mm') : 'N/A'
                   const activeDatasetText = status === 1 ? 'Yes' : 'No'
 
                   return (
@@ -147,6 +148,7 @@ Datasets.propTypes = {
   classes: PropTypes.object.isRequired,
   dispatchCreateDataset: PropTypes.func.isRequired,
   dispatchSetActiveDatasetId: PropTypes.func.isRequired,
+  dispatchGetDatasets: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   datasets: PropTypes.array,
   activeDataset: PropTypes.object,

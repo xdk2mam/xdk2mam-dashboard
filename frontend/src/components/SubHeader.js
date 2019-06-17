@@ -31,6 +31,7 @@ class SubHeader extends PureComponent {
       activeDataset,
       activeDataset: { dataset_name_table: name, name: displayName },
       onFinishDatasetClick,
+      selectedTimeInterval,
     } = this.props
 
     const isRecording = !isEmpty(activeDataset) && activeDataset.status === 1
@@ -45,36 +46,38 @@ class SubHeader extends PureComponent {
             {isRecording && <span className={classes.info}> | Recording</span>}
           </Typography>
         </div>
-        <div className={classes.timeIntervals}>
-          <span className={classes.timeIntervalsTitle}>Time interval:</span>
+        <div className={classes.right}>
+          <div className={classes.timeIntervals}>
+            <span className={classes.timeIntervalsTitle}>Time interval:</span>
 
-          {TIME_INTERVALS.map((option, index) => {
-            const separator = index === TIME_INTERVALS.length - 1 ? '' : ' / '
-            const selected = this.props.selectedTimeInterval === option.value
+            {TIME_INTERVALS.map((option, index) => {
+              const separator = index === TIME_INTERVALS.length - 1 ? '' : ' / '
+              const selected = selectedTimeInterval === option.value
 
-            return (
-              <React.Fragment key={`${option}-${index}`}>
-                <span
-                  className={classnames(classes.text, classes.button, selected && classes.selectedButton)}
-                  onClick={() => this.handleTimeIntervalClick(option.value)}
-                >
-                  {option.value}
-                </span>
-                {!isEmpty(separator) && <span className={classes.separator}>{separator}</span>}
-              </React.Fragment>
-            )
-          })}
+              return (
+                <React.Fragment key={`${option}-${index}`}>
+                  <span
+                    className={classnames(classes.text, classes.button, selected && classes.selectedButton)}
+                    onClick={() => this.handleTimeIntervalClick(option.value)}
+                  >
+                    {option.value}
+                  </span>
+                  {!isEmpty(separator) && <span className={classes.separator}>{separator}</span>}
+                </React.Fragment>
+              )
+            })}
+          </div>
+          {isRecording && (
+            <Button
+              variant="outlined"
+              size="small"
+              className={classes.finishDatasetButton}
+              onClick={onFinishDatasetClick}
+            >
+              Finish Dataset
+            </Button>
+          )}
         </div>
-        {isRecording && (
-          <Button
-            variant="outlined"
-            size="small"
-            className={classes.finishDatasetButton}
-            onClick={onFinishDatasetClick}
-          >
-            Finish Dataset
-          </Button>
-        )}
       </div>
     )
   }
@@ -118,6 +121,11 @@ const styles = {
     color: Colors.WHITE,
   },
 
+  right: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+
   info: {
     fontWeight: 'bold',
   },
@@ -144,6 +152,7 @@ const styles = {
   },
 
   finishDatasetButton: {
+    marginLeft: 20,
     fontFamily: 'Roboto, sans-serif',
     textTransform: 'uppercase',
     color: Colors.WHITE,

@@ -17,8 +17,8 @@ const createDataset = async data => {
  * Terminate a Dataset
  */
 
-const terminateDataset = async dataset => {
-  const response = await axios.post(`${HOST}:${PORT}/api/dataset/terminate`, { data: { id: dataset.id } })
+const terminateDataset = async id => {
+  const response = await axios.post(`${HOST}:${PORT}/api/dataset/terminate`, { data: { id } })
 
   return response
 }
@@ -37,7 +37,7 @@ const getDatasets = async () => {
  * Get sensor data for a specific Dataset Id, time interval and applying a limit to the results
  */
 
-const getData = async (datasetId, minutesAgo, limit) => {
+const getDatasetData = async (datasetId, minutesAgo, limit) => {
   const response = await axios.get(`${HOST}:${PORT}/api/getData/${datasetId}/${minutesAgo}?limit=${limit}`)
 
   return response.data
@@ -51,5 +51,5 @@ export default {
   createDataset,
   terminateDataset,
   getDatasets,
-  getData,
+  getDatasetData,
 }

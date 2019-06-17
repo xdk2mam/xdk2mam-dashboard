@@ -2,6 +2,134 @@
 # yarn lockfile v1
 
 
+"@iota/bundle-validator@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/bundle-validator/-/bundle-validator-1.0.0-beta.15.tgz#3e75ac434b11eb671679202add1eb54caaef1a40"
+  integrity sha512-GRq6o9Zj3iTkFZHUvIGnUCNsFtNInixrVSjTdPDU0PVhK0Pw+2x6YRx2hvEJo5dLVm9Dw8GVSlMct7QwT+R/Og==
+  dependencies:
+    "@iota/converter" "^1.0.0-beta.15"
+    "@iota/kerl" "^1.0.0-beta.15"
+    "@iota/signing" "^1.0.0-beta.15"
+    "@iota/transaction" "^1.0.0-beta.15"
+    "@iota/transaction-converter" "^1.0.0-beta.15"
+
+"@iota/bundle@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/bundle/-/bundle-1.0.0-beta.15.tgz#7a9d3eb0a000f9453966ccb72d6a4b89559f578d"
+  integrity sha512-Dzlh2aEduOBRx3HJI58gQg1hMdOiXfOhyjm8Nkl+PSZVR5frpZ9ltb8FnQevdeDbX1edM/huGRgFQ0wy6OketA==
+  dependencies:
+    "@iota/converter" "^1.0.0-beta.15"
+    "@iota/kerl" "^1.0.0-beta.15"
+    "@iota/signing" "^1.0.0-beta.15"
+    "@iota/transaction" "^1.0.0-beta.15"
+    "@types/warning" "^3.0.0"
+    warning "^4.0.3"
+
+"@iota/checksum@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/checksum/-/checksum-1.0.0-beta.15.tgz#5c1281b50f0acce755539685d4debcd33641906d"
+  integrity sha512-SVuWSVpPZ3XxaCcpgIRvSY6mrUwPhOS6eJAAMXXHepiruEaFHym2MipG8zxkFvGQjbHQ9/9WS1tpE+yFDquEHw==
+  dependencies:
+    "@iota/converter" "^1.0.0-beta.15"
+    "@iota/kerl" "^1.0.0-beta.15"
+
+"@iota/converter@^1.0.0-beta.11", "@iota/converter@^1.0.0-beta.12", "@iota/converter@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/converter/-/converter-1.0.0-beta.15.tgz#919117e120df491064acc840245c16f8aaf62ca6"
+  integrity sha512-CJb2dWibzgQZXBmmMWQOOLynTnNxUh4pbFrgJjaNQDmBHLTF5JOQvzaI005hrk8B7DDj2MmnSbmLYSvP/txt5Q==
+
+"@iota/core@^1.0.0-beta.11":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/core/-/core-1.0.0-beta.15.tgz#9f0b7ff0facdc4073712319a6b7c13b16fe50bd3"
+  integrity sha512-NY42eCu6QFkRyNo56sYJczoXjy4H9a5g5geKSufVLOMA2tJQZ3soTuyFeEIvo0Qrgp/itVYZjlQYC+MgVDgHkg==
+  dependencies:
+    "@iota/bundle" "^1.0.0-beta.15"
+    "@iota/bundle-validator" "^1.0.0-beta.15"
+    "@iota/checksum" "^1.0.0-beta.15"
+    "@iota/converter" "^1.0.0-beta.15"
+    "@iota/curl" "^1.0.0-beta.15"
+    "@iota/http-client" "^1.0.0-beta.15"
+    "@iota/kerl" "^1.0.0-beta.15"
+    "@iota/pad" "^1.0.0-beta.15"
+    "@iota/signing" "^1.0.0-beta.15"
+    "@iota/transaction" "^1.0.0-beta.15"
+    "@iota/transaction-converter" "^1.0.0-beta.15"
+    bluebird "^3.5.5"
+
+"@iota/curl@^1.0.0-beta.11", "@iota/curl@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/curl/-/curl-1.0.0-beta.15.tgz#da4ff2a2e1ec787316d1c1ef6affbd4acdeac20a"
+  integrity sha512-zriwkNySrWJvGy1yZKUKv6IFS+F8udH/2WSFenYysWZwCR4bvWidtGcAXqXM2vzQ3vsHYj+BR8QnORZ9l1lW3A==
+
+"@iota/http-client@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/http-client/-/http-client-1.0.0-beta.15.tgz#279ca154d2bddc80840d03b44d8c879ec0306843"
+  integrity sha512-MZJ7HYE5/KStdlauEo4KF2ddFCRRwdAFh0hdKLiVz4URQ7AEv4ZbkHFgDBG6D32vUhFfku3C1pH63c30iW1WyQ==
+  dependencies:
+    cross-fetch "^3.0.0"
+
+"@iota/kerl@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/kerl/-/kerl-1.0.0-beta.15.tgz#e3e5d5110179d475d1aef20e71d10b8f98b5eef9"
+  integrity sha512-EiK+fDHwzyD7Qz0iwT9+HeVkuUFTyOJI7PWO4WcOa3dollbJYJP+u3ZYUa+RTekskcbZ2rZDC/H20lXwz6eE4A==
+  dependencies:
+    "@types/crypto-js" "^3.1.38"
+    crypto-js "^3.1.9-1"
+
+"@iota/mam@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@iota/mam/-/mam-0.7.2.tgz#5bc2554ad0ae498ff9837e74276d26b7091f1029"
+  integrity sha512-5X4bh3BupSulbULeSNYaqvvOxtV9UkGkYVLPJRshPrh6GNhM0611p9MRswDiHpvWvG7oLAuDXe6mfsTzPTZx0A==
+  dependencies:
+    "@iota/converter" "^1.0.0-beta.11"
+    "@iota/core" "^1.0.0-beta.11"
+    "@iota/curl" "^1.0.0-beta.11"
+
+"@iota/pad@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/pad/-/pad-1.0.0-beta.15.tgz#24dcbb84d4f102fe852dd8a0575459f32c9d19f7"
+  integrity sha512-1/ZcqCP1Wtvj3Kr0Yxiae1W72UVS84TLOI26i9eUIxcyUoDzI8F4hu2oYvABzweqUkwvEQguiy2aK1Kt9eUF2A==
+
+"@iota/signing@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/signing/-/signing-1.0.0-beta.15.tgz#e35333ee114dac52b25386fd8c4824ca6cc62e7d"
+  integrity sha512-5eNU3mIlNQm7PcfUnTnEmVr1GYXpnhqIGjIrBNfSOWHWT99W5Oqdyak9FnUz4Ft/VzmqTuUOBvebE+v9HjH10A==
+  dependencies:
+    "@iota/converter" "^1.0.0-beta.15"
+    "@iota/kerl" "^1.0.0-beta.15"
+    "@iota/pad" "^1.0.0-beta.15"
+
+"@iota/transaction-converter@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/transaction-converter/-/transaction-converter-1.0.0-beta.15.tgz#c300a9f8611b50a16b91de2e01ca0f15cb8f3c07"
+  integrity sha512-+ZyitULMZwc8FYebzoMIJ4GjB7lXIoToC/f2rGl6jnjidMgB8puxhqmJri1uuldty9Gmgrr3GQFJsanWa7g/KQ==
+  dependencies:
+    "@iota/converter" "^1.0.0-beta.15"
+    "@iota/pad" "^1.0.0-beta.15"
+    "@iota/transaction" "^1.0.0-beta.15"
+
+"@iota/transaction@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@iota/transaction/-/transaction-1.0.0-beta.15.tgz#f6a00b3fd4c2747fde2dec2282420bc0930d1c64"
+  integrity sha512-CeMtJpYcDOxkfFBjAxB2aQqxbcT9HStaspg96LONYO2Qpm53fcFykK15QT2WCupvZ46Ag8lGIFs2sYC2JHgdhQ==
+  dependencies:
+    "@iota/converter" "^1.0.0-beta.15"
+    "@iota/curl" "^1.0.0-beta.15"
+    "@iota/kerl" "^1.0.0-beta.15"
+    "@iota/signing" "^1.0.0-beta.15"
+    "@types/warning" "^3.0.0"
+    warning "^4.0.3"
+
+"@types/crypto-js@^3.1.38":
+  version "3.1.43"
+  resolved "https://registry.yarnpkg.com/@types/crypto-js/-/crypto-js-3.1.43.tgz#b859347d6289ba13e347c335a4c9efa63337a748"
+  integrity sha512-EHe/YKctU3IYNBsDmSOPX/7jLHPRlx8WaiDKSY9JCTnJ8XJeM4c0ZJvx+9Gxmr2s2ihI92R+3U/gNL1sq5oRuQ==
+
+"@types/warning@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/warning/-/warning-3.0.0.tgz#0d2501268ad8f9962b740d387c4654f5f8e23e52"
+  integrity sha1-DSUBJorY+ZYrdA04fEZU9fjiPlI=
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -220,6 +348,11 @@ bl@^1.0.0:
   dependencies:
     readable-stream "^2.3.5"
     safe-buffer "^5.1.1"
+
+bluebird@^3.5.5:
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
+  integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
 
 body-parser@1.19.0:
   version "1.19.0"
@@ -570,6 +703,11 @@ copy-descriptor@^0.1.0:
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
   integrity sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
 
+core-js@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.1.4.tgz#3a2837fc48e582e1ae25907afcd6cf03b0cc7a07"
+  integrity sha512-YNZN8lt82XIMLnLirj9MhKDFZHalwzzrL9YLt6eb0T5D0EDl4IQ90IGkua8mHbnxNrkj1d8hbdizMc0Qmg1WnQ==
+
 core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -582,6 +720,14 @@ create-error-class@^3.0.0:
   dependencies:
     capture-stack-trace "^1.0.0"
 
+cross-fetch@^3.0.0:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.4.tgz#7bef7020207e684a7638ef5f2f698e24d9eb283c"
+  integrity sha512-MSHgpjQqgbT/94D4CyADeNoYh52zMkCX4pcJvPP5WqPsLFMKjr2TCMg381ox5qI0ii2dPwaLx/00477knXqXVw==
+  dependencies:
+    node-fetch "2.6.0"
+    whatwg-fetch "3.0.0"
+
 cross-spawn@^5.0.1, cross-spawn@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
@@ -591,10 +737,20 @@ cross-spawn@^5.0.1, cross-spawn@^5.1.0:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
+crypto-js@^3.1.9-1:
+  version "3.1.9-1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
+  integrity sha1-/aGedh/Ad+Af+/3G6f38WeiAbNg=
+
 crypto-random-string@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-1.0.0.tgz#a230f64f568310e1498009940790ec99545bca7e"
   integrity sha1-ojD2T1aDEOFJgAmUB5DsmVRbyn4=
+
+crypto@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/crypto/-/crypto-1.0.1.tgz#2af1b7cad8175d24c8a1b0778255794a21803037"
+  integrity sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
@@ -1524,6 +1680,11 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
+"js-tokens@^3.0.0 || ^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
+  integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
+
 js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
@@ -1664,6 +1825,13 @@ log4js@^0.6.26:
   dependencies:
     readable-stream "~1.0.2"
     semver "~4.3.3"
+
+loose-envify@^1.0.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
+  integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
+  dependencies:
+    js-tokens "^3.0.0 || ^4.0.0"
 
 lowercase-keys@^1.0.0:
   version "1.0.1"
@@ -1914,6 +2082,11 @@ node-abi@^2.7.0:
   dependencies:
     semver "^5.4.1"
 
+node-fetch@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
+  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+
 node-pre-gyp@^0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.12.0.tgz#39ba4bb1439da030295f899e3b520b7785766149"
@@ -1935,7 +2108,7 @@ node-style-guide@^1.0.0:
   resolved "https://registry.yarnpkg.com/node-style-guide/-/node-style-guide-1.0.0.tgz#83360a813b585cb4597329827232a508c222c964"
   integrity sha1-gzYKgTtYXLRZcymCcjKlCMIiyWQ=
 
-nodemon@^1.18.10:
+nodemon@^1.19.1:
   version "1.19.1"
   resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.19.1.tgz#576f0aad0f863aabf8c48517f6192ff987cd5071"
   integrity sha512-/DXLzd/GhiaDXXbGId5BzxP1GlsqtMGM9zTmkWrgXtSqjKmGSbLicM/oAy4FR0YWm14jCHRwnR31AHS2dYFHrg==
@@ -2967,6 +3140,18 @@ vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
+
+warning@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.3.tgz#16e9e077eb8a86d6af7d64aa1e05fd85b4678ca3"
+  integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
+  dependencies:
+    loose-envify "^1.0.0"
+
+whatwg-fetch@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.0.0.tgz#fc804e458cc460009b1a2b966bc8817d2578aefb"
+  integrity sha512-9GSJUgz1D4MfyKU7KRqwOjXCXTqWdFNvEr7eUBYchQiVc744mqK/MzXPNR2WsPkmkOa4ywfg8C2n8h+13Bey1Q==
 
 which-pm-runs@^1.0.0:
   version "1.0.0"
