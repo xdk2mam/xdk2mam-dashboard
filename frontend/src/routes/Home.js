@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 
 import { createDatasetDispatcher, clearActiveDatasetIdDispatcher } from '../store/actions/dataset'
 import { getActiveDataset } from '../store/selectors/dataset'
-import { formatDataForCharts, formatDataForTable, getLast, getYDomain, getSeriesLegendItems } from '../helpers/utils'
+import { formatDataForCharts, formatDataForTable, getYDomain, getSeriesLegendItems } from '../helpers/utils'
 import generateRandomData from '../helpers/randomData'
 import Layout from '../components/Layout'
 import Table from '../components/Table/Table'
@@ -63,6 +63,10 @@ const INERTIAL_LEGENDS = [
   },
 ]
 
+const GET_ALL_LIMIT_ENTRIES = 10000
+
+const TIME_INTERVALS = [{ '1m': 1 }, { '5m': 5 }, { '10m': 10 }, { '30m': 30 }, { All: -1 }]
+
 const initialState = {
   infoSensor: [],
   rawData: [],
@@ -73,6 +77,7 @@ const initialState = {
   selectedTimeInterval: '',
   disabledSeries: [],
   legendItems: INERTIAL_LEGENDS,
+  recording: false,
 }
 
 // const name = hasSeries ? data.sensorName : data.seriesName
@@ -90,29 +95,59 @@ class Home extends PureComponent {
     }
   }
 
-  componentDidMount() {
-    /** @todo: REMOVE THIS. only for dev purposes until backend is ready */
-    if (!isEmpty(this.props.activeDataset)) {
-      this.startDataset()
+  start = () => {
+    const { activeDataset } = this.props
+
+    if (!isEmpty(activeDataset)) {
+      if (activeDataset.status === 1) {
+        this.setState(
+          {
+            recording: true,
+            selectedTimeInterval: '1m',
+          },
+          () => {
+            if (USE_FAKE_DATA) {
+              this.startDataset()
+            } else {
+              this.intervalId = setInterval(async () => {
+                this.getAllData()
+              }, 1000)
+            }
+          }
+        )
+      } else {
+        this.setState({ selectedTimeInterval: 'All' }, () => this.getAllData())
+      }
     }
   }
 
-  componentWillUnmount() {
-    clearInterval(this.intervalId)
+  getAllData = async () => {
+    const {
+      activeDataset: { id },
+    } = this.props
+    const { selectedTimeInterval } = this.state
+
+    const selectedTimeIntervalValue = find(TIME_INTERVALS, selectedTimeInterval)[selectedTimeInterval]
+    const sensorData = await getData(id, selectedTimeIntervalValue, GET_ALL_LIMIT_ENTRIES)
+    const parsedData = sensorData.data
+
+    this.setState({
+      infoSensor: !isEmpty(parsedData) ? formatDataForCharts(parsedData) : null,
+      tableData: !isEmpty(parsedData) ? formatDataForTable(parsedData) : null,
+      rawData: parsedData,
+      rawChartData: parsedData,
+    })
   }
 
   startDataset = () => {
     this.intervalId = setInterval(async () => {
       const { rawData, rawChartData } = this.state
+
       let sensorData = []
+      let parsedData
 
-      if (USE_FAKE_DATA) {
-        sensorData = generateRandomData()
-      } else {
-        sensorData = await getLast(1)
-      }
-
-      const parsedData = USE_FAKE_DATA ? sensorData.data[0].data : JSON.parse(sensorData.data[0].data)
+      sensorData = generateRandomData()
+      parsedData = sensorData.data[0].data
 
       const newRawData = rawData.slice(0)
       const newChartData = rawChartData.slice(0)
@@ -125,20 +160,15 @@ class Home extends PureComponent {
       }
 
       this.setState({
-        infoSensor: formatDataForCharts(newChartData),
-        tableData: formatDataForTable(newRawData),
+        infoSensor: !isEmpty(newChartData) ? formatDataForCharts(newChartData) : null,
+        tableData: !isEmpty(newRawData) ? formatDataForTable(newRawData) : null,
         rawData: newRawData,
         rawChartData: newChartData,
       })
     }, 1000)
   }
 
-  getLastInfo = async num => {
-    const lastData = await getLast(num)
-    this.setState({ infoSensor: lastData.info })
-  }
-
-  handleTabChange = (event, value) => this.setState({ selectedTab: value })
+  handleTabChange = (_event, value) => this.setState({ selectedTab: value })
 
   handleFullscreenButton = selectedChart => {
     /** @todo: we should show the entire data of this chart and not the fragmented one */
@@ -151,12 +181,12 @@ class Home extends PureComponent {
 
   handleCreateDataset = (name, deviceName, description, endDate) => {
     this.props.dispatchCreateDataset({ name, deviceName, description, endDate }, true)
-    this.startDataset()
+    this.start()
   }
 
   handleFinishDatasetClick = () => {
     clearInterval(this.intervalId)
-    this.props.dispatchClearActiveDatasetId()
+    this.props.dispatchClearActiveDatasetId(this.props.activeDataset)
     this.setState(initialState)
   }
 
@@ -209,33 +239,47 @@ class Home extends PureComponent {
     return find(data, { seriesName: selectedChart.seriesName })
   }
 
+  componentDidMount() {
+    this.start()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.activeDataset !== prevProps.activeDataset) {
+      this.start()
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId)
+  }
+
   render() {
     const { classes, activeDataset } = this.props
     const { selectedTab, infoSensor, tableData, selectedTimeInterval, legendItems, disabledSeries } = this.state
 
     const selectedChartData = this.getSelectedChartData()
 
-    const showNoDataMessage = !isEmpty(activeDataset) && isEmpty(infoSensor)
-    const showDashboard = !isEmpty(activeDataset) && !isEmpty(infoSensor)
+    const showNoDataMessage = (!isEmpty(activeDataset) && isEmpty(infoSensor)) || isEmpty(tableData)
+    const showDashboard = !isEmpty(infoSensor)
+    const showSubHeader = !isEmpty(activeDataset)
 
     return (
       <Layout>
         {isEmpty(activeDataset) && <NoActiveDataset onCreateDataset={this.handleCreateDataset} />}
-        {showNoDataMessage && <NoDataMessage />}
-        {showDashboard && (
+        {showSubHeader && (
           <Fragment>
             <Grid item xs={12}>
               <SubHeader
                 deviceName={activeDataset.deviceName}
-                activeDataset={activeDataset.name}
+                activeDataset={activeDataset}
                 onTimeIntervalClick={this.handleSelectTimeInterval}
                 onFinishDatasetClick={this.handleFinishDatasetClick}
                 selectedTimeInterval={selectedTimeInterval}
               />
               <TabNavigator selected={selectedTab} onChange={this.handleTabChange} />
             </Grid>
-
-            {selectedTab === 0 && (
+            {showNoDataMessage && <NoDataMessage />}
+            {showDashboard && selectedTab === 0 && (
               <Grid container>
                 {infoSensor &&
                   infoSensor[0].series.map((data, index) => {
@@ -258,7 +302,7 @@ class Home extends PureComponent {
               </Grid>
             )}
 
-            {selectedTab === 1 && (
+            {showDashboard && selectedTab === 1 && (
               <Grid container>
                 {infoSensor &&
                   infoSensor[4].series.map((data, index) => {
@@ -295,7 +339,7 @@ class Home extends PureComponent {
               </Grid>
             )}
 
-            {selectedTab === 2 && (
+            {showDashboard && selectedTab === 2 && (
               <Grid container>
                 {infoSensor &&
                   infoSensor.map((sensors, index) => {
@@ -327,16 +371,18 @@ class Home extends PureComponent {
                   })}
               </Grid>
             )}
-            <Grid container>
-              <Grid item xs={12} classes={{ item: classes.gridInner }}>
-                <Typography variant="h5" classes={{ root: classes.tableTitle }}>
-                  Live Data
-                </Typography>
-                <Paper className={classes.tablePaper} elevation={0}>
-                  <Table data={tableData} />
-                </Paper>
+            {showDashboard && (
+              <Grid container>
+                <Grid item xs={12} classes={{ item: classes.gridInner }}>
+                  <Typography variant="h5" classes={{ root: classes.tableTitle }}>
+                    Live Data
+                  </Typography>
+                  <Paper className={classes.tablePaper} elevation={0}>
+                    <Table data={tableData} />
+                  </Paper>
+                </Grid>
               </Grid>
-            </Grid>
+            )}
 
             {!isEmpty(selectedChartData) && (
               <FullscreenModal

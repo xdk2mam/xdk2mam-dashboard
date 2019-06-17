@@ -56,7 +56,7 @@ var DataService = function() {
       })
       .catch(function(err) {
         deferred.reject({ errorMessage: err })
-        console.log('Inputting Data: ', err)
+        console.log('Inputting Data error: ', err)
       })
     return deferred.promise
   }
@@ -84,8 +84,8 @@ var DataService = function() {
             var dataList = []
             for (let i = 0; i < data.length; i++) {
               const info = data[i]
-              let sensorData = await convertToFrontFormat(info)
-              dataList.push(sensorData)
+              // let sensorData = await convertToFrontFormat(info)
+              dataList.push(info)
               ids.push(info.id)
             }
 

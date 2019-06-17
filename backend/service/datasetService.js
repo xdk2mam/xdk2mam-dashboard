@@ -6,7 +6,7 @@ var DatasetService = function() {
   this.create = function(datasetInfo) {
     var deferred = q.defer()
     datasetRepository
-      .create(datasetInfo)
+      .create(datasetInfo.data)
       .then(function(data) {
         deferred.resolve(data)
         console.log('Inputting Data: ', data)
@@ -21,7 +21,7 @@ var DatasetService = function() {
   this.terminate = function(datasetInfo) {
     var deferred = q.defer()
     datasetRepository
-      .terminate(datasetInfo)
+      .terminate(datasetInfo.data)
       .then(function(data) {
         deferred.resolve(data)
         console.log('Inputting Data: ', data)

@@ -1,15 +1,15 @@
 import axios from 'axios'
 import moment from 'moment'
-import { find, meanBy } from 'lodash'
+import { find, meanBy, isNil } from 'lodash'
 
 import generateRandomData from './randomData'
 
 const API_BASE_PATH = 'http://localhost:8081/api'
 
-export const getLast = number => {
+export const getData = (databaseId, minutesAgo, limit) => {
   return new Promise(async (res, rej) => {
     try {
-      const respDB = await axios.get(`${API_BASE_PATH}/getLast/${number}`)
+      const respDB = await axios.get(`${API_BASE_PATH}/getData/${databaseId}/${minutesAgo}?limit=${limit}`)
       const data = respDB.data
 
       res({ data })
@@ -142,6 +142,10 @@ export const formatDataForCharts = data => {
   ]
 
   data.map(item => {
+    if (isNil(item)) {
+      return false
+    }
+
     return item.xdk2mam.map((sensor, j) => {
       if (j === 0 || j === 4 || j === 6) {
         // Weather or Ambient Light sensors
@@ -283,8 +287,13 @@ export const formatDataForTable = data => {
   ]
 
   data.map(item => {
-    const itemData = []
+    if (isNil(item)) {
+      return false
+    }
+    
     const date = moment(item.timestamp).format('hh:mm:ss')
+    const itemData = []
+
     itemData.push(date)
     item.xdk2mam.map((sensor, j) => {
       return sensor.data.map((dataItem, i) => {
@@ -315,3 +324,5 @@ export const getYDomain = title => {
 }
 
 export const getSeriesLegendItems = (items, title) => find(items, ['sensor', title]).legends
+
+export const getAvgYValue = data => parseFloat(meanBy(data, 'y'))

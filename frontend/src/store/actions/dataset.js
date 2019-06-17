@@ -1,4 +1,5 @@
 import moment from 'moment'
+import api from '../../api/api'
 
 /**
  * Types
@@ -7,6 +8,7 @@ import moment from 'moment'
 export const SET_ACTIVE_DATASET_ID = 'SET_ACTIVE_DATASET_ID'
 export const CLEAR_ACTIVE_DATASET_ID = 'CLEAR_ACTIVE_DATASET_ID'
 export const CREATE_DATASET = 'CREATE_DATASET'
+export const SET_DATASETS = 'SET_DATASETS'
 
 /**
  * Action creators
@@ -26,30 +28,54 @@ export const createDataset = dataset => ({
   payload: { dataset },
 })
 
+export const setDatasets = datasets => ({
+  type: SET_DATASETS,
+  payload: { datasets },
+})
+
 /**
  * Action dispatchers
  */
+
+export const getDatasetsDispatcher = dispatch => async () => {
+  const response = await api.getDatasets()
+
+  if (response.status === 200) {
+    dispatch(setDatasets(response.data))
+  }
+}
 
 export const setActiveDatasetIdDispatcher = dispatch => activeDatasetId => {
   dispatch(setActiveDatasetId(activeDatasetId))
 }
 
-export const clearActiveDatasetIdDispatcher = dispatch => () => {
-  dispatch(clearActiveDatasetId())
+export const clearActiveDatasetIdDispatcher = dispatch => async activeDatasetId => {
+  const response = await api.terminateDataset(activeDatasetId)
+
+  if (response.status === 200) {
+    dispatch(clearActiveDatasetId())
+  }
 }
 
-export const createDatasetDispatcher = dispatch => (dataset, setAsActive = false) => {
+export const createDatasetDispatcher = dispatch => async (dataset, setAsActive = false) => {
   const datasetToCreate = {
-    id: Math.floor(Math.random() * 100000 + 1) /** TEMPORARY */,
+    name: dataset.name.replace(/ /g, '_'),
+    datasetEnd: moment(dataset.endDate).unix(),
+    datasetInterval: 30000 /** @todo This value shouldn't be hardcoded, perhaps env variable or sent as part of the dataset object */,
     ...dataset,
-    endDate: moment(dataset.endDate).format(),
   }
-  // dataset is an object with name, description, device name and end date
-  // we should write an api client with the object validations besides doing client validation
-  dispatch(createDataset(datasetToCreate))
-  // here we should post to an endpoint with the client dataset data
-  // api should return dataset id and we should store updated datasets array and set as active
+
   if (setAsActive) {
-    setActiveDatasetIdDispatcher(dispatch)(datasetToCreate.id)
+    datasetToCreate.status = 1
+  }
+
+  const response = await api.createDataset(datasetToCreate)
+
+  if (response.status === 200) {
+    dispatch(createDataset(response.data))
+
+    if (setAsActive) {
+      setActiveDatasetIdDispatcher(dispatch)(response.data.id)
+    }
   }
 }

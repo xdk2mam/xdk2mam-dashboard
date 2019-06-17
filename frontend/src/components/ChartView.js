@@ -18,6 +18,10 @@ class ChartView extends PureComponent {
   render() {
     const { classes, data, onFullscreenClick, title, yDomain, legendItems, onLegendClick, disabledSeries } = this.props
 
+    if (isEmpty(data)) {
+      return false
+    }
+
     let maxValue = null
     let minValue = null
     let avgValue = null

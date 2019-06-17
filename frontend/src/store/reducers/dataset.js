@@ -1,6 +1,6 @@
 import { concat } from 'lodash'
 
-import { SET_ACTIVE_DATASET_ID, CLEAR_ACTIVE_DATASET_ID, CREATE_DATASET } from '../actions/dataset'
+import { SET_ACTIVE_DATASET_ID, CLEAR_ACTIVE_DATASET_ID, CREATE_DATASET, SET_DATASETS } from '../actions/dataset'
 
 const initialState = {
   activeDatasetId: null,
@@ -25,6 +25,12 @@ const dataset = (state = initialState, action) => {
       return {
         ...state,
         datasets: concat(state.datasets, action.payload.dataset),
+      }
+
+    case SET_DATASETS:
+      return {
+        ...state,
+        datasets: action.payload.datasets,
       }
 
     default:
