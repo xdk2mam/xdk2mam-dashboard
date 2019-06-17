@@ -56,7 +56,8 @@ class Datasets extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.activeDataset.id !== prevProps.activeDataset.id) {
+    const { activeDataset } = this.props
+    if (activeDataset && activeDataset.id !== prevProps.activeDataset.id) {
       this.props.dispatchGetDatasets()
     }
   }
