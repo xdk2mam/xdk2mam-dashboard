@@ -2,7 +2,7 @@ import React, { Fragment, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Grid, Typography } from '@material-ui/core'
-import { isEmpty } from 'lodash'
+import { includes, isEmpty, find } from 'lodash'
 import { connect } from 'react-redux'
 
 import { createDatasetDispatcher, clearActiveDatasetIdDispatcher } from '../store/actions/dataset'
@@ -17,6 +17,7 @@ import TabNavigator from '../components/TabNavigator'
 import SubHeader from '../components/SubHeader'
 import NoDataMessage from '../components/NoDataMessage'
 import NoActiveDataset from '../components/NoActiveDataset'
+import SensorTypes from '../constants/SensorTypes'
 
 /**
  * Constants
@@ -115,9 +116,46 @@ class Home extends PureComponent {
     this.setState(initialState)
   }
 
+  getSelectedChartData = () => {
+    const { infoSensor, selectedChart } = this.state
+
+    if (isEmpty(selectedChart)) {
+      return null
+    }
+
+    if (selectedChart.sensorName) {
+      return find(infoSensor, { sensorName: selectedChart.sensorName })
+    }
+
+    let sensorType = ''
+    const WEATHER_SENSORS = ['Pressure', 'Temp', 'Humidity']
+    const LIGHT_SENSORS = ['milliLux']
+    const ACOUSTIC_SENSORS = ['mp']
+
+    if (includes(WEATHER_SENSORS, selectedChart.seriesName)) {
+      sensorType = SensorTypes.WEATHER
+    }
+
+    if (includes(LIGHT_SENSORS, selectedChart.seriesName)) {
+      sensorType = SensorTypes.LIGHT
+    }
+
+    if (includes(ACOUSTIC_SENSORS, selectedChart.seriesName)) {
+      sensorType = SensorTypes.ACOUSTIC
+    }
+
+    const selectedSensor = find(infoSensor, { sensorName: sensorType })
+    /** @todo: backend should return consistent objects */
+    const data = sensorType === SensorTypes.ACOUSTIC_SENSORS ? selectedSensor.data : selectedSensor.series
+
+    return find(data, { seriesName: selectedChart.seriesName })
+  }
+
   render() {
     const { classes, activeDataset } = this.props
-    const { selectedTab, infoSensor, tableData, selectedChart, selectedTimeInterval } = this.state
+    const { selectedTab, infoSensor, tableData, selectedTimeInterval } = this.state
+
+    const selectedChartData = this.getSelectedChartData()
 
     const showNoDataMessage = !isEmpty(activeDataset) && isEmpty(infoSensor)
     const showDashboard = !isEmpty(activeDataset) && !isEmpty(infoSensor)
@@ -236,8 +274,8 @@ class Home extends PureComponent {
               </Grid>
             </Grid>
 
-            {!isEmpty(selectedChart) && (
-              <FullscreenModal selectedChart={selectedChart} onCloseClick={this.handleCloseFullscreenButton} />
+            {!isEmpty(selectedChartData) && (
+              <FullscreenModal selectedChart={selectedChartData} onCloseClick={this.handleCloseFullscreenButton} />
             )}
           </Fragment>
         )}
