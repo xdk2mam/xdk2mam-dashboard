@@ -139,12 +139,20 @@ LineChart.propTypes = {
   data: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   height: PropTypes.number,
   classes: PropTypes.object.isRequired,
-  color: PropTypes.string,
+  color: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   baseColor: PropTypes.string,
+  disabledSeries: PropTypes.array,
+  yDomain: PropTypes.array,
+  onLegendClick: PropTypes.func,
+  legendItems: PropTypes.array,
 }
 
 LineChart.defaultProps = {
   height: 300,
+  disabledSeries: [],
+  legendItems: [],
+  onLegendClick: null,
+  yDomain: undefined,
 }
 
 /**
