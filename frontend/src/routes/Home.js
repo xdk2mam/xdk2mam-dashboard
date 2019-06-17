@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import { createDatasetDispatcher, clearActiveDatasetIdDispatcher } from '../store/actions/dataset'
 import { getActiveDataset } from '../store/selectors/dataset'
 import { formatDataForCharts, formatDataForTable, getYDomain, getSeriesLegendItems } from '../helpers/utils'
+import api from '../api/api'
 import generateRandomData from '../helpers/randomData'
 import Layout from '../components/Layout'
 import Table from '../components/Table/Table'
@@ -128,14 +129,13 @@ class Home extends PureComponent {
     const { selectedTimeInterval } = this.state
 
     const selectedTimeIntervalValue = find(TIME_INTERVALS, selectedTimeInterval)[selectedTimeInterval]
-    const sensorData = await getData(id, selectedTimeIntervalValue, GET_ALL_LIMIT_ENTRIES)
-    const parsedData = sensorData.data
+    const sensorData = await api.getData(id, selectedTimeIntervalValue, GET_ALL_LIMIT_ENTRIES)
 
     this.setState({
-      infoSensor: !isEmpty(parsedData) ? formatDataForCharts(parsedData) : null,
-      tableData: !isEmpty(parsedData) ? formatDataForTable(parsedData) : null,
-      rawData: parsedData,
-      rawChartData: parsedData,
+      infoSensor: !isEmpty(sensorData) ? formatDataForCharts(sensorData) : null,
+      tableData: !isEmpty(sensorData) ? formatDataForTable(sensorData) : null,
+      rawData: sensorData,
+      rawChartData: sensorData,
     })
   }
 
@@ -185,8 +185,9 @@ class Home extends PureComponent {
   }
 
   handleFinishDatasetClick = () => {
+    const { dispatchClearActiveDatasetId, activeDataset } = this.props
     clearInterval(this.intervalId)
-    this.props.dispatchClearActiveDatasetId(this.props.activeDataset)
+    dispatchClearActiveDatasetId(activeDataset)
     this.setState(initialState)
   }
 

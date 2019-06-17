@@ -6,19 +6,6 @@ import generateRandomData from './randomData'
 
 const API_BASE_PATH = 'http://localhost:8081/api'
 
-export const getData = (databaseId, minutesAgo, limit) => {
-  return new Promise(async (res, rej) => {
-    try {
-      const respDB = await axios.get(`${API_BASE_PATH}/getData/${databaseId}/${minutesAgo}?limit=${limit}`)
-      const data = respDB.data
-
-      res({ data })
-    } catch (e) {
-      rej(e)
-    }
-  })
-}
-
 export const putRandomData = () => {
   const randomData = generateRandomData()
 
