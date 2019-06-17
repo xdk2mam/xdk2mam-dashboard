@@ -277,7 +277,7 @@ export const formatDataForTable = data => {
     if (isNil(item)) {
       return false
     }
-    
+
     const date = moment(item.timestamp).format('hh:mm:ss')
     const itemData = []
 
@@ -298,7 +298,7 @@ export const getMaxYValue = data => Math.max(...data.map(item => item.y))
 
 export const getMinYValue = data => Math.min(...data.map(item => item.y))
 
-export const getAvgYValue = data => meanBy(data, 'y').toFixed(1)
+export const getAvgYValue = data => parseFloat(meanBy(data, 'y'))
 
 export const getYDomain = title => {
   const HUMIDITY_Y_DOMAIN = [0, 100]
@@ -311,5 +311,3 @@ export const getYDomain = title => {
 }
 
 export const getSeriesLegendItems = (items, title) => find(items, ['sensor', title]).legends
-
-export const getAvgYValue = data => parseFloat(meanBy(data, 'y'))
