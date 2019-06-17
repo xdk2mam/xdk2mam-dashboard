@@ -1,4 +1,5 @@
-import moment from 'moment'
+import { replace } from 'lodash'
+
 import api from '../../api/api'
 
 /**
@@ -49,8 +50,8 @@ export const setActiveDatasetIdDispatcher = dispatch => activeDatasetId => {
   dispatch(setActiveDatasetId(activeDatasetId))
 }
 
-export const clearActiveDatasetIdDispatcher = dispatch => async activeDatasetId => {
-  const response = await api.terminateDataset(activeDatasetId)
+export const clearActiveDatasetIdDispatcher = dispatch => async id => {
+  const response = await api.terminateDataset(id)
 
   if (response.status === 200) {
     dispatch(clearActiveDatasetId())
@@ -59,10 +60,10 @@ export const clearActiveDatasetIdDispatcher = dispatch => async activeDatasetId 
 
 export const createDatasetDispatcher = dispatch => async (dataset, setAsActive = false) => {
   const datasetToCreate = {
-    name: dataset.name.replace(/ /g, '_'),
-    datasetEnd: moment(dataset.endDate).unix(),
-    datasetInterval: 30000 /** @todo This value shouldn't be hardcoded, perhaps env variable or sent as part of the dataset object */,
     ...dataset,
+    name: replace(dataset.name, ' ', '_'),
+    datasetEnd: dataset.endDate.unix(),
+    datasetInterval: 30000 /** @todo This value shouldn't be hardcoded, perhaps env variable or sent as part of the dataset object */,
   }
 
   if (setAsActive) {

@@ -78,7 +78,6 @@ const initialState = {
   selectedTimeInterval: '',
   disabledSeries: [],
   legendItems: INERTIAL_LEGENDS,
-  recording: false,
 }
 
 // const name = hasSeries ? data.sensorName : data.seriesName
@@ -96,30 +95,18 @@ class Home extends PureComponent {
     }
   }
 
-  start = () => {
-    const { activeDataset } = this.props
+  componentDidMount() {
+    this.start()
+  }
 
-    if (!isEmpty(activeDataset)) {
-      if (activeDataset.status === 1) {
-        this.setState(
-          {
-            recording: true,
-            selectedTimeInterval: '1m',
-          },
-          () => {
-            if (USE_FAKE_DATA) {
-              this.startDataset()
-            } else {
-              this.intervalId = setInterval(async () => {
-                this.getAllData()
-              }, 1000)
-            }
-          }
-        )
-      } else {
-        this.setState({ selectedTimeInterval: 'All' }, () => this.getAllData())
-      }
+  componentDidUpdate(prevProps) {
+    if (this.props.activeDataset !== prevProps.activeDataset) {
+      this.start()
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId)
   }
 
   getAllData = async () => {
@@ -129,7 +116,7 @@ class Home extends PureComponent {
     const { selectedTimeInterval } = this.state
 
     const selectedTimeIntervalValue = find(TIME_INTERVALS, selectedTimeInterval)[selectedTimeInterval]
-    const sensorData = await api.getData(id, selectedTimeIntervalValue, GET_ALL_LIMIT_ENTRIES)
+    const sensorData = await api.getDatasetData(id, selectedTimeIntervalValue, GET_ALL_LIMIT_ENTRIES)
 
     this.setState({
       infoSensor: !isEmpty(sensorData) ? formatDataForCharts(sensorData) : null,
@@ -139,15 +126,34 @@ class Home extends PureComponent {
     })
   }
 
-  startDataset = () => {
+  start = () => {
+    const { activeDataset } = this.props
+
+    if (isEmpty(activeDataset)) {
+      return
+    }
+
+    if (activeDataset.status === 1) {
+      this.setState({ selectedTimeInterval: '1m' }, () => {
+        if (USE_FAKE_DATA) {
+          this.startFakeDataset()
+        } else {
+          this.intervalId = setInterval(async () => {
+            this.getAllData()
+          }, 1000)
+        }
+      })
+    } else {
+      this.setState({ selectedTimeInterval: 'All' }, () => this.getAllData())
+    }
+  }
+
+  startFakeDataset = () => {
     this.intervalId = setInterval(async () => {
       const { rawData, rawChartData } = this.state
 
-      let sensorData = []
-      let parsedData
-
-      sensorData = generateRandomData()
-      parsedData = sensorData.data[0].data
+      const sensorData = generateRandomData()
+      const parsedData = sensorData.data[0].data
 
       const newRawData = rawData.slice(0)
       const newChartData = rawChartData.slice(0)
@@ -187,7 +193,7 @@ class Home extends PureComponent {
   handleFinishDatasetClick = () => {
     const { dispatchClearActiveDatasetId, activeDataset } = this.props
     clearInterval(this.intervalId)
-    dispatchClearActiveDatasetId(activeDataset)
+    dispatchClearActiveDatasetId(activeDataset.id)
     this.setState(initialState)
   }
 
@@ -238,20 +244,6 @@ class Home extends PureComponent {
     const data = sensorType === SensorTypes.ACOUSTIC_SENSORS ? selectedSensor.data : selectedSensor.series
 
     return find(data, { seriesName: selectedChart.seriesName })
-  }
-
-  componentDidMount() {
-    this.start()
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.activeDataset !== prevProps.activeDataset) {
-      this.start()
-    }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.intervalId)
   }
 
   render() {

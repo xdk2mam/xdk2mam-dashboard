@@ -63,7 +63,7 @@ class LineChart extends PureComponent {
       return null
     }
 
-    if (data.length < 2) {
+    if (data.length < 1) {
       return (
         <div className={classes.loadingContainer}>
           <CircularProgress classes={{ root: classes.loadingSpinner, colorPrimary: classes.loadingColor }} size={25} />
