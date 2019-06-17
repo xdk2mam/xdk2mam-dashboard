@@ -89,7 +89,12 @@ SubHeader.propTypes = {
   onFinishDatasetClick: PropTypes.func.isRequired,
   onTimeIntervalClick: PropTypes.func.isRequired,
   deviceName: PropTypes.string,
-  activeDataset: PropTypes.string,
+  activeDataset: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    description: PropTypes.string,
+    endDate: PropTypes.string,
+  }),
 }
 
 SubHeader.defaultProps = {
