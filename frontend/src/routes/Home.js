@@ -2,12 +2,12 @@ import React, { Fragment, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Grid, Typography } from '@material-ui/core'
-import { includes, isEmpty, find } from 'lodash'
+import { includes, isEmpty, find, remove } from 'lodash'
 import { connect } from 'react-redux'
 
 import { createDatasetDispatcher, clearActiveDatasetIdDispatcher } from '../store/actions/dataset'
 import { getActiveDataset } from '../store/selectors/dataset'
-import { formatDataForCharts, formatDataForTable, getLast, getYDomain } from '../helpers/utils'
+import { formatDataForCharts, formatDataForTable, getLast, getYDomain, getSeriesLegendItems } from '../helpers/utils'
 import generateRandomData from '../helpers/randomData'
 import Layout from '../components/Layout'
 import Table from '../components/Table/Table'
@@ -18,6 +18,7 @@ import SubHeader from '../components/SubHeader'
 import NoDataMessage from '../components/NoDataMessage'
 import NoActiveDataset from '../components/NoActiveDataset'
 import SensorTypes from '../constants/SensorTypes'
+import { ChartColors } from '../helpers/colors'
 
 /**
  * Constants
@@ -27,6 +28,41 @@ const USE_FAKE_DATA = true
 
 const VISIBLE_VALUES_ON_CHART = 25
 
+const INERTIAL_LEGENDS = [
+  {
+    sensor: 'Accelerometer',
+    legends: [
+      { title: 'AccelerometerX', color: ChartColors.x },
+      { title: 'AccelerometerY', color: ChartColors.y },
+      { title: 'AccelerometerZ', color: ChartColors.z },
+    ],
+  },
+  {
+    sensor: 'Gyroscope',
+    legends: [
+      { title: 'GyroscopeX', color: ChartColors.x },
+      { title: 'GyroscopeY', color: ChartColors.y },
+      { title: 'GyroscopeZ', color: ChartColors.z },
+    ],
+  },
+  {
+    sensor: 'Inertial',
+    legends: [
+      { title: 'InertialX', color: ChartColors.x },
+      { title: 'InertialY', color: ChartColors.y },
+      { title: 'InertialZ', color: ChartColors.z },
+    ],
+  },
+  {
+    sensor: 'Magnetometer',
+    legends: [
+      { title: 'MagnetometerX', color: ChartColors.x },
+      { title: 'MagnetometerY', color: ChartColors.y },
+      { title: 'MagnetometerZ', color: ChartColors.z },
+    ],
+  },
+]
+
 const initialState = {
   infoSensor: [],
   rawData: [],
@@ -35,7 +71,11 @@ const initialState = {
   selectedTab: 0,
   selectedChart: null,
   selectedTimeInterval: '',
+  disabledSeries: [],
+  legendItems: INERTIAL_LEGENDS,
 }
+
+// const name = hasSeries ? data.sensorName : data.seriesName
 
 /**
  * Home
@@ -55,6 +95,10 @@ class Home extends PureComponent {
     if (!isEmpty(this.props.activeDataset)) {
       this.startDataset()
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId)
   }
 
   startDataset = () => {
@@ -116,6 +160,20 @@ class Home extends PureComponent {
     this.setState(initialState)
   }
 
+  handleLegendClick = item => {
+    const { disabledSeries } = this.state
+    const { title } = item
+    item.disabled = !item.disabled
+
+    if (item.disabled) {
+      disabledSeries.push(title)
+      this.setState({ disabledSeries })
+    } else {
+      remove(disabledSeries, seriesName => seriesName === item.title)
+      this.setState({ disabledSeries })
+    }
+  }
+
   getSelectedChartData = () => {
     const { infoSensor, selectedChart } = this.state
 
@@ -153,7 +211,7 @@ class Home extends PureComponent {
 
   render() {
     const { classes, activeDataset } = this.props
-    const { selectedTab, infoSensor, tableData, selectedTimeInterval } = this.state
+    const { selectedTab, infoSensor, tableData, selectedTimeInterval, legendItems, disabledSeries } = this.state
 
     const selectedChartData = this.getSelectedChartData()
 
@@ -245,6 +303,9 @@ class Home extends PureComponent {
                       return false
                     }
 
+                    const sensorName = sensors.sensorName
+                    const legends = getSeriesLegendItems(legendItems, sensorName)
+
                     return (
                       index !== 0 &&
                       index !== 4 &&
@@ -252,9 +313,12 @@ class Home extends PureComponent {
                         <Grid item sm={6} xs={12} key={index} className={classes.gridInner}>
                           <Grid item xs={12}>
                             <ChartView
-                              title={sensors.sensorName}
+                              title={sensorName}
                               data={sensors}
                               onFullscreenClick={() => this.handleFullscreenButton(sensors)}
+                              legendItems={legends}
+                              onLegendClick={this.handleLegendClick}
+                              disabledSeries={disabledSeries}
                             />
                           </Grid>
                         </Grid>
@@ -275,7 +339,13 @@ class Home extends PureComponent {
             </Grid>
 
             {!isEmpty(selectedChartData) && (
-              <FullscreenModal selectedChart={selectedChartData} onCloseClick={this.handleCloseFullscreenButton} />
+              <FullscreenModal
+                selectedChart={selectedChartData}
+                onCloseClick={this.handleCloseFullscreenButton}
+                legendItems={legendItems}
+                disabledSeries={disabledSeries}
+                onLegendClick={this.handleLegendClick}
+              />
             )}
           </Fragment>
         )}

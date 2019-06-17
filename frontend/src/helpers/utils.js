@@ -1,6 +1,6 @@
 import axios from 'axios'
 import moment from 'moment'
-import { meanBy } from 'lodash'
+import { find, meanBy } from 'lodash'
 
 import generateRandomData from './randomData'
 
@@ -151,7 +151,7 @@ export const formatDataForCharts = data => {
             y: 0,
           }
           dataEntry.x = item.timestamp
-          dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName])
+          dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName], 10)
 
           return formattedData[j].series[i].data.push(dataEntry)
         })
@@ -163,7 +163,7 @@ export const formatDataForCharts = data => {
             y: 0,
           }
           dataEntry.x = item.timestamp
-          dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName])
+          dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName], 10)
 
           return formattedData[j].series[i].data.push(dataEntry)
         })
@@ -288,7 +288,7 @@ export const formatDataForTable = data => {
     itemData.push(date)
     item.xdk2mam.map((sensor, j) => {
       return sensor.data.map((dataItem, i) => {
-        return itemData.push(parseInt(dataItem[dataShape[j].series[i].seriesName]))
+        return itemData.push(parseInt(dataItem[dataShape[j].series[i].seriesName], 10))
       })
     })
 
@@ -298,9 +298,9 @@ export const formatDataForTable = data => {
   return formattedData
 }
 
-export const getMaxYValue = data => Math.max.apply(Math, data.map(item => item.y))
+export const getMaxYValue = data => Math.max(...data.map(item => item.y))
 
-export const getMinYValue = data => Math.min.apply(Math, data.map(item => item.y))
+export const getMinYValue = data => Math.min(...data.map(item => item.y))
 
 export const getAvgYValue = data => meanBy(data, 'y').toFixed(1)
 
@@ -313,3 +313,5 @@ export const getYDomain = title => {
 
   return undefined
 }
+
+export const getSeriesLegendItems = (items, title) => find(items, ['sensor', title]).legends
