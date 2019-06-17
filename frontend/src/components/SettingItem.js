@@ -15,7 +15,7 @@ import MenuButton from './MenuButton'
 const SettingItem = ({ classes, value, onAddClick, onMenuClick, type }) => (
   <Fragment>
     <div className={classes.settingHeader}>
-      <Typography variant="subtitle2">{SettingsValues[type].label}</Typography>
+      <Typography variant="subtitle2">{SettingsValues[type].dialogLabel}</Typography>
       {isEmpty(value) && <AddButton onClick={onAddClick} />}
       {!isEmpty(value) && <MenuButton onClick={event => onMenuClick(event, SettingsValues[type].value)} />}
     </div>
