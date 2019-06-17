@@ -303,3 +303,13 @@ export const getMaxYValue = data => Math.max.apply(Math, data.map(item => item.y
 export const getMinYValue = data => Math.min.apply(Math, data.map(item => item.y))
 
 export const getAvgYValue = data => meanBy(data, 'y').toFixed(1)
+
+export const getYDomain = title => {
+  const HUMIDITY_Y_DOMAIN = [0, 100]
+
+  if (title === 'Humidity') {
+    return HUMIDITY_Y_DOMAIN
+  }
+
+  return undefined
+}

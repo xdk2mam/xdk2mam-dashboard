@@ -2,27 +2,34 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Grid, Typography } from '@material-ui/core'
+import { isEmpty } from 'lodash'
 
-import LineChart from './LineChart'
 import FullscreenExitButton from './FullscreenExitButton'
-import Colors, { ChartColors } from '../helpers/colors'
+import Colors from '../helpers/colors'
+import ChartView from './ChartView'
+import { getYDomain } from '../helpers/utils'
 
 /**
  * FullscreenModal
  */
 
 const FullscreenModal = ({ classes, onCloseClick, selectedChart }) => {
+  const hasSeries = !isEmpty(selectedChart.series)
+  const title = hasSeries ? selectedChart.sensorName : selectedChart.seriesName
+  const data = hasSeries ? selectedChart : selectedChart.data
+  const yDomain = getYDomain(title)
+
   return (
     <div className={classes.container}>
       <Grid item xs={12}>
         <Paper className={classes.paper} elevation={0}>
           <div className={classes.lineChartHeader}>
-            <Typography variant="subheading" color="inherit">
+            <Typography variant="subtitle1" color="inherit">
               {selectedChart.seriesName}
             </Typography>
             <FullscreenExitButton onClick={onCloseClick} />
           </div>
-          <LineChart data={selectedChart.data} color={ChartColors[selectedChart.seriesName]} height={600} />
+          <ChartView title={title} data={data} yDomain={yDomain} />
         </Paper>
       </Grid>
     </div>
