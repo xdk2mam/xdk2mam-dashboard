@@ -6,23 +6,36 @@ import { isEmpty } from 'lodash'
 
 import FullscreenExitButton from './FullscreenExitButton'
 import ChartView from './ChartView'
-import { getYDomain } from '../helpers/utils'
+import { getYDomain, getSeriesLegendItems } from '../helpers/utils'
 
 /**
  * FullscreenModal
  */
 
-const FullscreenModal = ({ classes, onCloseClick, selectedChart }) => {
+const FullscreenModal = ({ classes, onCloseClick, selectedChart, legendItems, disabledSeries = [], onLegendClick }) => {
   const hasSeries = !isEmpty(selectedChart.series)
   const title = hasSeries ? selectedChart.sensorName : selectedChart.seriesName
   const data = hasSeries ? selectedChart : selectedChart.data
   const yDomain = getYDomain(title)
 
+  let legends = []
+
+  if (hasSeries) {
+    legends = getSeriesLegendItems(legendItems, title)
+  }
+
   return (
     <Dialog open={!!selectedChart} fullWidth maxWidth="lg" onClose={onCloseClick}>
       <Paper className={classes.paper} elevation={1}>
         <FullscreenExitButton onClick={onCloseClick} />
-        <ChartView title={title} data={data} yDomain={yDomain} />
+        <ChartView
+          title={title}
+          data={data}
+          yDomain={yDomain}
+          legendItems={legends}
+          disabledSeries={disabledSeries}
+          onLegendClick={onLegendClick}
+        />
       </Paper>
     </Dialog>
   )
@@ -36,6 +49,14 @@ FullscreenModal.propTypes = {
   classes: PropTypes.object.isRequired,
   onCloseClick: PropTypes.func.isRequired,
   selectedChart: PropTypes.object.isRequired,
+  legendItems: PropTypes.array.isRequired,
+  disabledSeries: PropTypes.array,
+  onLegendClick: PropTypes.func,
+}
+
+FullscreenModal.propTypes = {
+  disabledSeries: [],
+  onLegendClick: () => {},
 }
 
 /**
