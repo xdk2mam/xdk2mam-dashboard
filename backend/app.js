@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(compression())
 app.use('/api', main)
 
-setInterval(() => dataService.publish(), 5000)
+// setInterval(() => dataService.publish(), 5000)
 
 app.listen(port, function() {
   console.log('xdk2mam API on: http://localhost:' + port)

@@ -19,9 +19,9 @@ var DatasetRepository = function() {
       '`pressure` int(11)  NULL,' +
       '`temperature` int(11)  NULL,' +
       '`humidity` int(11)  NULL,' +
-      '`accelerometer_x` int(11)  NULL,' +
-      '`accelerometer_y` int(11)  NULL,' +
-      '`accelerometer_z` int(11)  NULL,' +
+      '`accel_x` int(11)  NULL,' +
+      '`accel_y` int(11)  NULL,' +
+      '`accel_z` int(11)  NULL,' +
       '`gyroscope_x` int(11)  NULL,' +
       '`gyroscope_y` int(11)  NULL,' +
       '`gyroscope_z` int(11)  NULL,' +
