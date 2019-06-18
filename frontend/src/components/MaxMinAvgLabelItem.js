@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
+import Colors from '../helpers/colors'
 
 /**
  * LabelItem
@@ -10,10 +11,10 @@ import { Typography } from '@material-ui/core'
 const LabelItem = ({ classes, value, label }) => {
   return (
     <div className={classes.value}>
-      <Typography variant="h6" color="inherit" className={classes.maxValue} align="center">
+      <Typography variant="subtitle2" color="inherit" align="center">
         {value}
       </Typography>
-      <Typography variant="subtitle1" className={classes.maxValue} align="center">
+      <Typography variant="caption" className={classes.label} align="center">
         {label}
       </Typography>
     </div>
@@ -26,7 +27,8 @@ const LabelItem = ({ classes, value, label }) => {
 
 LabelItem.propTypes = {
   classes: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  value: PropTypes.number.isRequired,
+  label: PropTypes.string.isRequired,
 }
 
 /**
@@ -38,8 +40,8 @@ const styles = {
     minWidth: 90,
   },
 
-  maxValue: {
-    // paddingRight: 15,
+  label: {
+    color: Colors.TEXT_GREY,
   },
 }
 

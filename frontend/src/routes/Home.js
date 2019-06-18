@@ -80,8 +80,6 @@ const initialState = {
   legendItems: INERTIAL_LEGENDS,
 }
 
-// const name = hasSeries ? data.sensorName : data.seriesName
-
 /**
  * Home
  */
