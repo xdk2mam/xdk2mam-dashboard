@@ -1,8 +1,8 @@
 var connectionService = require('./../service/connectionService.js')
 var q = require('q')
 
-var DatasetRepository = function() {
-  this.create = function(dataset) {
+var DatasetRepository = function () {
+  this.create = function (dataset) {
     var query
     var deferred = q.defer()
 
@@ -41,7 +41,7 @@ var DatasetRepository = function() {
       'FOREIGN KEY (`bundle_id`) REFERENCES bundles(`id`)' +
       ')DEFAULT CHARSET=utf8mb4;'
 
-    connectionService.getConnectionRequest(query, function(err, data) {
+    connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {
         deferred.reject(err)
       } else {
@@ -60,11 +60,22 @@ var DatasetRepository = function() {
           dataset.datasetInterval +
           ');'
 
-        connectionService.getConnectionRequest(queryInsert, function(err, dt) {
+        connectionService.getConnectionRequest(queryInsert, function (err, dt) {
           if (err) {
             deferred.reject(err)
           } else {
-            deferred.resolve({ id: dt.insertId, ...dataset, timestamp })
+
+            const idInsert = dt.insertId
+            const queryUpdate = 'UPDATE `datasets` SET ' + '`status` = 0  WHERE `id` != ' + idInsert + ';'
+
+            connectionService.getConnectionRequest(queryUpdate, function (err, dts) {
+              if (err) {
+                deferred.reject(err)
+              } else {
+
+                deferred.resolve({ id: idInsert, ...dataset, timestamp })
+              }
+            })
           }
         })
       }
@@ -73,7 +84,7 @@ var DatasetRepository = function() {
     return deferred.promise
   }
 
-  this.terminate = function(dataset) {
+  this.terminate = function (dataset) {
     var query
     var deferred = q.defer()
     const timestamp = parseInt(new Date().getTime() / 1000)
@@ -81,7 +92,7 @@ var DatasetRepository = function() {
     query =
       'UPDATE `datasets` SET ' + '`status` = 0 , `dataset_end` = ' + timestamp + ' WHERE `id` = ' + dataset.id + ';'
 
-    connectionService.getConnectionRequest(query, function(err, data) {
+    connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {
         deferred.reject(err)
       } else {
@@ -92,13 +103,13 @@ var DatasetRepository = function() {
     return deferred.promise
   }
 
-  this.getAll = function() {
+  this.getAll = function () {
     var query
     var deferred = q.defer()
 
     query = 'SELECT * FROM `datasets`'
 
-    connectionService.getConnectionRequest(query, function(err, data) {
+    connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {
         deferred.reject(err)
       } else {

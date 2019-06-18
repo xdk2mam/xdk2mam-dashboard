@@ -26,7 +26,7 @@ var DataRepository = function () {
               queryInsert += " pressure,temperature,humidity,"
               queryAux += info.data[0].Pressure + "," + info.data[1].Temp + "," + info.data[2].Humidity
               break;
-            case 'Accelerometer':
+            case 'Accel':
               queryInsert += " accelerometer_x,accelerometer_y,accelerometer_z, "
               queryAux += info.data[0].x + "," + info.data[1].y + "," + info.data[2].z
               break;
@@ -55,7 +55,7 @@ var DataRepository = function () {
           queryAux += ','
         })
 
-        var finalQuery = queryInsert + "on_tangle) VALUES ("+ dataSensors.timestamp+', 1, "'+ dataSensors.device+ '" , ' + queryAux + 0 + ")"
+        var finalQuery = queryInsert + "on_tangle) VALUES (" + dataSensors.timestamp + ', 1, "' + dataSensors.device + '" , ' + queryAux + 0 + ")"
 
         connectionService.getConnectionRequest(finalQuery, function (err, dt) {
           if (err) {
@@ -89,7 +89,7 @@ var DataRepository = function () {
     return deferred.promise
   }
 
-  this.getData = function (id,interval,limit) {
+  this.getData = function (id, interval, limit) {
     var query
     var deferred = q.defer()
 
@@ -102,28 +102,34 @@ var DataRepository = function () {
         deferred.reject(err)
       } else {
 
-        const timestampNOW = parseInt(new Date().getTime() / 1000)
-        //Receive interval in minutes, so...
-        const intervalSec = interval * 60
+        if (data.length > 0) {
 
-        let queryInterval = ''
+          const timestampNOW = parseInt(new Date().getTime() / 1000)
+          //Receive interval in minutes, so...
+          const intervalSec = interval * 60
 
-        if(intervalSec > 0)
-          queryInterval = ' AND timestamp BETWEEN ' + (timestampNOW - intervalSec) + ' AND ' + timestampNOW
-        else if(intervalSec === 0)
-          queryInterval = ' '    
-        else
-        queryInterval = ' AND on_tangle = 0'
-          
-        var querySelect = "SELECT * FROM "+ data[0].dataset_name_table + " WHERE  1=1 " + queryInterval + ' LIMIT '+ limit
+          let queryInterval = ''
 
-        connectionService.getConnectionRequest(querySelect, function (err, dt) {
-          if (err) {
-            deferred.reject(err)
-          } else {
-            deferred.resolve(dt)
-          }
-        })
+          if (intervalSec > 0)
+            queryInterval = ' AND timestamp BETWEEN ' + (timestampNOW - intervalSec) + ' AND ' + timestampNOW
+          else if (intervalSec === 0)
+            queryInterval = ' '
+          else
+            queryInterval = ' AND on_tangle = 0'
+
+          var querySelect = "SELECT * FROM " + data[0].dataset_name_table + " WHERE  1=1 " + queryInterval + ' LIMIT ' + limit
+
+          connectionService.getConnectionRequest(querySelect, function (err, dt) {
+            if (err) {
+              deferred.reject(err)
+            } else {
+              deferred.resolve(dt)
+            }
+          })
+
+        } else
+          deferred.reject({ errorMessage: "No data was found." })
+
 
       }
     })
@@ -131,19 +137,19 @@ var DataRepository = function () {
     return deferred.promise
   }
 
-  this.updateStatus = function (table,ids,idBundle) {
+  this.updateStatus = function (table, ids, idBundle) {
     var query
     var deferred = q.defer()
- 
-    query = "UPDATE "+ table + " SET on_tangle = 1, bundle_id = "+ idBundle + " WHERE id  IN  ( "
- 
-    for(let i=0;i<ids.length;i++){
-      const id = ids[i]      
-      query += id     
-      if(i<ids.length-1)
-        query+= ','
+
+    query = "UPDATE " + table + " SET on_tangle = 1, bundle_id = " + idBundle + " WHERE id  IN  ( "
+
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i]
+      query += id
+      if (i < ids.length - 1)
+        query += ','
       else
-        query+= ')'
+        query += ')'
     }
 
     connectionService.getConnectionRequest(query, function (err, data) {
@@ -157,19 +163,19 @@ var DataRepository = function () {
     return deferred.promise
   }
 
-  this.updateFlag = function (table,ids) {
+  this.updateFlag = function (table, ids) {
     var query
     var deferred = q.defer()
- 
-    query = "UPDATE "+ table + " SET on_tangle = 1  WHERE id  IN  ( "
- 
-    for(let i=0;i<ids.length;i++){
-      const id = ids[i]      
-      query += id     
-      if(i<ids.length-1)
-        query+= ','
+
+    query = "UPDATE " + table + " SET on_tangle = 1  WHERE id  IN  ( "
+
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i]
+      query += id
+      if (i < ids.length - 1)
+        query += ','
       else
-        query+= ')'
+        query += ')'
     }
 
     connectionService.getConnectionRequest(query, function (err, data) {
@@ -189,15 +195,15 @@ var DataRepository = function () {
     var deferred = q.defer()
 
     const timestampNOW = parseInt(new Date().getTime() / 1000)
- 
-    query = "INSERT INTO bundles (timestamp,id_bundle,root) VALUES ("+timestampNOW+','+ null+',"'+root+'")'
+
+    query = "INSERT INTO bundles (timestamp,id_bundle,root) VALUES (" + timestampNOW + ',' + null + ',"' + root + '")'
 
 
     connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {
         deferred.reject(err)
       } else {
-        deferred.resolve({idBundle: data.insertId,timestamp:timestampNOW})
+        deferred.resolve({ idBundle: data.insertId, timestamp: timestampNOW })
       }
     })
 

@@ -84,7 +84,7 @@ var DataService = function() {
             var dataList = []
             for (let i = 0; i < data.length; i++) {
               const info = data[i]
-              // let sensorData = await convertToFrontFormat(info)
+              let sensorData = await convertToFrontFormat(info)
               dataList.push(info)
               ids.push(info.id)
             }
