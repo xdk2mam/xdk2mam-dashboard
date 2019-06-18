@@ -298,7 +298,7 @@ export const getMaxYValue = data => Math.max(...data.map(item => item.y))
 
 export const getMinYValue = data => Math.min(...data.map(item => item.y))
 
-export const getAvgYValue = data => parseFloat(meanBy(data, 'y'))
+export const getAvgYValue = data => parseFloat(meanBy(data, 'y')).toFixed(1)
 
 export const getYDomain = title => {
   const HUMIDITY_Y_DOMAIN = [0, 100]

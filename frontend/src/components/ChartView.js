@@ -2,11 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Typography } from '@material-ui/core'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel'
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import { isEmpty, remove } from 'lodash'
+import { isEmpty } from 'lodash'
 
 import { ChartColors } from '../helpers/colors'
 import { getMaxYValue, getMinYValue, getAvgYValue } from '../helpers/utils'
@@ -66,32 +62,28 @@ class ChartView extends PureComponent {
           legendItems={formattedlegendItems}
           yDomain={yDomain}
         />
-        <ExpansionPanel elevation={0}>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-            <Typography className={classes.heading}>View chart details</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            {!isEmpty(data.series) ? (
-              data.series.map(item => {
-                const seriesMaxValue = getMaxYValue(item.data)
-                const seriesMinValue = getMinYValue(item.data)
-                const seriesAvgValue = getAvgYValue(item.data)
+        {!isEmpty(data.series) ? (
+          data.series.map((item, index) => {
+            const seriesMaxValue = getMaxYValue(item.data)
+            const seriesMinValue = getMinYValue(item.data)
+            const seriesAvgValue = getAvgYValue(item.data)
+            const isEven = num => num % 2 === 0
 
-                return (
-                  <MaxMinAvgLabels
-                    key={`max-min-avg-${title}-${item.seriesName}`}
-                    title={item.seriesName}
-                    maxValue={seriesMaxValue}
-                    minValue={seriesMinValue}
-                    avgValue={seriesAvgValue}
-                  />
-                )
-              })
-            ) : (
-              <MaxMinAvgLabels maxValue={maxValue} minValue={minValue} avgValue={avgValue} />
-            )}
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+            return (
+              <MaxMinAvgLabels
+                key={`max-min-avg-${title}-${item.seriesName}`}
+                title={`${data.sensorName}${item.seriesName.toUpperCase()}`}
+                maxValue={seriesMaxValue}
+                minValue={seriesMinValue}
+                avgValue={seriesAvgValue}
+                showLabels={false}
+                greyBackground={!isEven(index)}
+              />
+            )
+          })
+        ) : (
+          <MaxMinAvgLabels maxValue={maxValue} minValue={minValue} avgValue={avgValue} />
+        )}
       </Paper>
     )
   }

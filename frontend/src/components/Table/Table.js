@@ -158,6 +158,7 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     boxSizing: 'border-box',
+    borderBottom: `1px solid ${Colors.FAFAFA}`,
   },
 
   tableHeader: {
@@ -173,7 +174,7 @@ const styles = theme => ({
   },
 
   row: {
-    backgroundColor: Colors.GREY,
+    backgroundColor: Colors.FAFAFA,
   },
 
   rootLink: {
