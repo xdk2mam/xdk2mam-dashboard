@@ -65,8 +65,9 @@ var DataService = function() {
     var deferred = q.defer()
 
     const datasets = await datasetService.getAll()
-    const dataset = datasets.map(dt => {
-      if (dt.status == 1) return dt
+    let dataset
+    datasets.map(dt => {
+      if (dt.status == 1) dataset=dt
     })[0]
     if (dataset !== undefined) {
       const limit = 1
@@ -85,7 +86,7 @@ var DataService = function() {
             for (let i = 0; i < data.length; i++) {
               const info = data[i]
               let sensorData = await convertToFrontFormat(info)
-              dataList.push(info)
+              dataList.push(sensorData)
               ids.push(info.id)
             }
 
