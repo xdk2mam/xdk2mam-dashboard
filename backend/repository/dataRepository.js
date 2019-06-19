@@ -101,9 +101,7 @@ var DataRepository = function () {
       if (err) {
         deferred.reject(err)
       } else {
-
         if (data.length > 0) {
-
           const timestampNOW = parseInt(new Date().getTime() / 1000)
           //Receive interval in minutes, so...
           const intervalSec = interval * 60
