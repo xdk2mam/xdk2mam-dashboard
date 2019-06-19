@@ -66,7 +66,7 @@ const INERTIAL_LEGENDS = [
 
 const GET_ALL_LIMIT_ENTRIES = 10000
 
-const TIME_INTERVALS = [{ '1m': 1 }, { '5m': 5 }, { '10m': 10 }, { '30m': 30 }, { All: -1 }]
+const TIME_INTERVALS = [{ '1m': 1 }, { '5m': 5 }, { '10m': 10 }, { '30m': 30 }, { All: 0 }]
 
 const initialState = {
   infoSensor: [],
@@ -113,7 +113,9 @@ class Home extends PureComponent {
     } = this.props
     const { selectedTimeInterval } = this.state
 
-    const selectedTimeIntervalValue = find(TIME_INTERVALS, selectedTimeInterval)[selectedTimeInterval]
+    const selectedTimeIntervalValue = find(TIME_INTERVALS, value => Object.keys(value)[0] === selectedTimeInterval)[
+      selectedTimeInterval
+    ]
     const sensorData = await api.getDatasetData(id, selectedTimeIntervalValue, GET_ALL_LIMIT_ENTRIES)
 
     this.setState({
