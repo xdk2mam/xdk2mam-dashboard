@@ -3,7 +3,7 @@ const { asciiToTrytes } = require('@iota/converter')
 const crypto = require('crypto')
 
 
-const provider = "https://nodes.devnet.thetangle.org:443"
+const provider = "https://node01.iotatoken.nl:443"
 
 function sha256(data){ return crypto.createHash('sha256').update(data).digest() }
 
