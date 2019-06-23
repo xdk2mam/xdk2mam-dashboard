@@ -112,6 +112,10 @@ If your XDK110 is on and sending data, you should be able to start visualizing i
 
 XDK2MAM Dashboard aims to allow the income of the XDK110 sensor's data on short intervals and build bundles in order to publish datasets collections to the Tangle as Nodes allow. If you check the Live Data table you will see which datasets are already published on MAM transactions and which ones are waiting to be published. 
 
-![Creating you first Dataset](https://xdk2mam.io/assets/images/Dash-live.png)
+![Live Data](https://xdk2mam.io/assets/images/Dash-live.png)
+
+If the dataset is already published you can click the link to see the MAM transaction on the Explorer. The following image shows a 10 datasets Bundle published by the Dashboard. You can verify it by yourself [following this link](https://devnet.thetangle.org/mam/RGEKDOMUWTWBDMTSRJFDCJRMSFWLMEQLJTZNNQ99YDGUNTUTVO9YMPUVNRVCRRJLWMSOONCWWF9ZPUY9L)
+
+![Data published to the Tangle](https://xdk2mam.io/assets/images/Dash-Explorer.png)
 
 
