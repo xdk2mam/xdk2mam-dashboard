@@ -118,4 +118,8 @@ If the dataset is already published you can click the link to see the MAM transa
 
 ![Data published to the Tangle](https://xdk2mam.io/assets/images/Dash-Explorer.png)
 
+# Final considerations
 
+The XDK2MAM is agnostic to devices as long as they respect the json structure. In the coming months we will be extending the supported data types to allow geolocalization and other information produced by devices out there. 
+
+Since you can create and terminate datasets for different projects we think that to be able to compare two datasets data is important. We are already working on it and it should be added to the Dash in the coming weeks. 
