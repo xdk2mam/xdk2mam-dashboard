@@ -89,7 +89,7 @@ var DataService = function () {
             }
 
             publishData(dataList).then(async root => {
-              console.log("Root:",root)
+              console.log("Root:", root)
               await dataRepository.updateFlag(dataset.dataset_name_table, ids)
               dataRepository
                 .createBundle(root)
@@ -99,24 +99,33 @@ var DataService = function () {
                     .then(data => {
                       deferred.resolve({ dataList, updated: true, root })
                     })
-                    .catch(function (err) {
-                      deferred.reject({ errorMessage: err })
+                    .catch(function (msg) {
+                      console.log(msg)
+                      deferred.resolve({ msg })
                     })
                 })
                 .catch(function (err) {
-                  deferred.reject({ errorMessage: err })
+                  console.log(err)
+                  deferred.resolve({ msg })
                 })
             })
+              .catch(function (msg) {
+                console.log("IOTA NODE:", msg)
+                deferred.resolve({ msg })
+              })
 
 
           } else {
+            console.log(err)
             deferred.resolve({ msg: 'There is no data to publish.' })
           }
         })
         .catch(function (err) {
+          console.log(err)
           deferred.resolve({ msg: 'No data was found.' })
         })
     } else {
+      console.log(err)
       deferred.resolve({ msg: 'No active dataset was found.' })
     }
 
