@@ -12,7 +12,7 @@ You can check our [step by step videotutorial](https://www.youtube.com/watch?v=i
 ## Requirements on the XDK110 side
 In order to be able to run the code on this repo you will need to [download XDK Workbench](https://xdk.bosch-connectivity.com/software-downloads), download the C code and flash it to your XDK110 following the [http-sdcard](https://github.com/xdk2mam/xdk2mam/tree/Workbench-3.6/http-sdcard) guide. 
 
-**Notice that the MicroSD config file has two variations: DEST_SERVER_PORT should now be set to 8081 and DEST_POST_PATH needs to point to /api/putData**
+**Notice that the MicroSD config.cfg file used on the http-sdcard needs two variations for the XDK2MAM Dashboard: DEST_SERVER_PORT should now be set to 8081 and DEST_POST_PATH needs to point to /api/putData**
 
 ```
 DEVICE_NAME=enter-your-device-id
