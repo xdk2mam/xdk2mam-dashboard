@@ -1,6 +1,8 @@
 # XDK2MAM Dashboard
 
-The XDK2MAM Dashboard is visualization tool for the XDK110 sensor's data and a buffer to handle short intervals data and distribute the publish to Tangle by creating bundles containing more than one dataset. 
+The XDK2MAM Dashboard is a visualization/storage tool for the XDK110 sensor's data and a buffer to handle short intervals data and distribute the publish to Tangle by creating bundles containing more than one dataset. Because publishing to Tangle using MAM requires Proof of Work, and this takes some seconds, it is not possible to get live data from the XDK110 and send it straight to the Tangle.
+
+XDK2MAM Dashboard React application solves this in a simple way: it collects all the data on a local database, builds bundles and publishes the dataset collection to the Tangle every n seconds. 
 
 This package uses the [http-sdcard](https://github.com/xdk2mam/xdk2mam/tree/Workbench-3.6/http-sdcard) code on the XDK110 side with a minor change at the ***config.cfg*** file. 
 You can check our step by [step videotutorial](https://www.youtube.com/watch?v=isrx7ibcRL4) to learn how to import, build and flash the C code to the XDK110 
