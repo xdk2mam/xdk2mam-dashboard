@@ -98,5 +98,20 @@ This will open a new Browser or tab with the XDK2MAM Dashboard.
 
 The Dashboard allows you to create datasets to log XDK110 data on certain periods. Since we started the application for the first time, you will have to create a new Dataset and provide some basic information. 
 Once this is done, you should be able to start watching how the sensor's data is sent on the graphics. 
-Notice that you have the sensor's divided by Enviromental, Inertial and tabs. 
+Notice that you have the sensor's grouped by Weather, Enviromental and Inertial and tabs. 
+
+![Creating you first Dataset](https://xdk2mam.io/assets/images/Dash-1.png)
+
+## Dashboard Home overview
+
+If your XDK110 is on and sending data, you should be able to start visualizing it on the Dashboard graphics on each tab. Notice that you can chose from diferent time intervals and also that you can enlarge the graphic. Also, you will get a **Live Data** table showing the data as it arrives and links to verify its integrity on the Tangle as it get's published.
+
+![Creating you first Dataset](https://xdk2mam.io/assets/images/Dashboard-overview.png)
+
+## Data verification on Tangle
+
+XDK2MAM Dashboard aims to allow the income of the XDK110 sensor's data on short intervals and build bundles in order to publish datasets collections to the Tangle as Nodes allow. If you check the Live Data table you will see which datasets are already published on MAM transactions and which ones are waiting to be published. 
+
+![Creating you first Dataset](https://xdk2mam.io/assets/images/Dash-live.png)
+
 
