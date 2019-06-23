@@ -101,7 +101,7 @@ var DataRepository = function () {
       if (err) {
         deferred.reject(err)
       } else {
-        if (data.length > 0) {
+        if (data.length > 0) {          
           const timestampNOW = parseInt(new Date().getTime() / 1000)
           //Receive interval in minutes, so...
           const intervalSec = interval * 60
@@ -115,16 +115,20 @@ var DataRepository = function () {
           else
             queryInterval = ' AND on_tangle = 0'
 
-          var querySelect = "SELECT * FROM " + data[0].dataset_name_table + " WHERE  1=1 " + queryInterval + ' LIMIT ' + limit
+          var querySelect = "SELECT * FROM " + data[0].dataset_name_table + " WHERE  1=1 " + queryInterval + ' LIMIT ' + limit          
 
+          console.log(querySelect)
           connectionService.getConnectionRequest(querySelect, function (err, dt) {
             if (err) {
               deferred.reject(err)
-            } else {
-              deferred.resolve(dt)
+            } else {     
+              if(dt.length>0)        
+                deferred.resolve(dt)
+              else
+                deferred.reject({ errorMessage: "No data was found." })
             }
+            
           })
-
         } else
           deferred.reject({ errorMessage: "No data was found." })
 
@@ -175,6 +179,7 @@ var DataRepository = function () {
       else
         query += ')'
     }
+    console.log(query)
 
     connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {

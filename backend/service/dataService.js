@@ -19,7 +19,7 @@ var DataService = function() {
           const info = data[i]
           let sensorData = await convertToFrontFormat(info)
           let root = null
-          if (info.on_tangle === 1) root = await bundleRepository.getRoot(info.bundle_id)
+          if (info.on_tangle === 1 && info.bundle_id!=null) root = await bundleRepository.getRoot(info.bundle_id)
 
           dataList.push({ ...sensorData, root })
         }
@@ -65,17 +65,15 @@ var DataService = function() {
     var deferred = q.defer()
 
     const datasets = await datasetService.getAll()
-    let dataset
+    let dataset = null
     datasets.map(dt => {
       if (dt.status == 1) dataset=dt
     })[0]
-    if (dataset !== undefined) {
-      const limit = 1
-
+    if (dataset !== null) {   
+      let limit = 1
       if (dataset.dataset_interval <= 1000) limit = 10
       else if (dataset.dataset_interval <= 5000) limit = 5
       else if (dataset.dataset_interval <= 10000) limit = 2
-
       dataRepository
         .getData(dataset.id, -1, limit)
         .then(async data => {
@@ -93,7 +91,6 @@ var DataService = function() {
             await dataRepository.updateFlag(dataset.dataset_name_table, ids)
 
             const root = await publishData(dataList)
-
             dataRepository
               .createBundle(root)
               .then(data => {
@@ -114,7 +111,7 @@ var DataService = function() {
           }
         })
         .catch(function(err) {
-          deferred.reject({ errorMessage: err })
+          deferred.resolve({ msg: 'No data was found.' })
         })
     } else {
       deferred.resolve({ msg: 'No active dataset was found.' })
