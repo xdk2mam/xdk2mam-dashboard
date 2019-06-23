@@ -38,7 +38,8 @@ Turn on your XDK110 and that's it. Now let's go to the Node part.
 # Setting up the Node Dashboard
 ## Requirements on Node side
 
-The XDK2MAM dashboard works on Nodejs and uses a Mysql database named **xdk2mam** with user root and no password. If you do not have Mysql installed, you can download it and install it from  [MariaDB website](https://downloads.mariadb.org). If you don't feel like running a passwordless root user, you can change the password on /backend/dbConfig.json to match your existing password. 
+The XDK2MAM dashboard works on Nodejs and uses a Mysql database named **xdk2mam** with user root and no password. If you do not have Mysql installed, you can download it and install it from  [MariaDB website](https://downloads.mariadb.org). If you don't like the idea of running a passwordless root user, you can change the password on /backend/dbConfig.json to match your existing password. Default is set to user root and no password. 
+
 Now that we have met the requirements let's jump to the installation! 
 
 ## Dashboard Installation. Setting up the Mysql Database
