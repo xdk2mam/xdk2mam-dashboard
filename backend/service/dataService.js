@@ -125,8 +125,9 @@ var DataService = function () {
           deferred.resolve({ msg: 'No data was found.' })
         })
     } else {
+      const err ={ msg: 'No active dataset was found.' }
       console.log(err)
-      deferred.resolve({ msg: 'No active dataset was found.' })
+      deferred.resolve(err)
     }
 
     return deferred.promise
