@@ -2,15 +2,15 @@
 
 The XDK2MAM Dashboard is a visualization/storage tool for the XDK110 sensor's data and a buffer to handle short intervals data and distribute the publish to Tangle by creating bundles containing more than one dataset. Because publishing to Tangle using MAM requires Proof of Work, and this takes some seconds, it is not possible to get live data from the XDK110 and send it straight to the Tangle.
 
-XDK2MAM Dashboard React application solves this in a simple way: it collects all the data on a local database, builds bundles and publishes the dataset collection to the Tangle every n seconds. 
+XDK2MAM Dashboard React application solves this in a simple way: it collects all the data on a local database, builds bundles and publishes datasets collections periodically to the Tangle. 
 
-This package uses the [http-sdcard](https://github.com/xdk2mam/xdk2mam/tree/Workbench-3.6/http-sdcard) code on the XDK110 side with a minor change at the ***config.cfg*** file. 
-You can check our step by [step videotutorial](https://www.youtube.com/watch?v=isrx7ibcRL4) to learn how to import, build and flash the C code to the XDK110 
+This package uses the [http-sdcard](https://github.com/xdk2mam/xdk2mam/tree/Workbench-3.6/http-sdcard) code on the XDK110 side with a minor change on the **config.cfg** file. 
+You can check our [step by step videotutorial](https://www.youtube.com/watch?v=isrx7ibcRL4) to learn how to import, build and flash the C code to the XDK110 
 
 # Instructions
 
-## Requirements
-In order to be able to run the code on this repo you will to [download XDK Workbench](https://xdk.bosch-connectivity.com/software-downloads), have a XDK 110 and insall Node on the computer you are going to use as listener server.
+## Requirements on the XDK110 side
+In order to be able to run the code on this repo you will need to [download XDK Workbench](https://xdk.bosch-connectivity.com/software-downloads), have a XDK110 and install Nodejs on the computer you are going to use as listener server.
 Download the C code and flash it to your XDK110 following the [http-sdcard](https://github.com/xdk2mam/xdk2mam/tree/Workbench-3.6/http-sdcard) guide. 
 
 **Notice that the MicroSD config file has two variations: DEST_SERVER_PORT should now be set to 8081 and DEST_POST_PATH needs to point to /api/putData**
@@ -36,13 +36,13 @@ Except for this two values, the rest needs your WiFi data and LAN IP as with the
 Turn on your XDK110 and that's it. Now let's go to the Node part.
 
 
-## Setting up the Node Dashboard
-### Requirements
+# Setting up the Node Dashboard
+## Requirements on Node side
 
-The XDK2MAM dashboard works on Nodejs and uses a Mysql database called ***xdk2mam*** with user root and no password. If you do not have Mysql installed, you can downloadit and install it from  [MariaDB website](https://downloads.mariadb.org). 
+The XDK2MAM dashboard works on Nodejs and uses a Mysql database named **xdk2mam** with user root and no password. If you do not have Mysql installed, you can download it and install it from  [MariaDB website](https://downloads.mariadb.org). 
 Now that we have met the requirements let's jump to the installation! 
 
-### Dashboard Installation. Setting up the Mysql Database
+## Dashboard Installation. Setting up the Mysql Database
 
 Clone the Dashboard code.
 
