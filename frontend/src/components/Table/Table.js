@@ -4,10 +4,15 @@ import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import { TableCell, TableSortLabel, Tooltip } from '@material-ui/core'
 import LinkIcon from '@material-ui/icons/Link'
+import AlarmIcon from '@material-ui/icons/Alarm'
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized'
+import { isNil } from 'lodash'
 
 import { TABLE_COLUMNS } from './helpers'
 import Colors from '../../helpers/colors'
+
+/** @todo: Use the URL from the user config when backend is ready */
+const BASE_TANGLE_NODE_URL = 'https://devnet.thetangle.org/mam/'
 
 /**
  * VirtualizedTable
@@ -18,6 +23,26 @@ class VirtualizedTable extends PureComponent {
     const { classes, data, rowHeight, onRowClick } = this.props
 
     const isNotEvenIndex = rowIndex % 2 !== 0
+    const isLastColumn = columnIndex === 18
+
+    if (!isLastColumn) {
+      return (
+        <TableCell
+          component="div"
+          className={classNames(classes.tableCell, classes.flexContainer, isNotEvenIndex && classes.row, {
+            [classes.noClick]: onRowClick == null,
+          })}
+          variant="body"
+          style={{ height: rowHeight }}
+          align="right"
+        >
+          {data[rowIndex][columnIndex]}
+        </TableCell>
+      )
+    }
+
+    const root = data[rowIndex][columnIndex]
+    const rootUrl = `${BASE_TANGLE_NODE_URL}${root}`
 
     return (
       <TableCell
@@ -29,14 +54,16 @@ class VirtualizedTable extends PureComponent {
         style={{ height: rowHeight }}
         align="right"
       >
-        {columnIndex === 18 ? (
+        {!isNil(root) ? (
           <Tooltip title="View on tangle" placement="top" classes={{ tooltipPlacementTop: classes.tooltip }}>
-            <a className={classes.rootLink} href="about:blank" target="blank">
+            <a className={classes.rootLink} href={rootUrl} target="blank">
               <LinkIcon />
             </a>
           </Tooltip>
         ) : (
-          data[rowIndex][columnIndex]
+          <Tooltip title="Not available" placement="top" classes={{ tooltipPlacementTop: classes.tooltip }}>
+            <AlarmIcon />
+          </Tooltip>
         )}
       </TableCell>
     )
@@ -138,6 +165,7 @@ VirtualizedTable.propTypes = {
   rowClassName: PropTypes.string,
   rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
   sort: PropTypes.func,
+  root: PropTypes.string.isRequired,
 }
 
 VirtualizedTable.defaultProps = {

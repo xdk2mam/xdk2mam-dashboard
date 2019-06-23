@@ -287,6 +287,7 @@ export const formatDataForTable = data => {
         return itemData.push(parseInt(dataItem[dataShape[j].series[i].seriesName], 10))
       })
     })
+    itemData.push(item.root)
 
     return formattedData.unshift(itemData)
   })
