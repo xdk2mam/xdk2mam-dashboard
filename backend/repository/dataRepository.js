@@ -55,7 +55,9 @@ var DataRepository = function () {
           queryAux += ','
         })
 
-        var finalQuery = queryInsert + "on_tangle) VALUES (" + dataSensors.timestamp + ', 1, "' + dataSensors.device + '" , ' + queryAux + 0 + ")"
+        const timestampNOW = parseInt(new Date().getTime() / 1000)
+        
+        var finalQuery = queryInsert + "on_tangle) VALUES (" + timestampNOW + ', 1, "' + dataSensors.device + '" , ' + queryAux + 0 + ")"
 
         connectionService.getConnectionRequest(finalQuery, function (err, dt) {
           if (err) {
