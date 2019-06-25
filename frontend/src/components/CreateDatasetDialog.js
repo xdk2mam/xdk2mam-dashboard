@@ -10,6 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
 import { Formik, Field } from 'formik'
+import moment from 'moment'
 
 import { CreateDatasetSchema } from '../helpers/validation'
 import Colors from '../helpers/colors'
@@ -23,14 +24,14 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => (
     <Formik
       validationSchema={CreateDatasetSchema}
       validateOnChange
-      initialValues={{ name: '', description: '', deviceName: '', endDate: new Date() }}
+      initialValues={{ name: '', description: '', deviceName: '', endDate: moment().format() }}
       onSubmit={(values, actions) => {
         actions.setSubmitting(true)
         const { name, deviceName, description, endDate } = values
         onCreate(name, deviceName, description, endDate)
         actions.setSubmitting(false)
       }}
-      render={({ handleChange, handleBlur, handleSubmit, isValid, errors, touched }) => (
+      render={({ handleChange, handleBlur, handleSubmit, isValid, errors, touched, values }) => (
         <React.Fragment>
           <DialogTitle>Create Dataset</DialogTitle>
           <DialogContent>
@@ -97,7 +98,7 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => (
             </div>
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <div className={classes.endDateField}>
-                <DateTimePicker label="End date" onChange={handleChange} />
+                <DateTimePicker value={values.endDate} label="End date" onChange={handleChange} />
               </div>
             </MuiPickersUtilsProvider>
           </DialogContent>

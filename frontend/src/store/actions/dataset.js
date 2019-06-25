@@ -1,4 +1,5 @@
 import { replace } from 'lodash'
+import moment from 'moment'
 
 import api from '../../api/api'
 
@@ -62,8 +63,8 @@ export const createDatasetDispatcher = dispatch => async (dataset, setAsActive =
   const datasetToCreate = {
     ...dataset,
     name: replace(dataset.name, ' ', '_'),
-    datasetEnd: dataset.endDate.unix(),
-    datasetInterval: 30000 /** @todo This value shouldn't be hardcoded, perhaps env variable or sent as part of the dataset object */,
+    datasetEnd: moment(dataset.endDate).unix(),
+    datasetInterval: dataset.interval,
   }
 
   if (setAsActive) {
