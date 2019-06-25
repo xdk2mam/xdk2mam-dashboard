@@ -64,7 +64,7 @@ export const createDatasetDispatcher = dispatch => async (dataset, setAsActive =
     ...dataset,
     name: replace(dataset.name, ' ', '_'),
     datasetEnd: moment(dataset.endDate).unix(),
-    datasetInterval: dataset.interval,
+    datasetInterval: dataset.interval * 1000,
   }
 
   if (setAsActive) {

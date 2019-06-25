@@ -24,11 +24,19 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => (
     <Formik
       validationSchema={CreateDatasetSchema}
       validateOnChange
-      initialValues={{ name: '', description: '', deviceName: '', endDate: moment().format() }}
+      initialValues={{
+        name: '',
+        description: '',
+        deviceName: '',
+        interval: undefined,
+        endDate: moment()
+          .add(1, 'hour')
+          .format(),
+      }}
       onSubmit={(values, actions) => {
         actions.setSubmitting(true)
-        const { name, deviceName, description, endDate } = values
-        onCreate(name, deviceName, description, endDate)
+        const { name, deviceName, description, endDate, interval } = values
+        onCreate(name, deviceName, description, endDate, interval)
         actions.setSubmitting(false)
       }}
       render={({ handleChange, handleBlur, handleSubmit, isValid, errors, touched, values }) => (
@@ -93,6 +101,23 @@ const CreateDatasetDialog = ({ classes, onCancel, onCreate, open }) => (
               {errors.deviceName && touched.deviceName ? (
                 <Typography variant="caption" classes={{ root: classes.error }}>
                   {errors.deviceName}
+                </Typography>
+              ) : null}
+            </div>
+            <div className={classes.field}>
+              <Field
+                component={TextField}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                margin="dense"
+                id="interval"
+                label="Interval (in seconds)"
+                type="number"
+                fullWidth
+              />
+              {errors.interval && touched.interval ? (
+                <Typography variant="caption" classes={{ root: classes.error }}>
+                  {errors.interval}
                 </Typography>
               ) : null}
             </div>
