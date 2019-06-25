@@ -19,3 +19,7 @@ export const SettingEmailSchema = yup.object().shape({
 export const SettingFullNodeIotaUrlSchema = yup.object().shape({
   fullNodeIotaUrl: yup.string().url('Please enter a valid url'),
 })
+
+export const SettingExplorerUrlSchema = yup.object().shape({
+  explorerUrl: yup.string().url('Please enter a valid url'),
+})

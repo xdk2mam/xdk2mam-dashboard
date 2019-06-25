@@ -12,7 +12,22 @@ import { Formik, Field } from 'formik'
 
 import Colors from '../helpers/colors'
 import SettingsValues from '../constants/SettingsValues'
-import { SettingEmailSchema, SettingFullNodeIotaUrlSchema } from '../helpers/validation'
+import { SettingEmailSchema, SettingFullNodeIotaUrlSchema, SettingExplorerUrlSchema } from '../helpers/validation'
+
+// eslint-disable-next-line consistent-return
+const getValidationSchema = value => {
+  if (value === SettingsValues.email.value) {
+    return SettingEmailSchema
+  }
+
+  if (value === SettingsValues.fullNodeIotaUrl.value) {
+    return SettingFullNodeIotaUrlSchema
+  }
+
+  if (value === SettingsValues.explorerUrl.value) {
+    return SettingExplorerUrlSchema
+  }
+}
 
 /**
  * SettingDialog
@@ -21,8 +36,7 @@ import { SettingEmailSchema, SettingFullNodeIotaUrlSchema } from '../helpers/val
 const SettingDialog = ({ classes, onCancel, onSave, open, selectedSetting, value }) => {
   const actionText = isEmpty(value) ? 'Add' : 'Edit'
   const titleText = `${actionText} ${selectedSetting.dialogLabel}`
-  const isEmailSetting = selectedSetting.value === SettingsValues.email.value
-  const validationSchema = isEmailSetting ? SettingEmailSchema : SettingFullNodeIotaUrlSchema
+  const validationSchema = getValidationSchema(selectedSetting.value)
   const type = get(SettingsValues[selectedSetting.value], 'type', '')
 
   return (
