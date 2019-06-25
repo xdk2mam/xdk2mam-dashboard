@@ -16,6 +16,19 @@ CREATE TABLE `bundles` (
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `config` (
+  `id` int(11) AUTO_INCREMENT NOT NULL,  
+  `fullnode` varchar(200)  NULL,
+  `email` varchar(200)  NULL,
+  `explorer` varchar(200)  NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `config` (`fullnode`,`email`,`explorer`) 
+VALUES('https://nodes.devnet.thetangle.org:443',
+NULL,
+'https://devnet.thetangle.org/mam/');
+
 CREATE TABLE `datasets` (
     `id` int(11) AUTO_INCREMENT NOT NULL,    
     `dataset_name_table` varchar(100) NOT NULL,
