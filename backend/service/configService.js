@@ -53,7 +53,7 @@ var ConfigService = function() {
     configRepository
       .get()
       .then(function(data) {
-        deferred.resolve(data)
+        deferred.resolve(data[0])
       })
       .catch(function(err) {
         deferred.reject({ errorMessage: err })

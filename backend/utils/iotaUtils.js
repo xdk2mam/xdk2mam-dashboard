@@ -15,8 +15,8 @@ const keyGen = length => {
     return Array.from(new Array(length), (x, i) => charset[values[i] % charset.length]).join('')
 }
 
-async function publishData(data) {
-    var mamState = mam.init(provider)
+async function publishData(data,fullnode) {
+    var mamState = mam.init(fullnode)
     var message = mam.create(mamState,
         asciiToTrytes(JSON.stringify(data)))
     await mam.attach(message.payload, message.address, 3, 9)    

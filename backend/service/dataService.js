@@ -1,6 +1,7 @@
 var dataRepository = require('../repository/dataRepository.js')
 var bundleRepository = require('../repository/bundleRepository.js')
 var datasetService = require('./datasetService.js')
+var configService = require('./configService.js')
 const { publishData } = require('../utils/iotaUtils')
 const { convertToFrontFormat } = require('../utils/dataDTO')
 
@@ -65,6 +66,7 @@ var DataService = function () {
     var deferred = q.defer()
 
     const datasets = await datasetService.getAll()
+    const { fullnode } = await configService.get()
     let dataset = null
     datasets.map(dt => {
       if (dt.status == 1) dataset = dt
@@ -88,7 +90,7 @@ var DataService = function () {
               ids.push(info.id)
             }
 
-            publishData(dataList).then(async root => {
+            publishData(dataList, fullnode).then(async root => {
               console.log("Root:", root)
               await dataRepository.updateFlag(dataset.dataset_name_table, ids)
               dataRepository
@@ -125,7 +127,7 @@ var DataService = function () {
           deferred.resolve({ msg: 'No data was found.' })
         })
     } else {
-      const err ={ msg: 'No active dataset was found.' }
+      const err = { msg: 'No active dataset was found.' }
       console.log(err)
       deferred.resolve(err)
     }
