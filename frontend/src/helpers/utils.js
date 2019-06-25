@@ -278,7 +278,7 @@ export const formatDataForTable = data => {
       return false
     }
 
-    const date = moment(item.timestamp).format('hh:mm:ss')
+    const date = moment.unix(item.timestamp).format('hh:mm:ss')
     const itemData = []
 
     itemData.push(date)

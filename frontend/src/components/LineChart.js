@@ -49,11 +49,11 @@ class LineChart extends PureComponent {
   handleTitleFormat = () => null
 
   handleItemsFormat = values => [
-    { title: 'X', value: moment(values[0].x).format('hh:mm:ss') },
+    { title: 'X', value: moment.unix(values[0].x).format('DD/MM hh:mm:ss') },
     { title: 'Y', value: values[0].y },
   ]
 
-  handleXAxisFormat = value => `${moment(value).format('mm:ss')}`
+  handleXAxisFormat = value => `${moment.unix(value).format('mm:ss')}`
 
   render() {
     const { data, classes, color, baseColor, height, yDomain, legendItems, onLegendClick, disabledSeries } = this.props

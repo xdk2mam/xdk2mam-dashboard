@@ -45,7 +45,7 @@ export default function generateRandomData() {
             { sensorType: 'Acoustic', data: [{ mp: getRandomInt(0, 100) }] },
           ],
           device: 'XDKDevice1',
-          timestamp: new Date().getTime(),
+          timestamp: new Date().getTime() / 1000,
         },
       },
     ],
