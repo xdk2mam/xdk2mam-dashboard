@@ -127,7 +127,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/api/getData/13/0?limit=2",
+					"raw": "http://localhost:8081/api/getData/13/0?limit=2&type=9",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -143,6 +143,10 @@
 						{
 							"key": "limit",
 							"value": "2"
+						},
+						{
+							"key": "type",
+							"value": "9"
 						}
 					]
 				}
@@ -164,6 +168,123 @@
 					"path": [
 						"api",
 						"publish"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3800/userConfig/fullnode/",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"fullNode\": \"https://node.vanityfive.de:443\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/userConfig/fullnode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userConfig",
+						"fullnode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userConfig/explorer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"explorer\": \"https://thetangle.org/mam/\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/userConfig/explorer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userConfig",
+						"explorer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userConfig/email",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"aleelus@gmail.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/userConfig/email",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userConfig",
+						"email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/userConfig/get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/userConfig/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"userConfig",
+						""
 					]
 				}
 			},
