@@ -5,6 +5,11 @@ export const CreateDatasetSchema = yup.object().shape({
   description: yup.string(),
   deviceName: yup.string().required('Device name is required'),
   endDate: yup.date().required('End date is required'),
+  interval: yup
+    .number()
+    .min(1, 'Enter a number greater or equal than 1')
+    .max(1000, 'Enter a number less than 1000')
+    .required('Interval is required'),
 })
 
 export const SettingEmailSchema = yup.object().shape({

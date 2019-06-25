@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
 import { Grid, Paper, Button, TableRow, TableHead, TableCell, TableBody, Table, Typography } from '@material-ui/core'
 import moment from 'moment'
-import { isNil } from 'lodash'
+import { isNil, toString } from 'lodash'
 
 import { datasetsSelector, getActiveDataset } from '../store/selectors/dataset'
 import { createDatasetDispatcher, setActiveDatasetIdDispatcher, getDatasetsDispatcher } from '../store/actions/dataset'
@@ -23,6 +23,7 @@ const DATASET_HEADERS = [
   // 'Device Name',
   'End Date',
   'Active',
+  'Interval',
   'Actions',
 ]
 
@@ -51,9 +52,9 @@ class Datasets extends PureComponent {
 
   handleCancelDialog = () => this.setState({ openDialog: false })
 
-  handleCreateDataset = (name, deviceName, description, endDate) => {
+  handleCreateDataset = (name, deviceName, description, endDate, interval) => {
     this.setState({ openDialog: false })
-    this.props.dispatchCreateDataset({ name, deviceName, description, endDate }, true)
+    this.props.dispatchCreateDataset({ name, deviceName, description, endDate, interval }, true)
   }
 
   handleViewDataset = datasetId => {
@@ -99,10 +100,12 @@ class Datasets extends PureComponent {
                     deviceName,
                     status,
                     dataset_end: endDate,
+                    dataset_interval: interval,
                   } = dataset
 
                   const dateText = !isNil(endDate) ? moment.unix(endDate).format('Y/M/D hh:mm') : 'N/A'
                   const activeDatasetText = status === 1 ? 'Yes' : 'No'
+                  const intervalText = `${toString(interval / 1000)} sec`
 
                   return (
                     <TableRow key={`${deviceName}-${id}`}>
@@ -114,6 +117,7 @@ class Datasets extends PureComponent {
                       {/* <TableCell align="right">{deviceName}</TableCell> */}
                       <TableCell align="right">{dateText}</TableCell>
                       <TableCell align="right">{activeDatasetText}</TableCell>
+                      <TableCell align="right">{intervalText}</TableCell>
                       <TableCell align="right">
                         <Button
                           color="primary"
