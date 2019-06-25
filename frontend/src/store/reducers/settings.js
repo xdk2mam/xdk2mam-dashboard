@@ -1,4 +1,11 @@
-import { SET_EMAIL, CLEAR_EMAIL, SET_FULLNODE_IOTA_URL, CLEAR_FULLNODE_IOTA_URL } from '../actions/settings'
+import {
+  SET_EMAIL,
+  CLEAR_EMAIL,
+  SET_FULLNODE_IOTA_URL,
+  CLEAR_FULLNODE_IOTA_URL,
+  SET_EXPLORER_URL,
+  CLEAR_EXPLORER_URL,
+} from '../actions/settings'
 
 const initialState = {
   email: '',
@@ -19,6 +26,12 @@ const settings = (state = initialState, action) => {
         fullNodeIotaUrl: action.payload.fullNodeIotaUrl,
       }
 
+    case SET_EXPLORER_URL:
+      return {
+        ...state,
+        explorerUrl: action.payload.explorerUrl,
+      }
+
     case CLEAR_EMAIL:
       return {
         ...state,
@@ -29,6 +42,12 @@ const settings = (state = initialState, action) => {
       return {
         ...state,
         fullNodeIotaUrl: null,
+      }
+
+    case CLEAR_EXPLORER_URL:
+      return {
+        ...state,
+        explorerUrl: null,
       }
 
     default:

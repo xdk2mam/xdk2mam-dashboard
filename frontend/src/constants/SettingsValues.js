@@ -11,6 +11,12 @@ const SettingsValues = Object.freeze({
     value: 'fullNodeIotaUrl',
     type: 'url',
   },
+  explorerUrl: {
+    label: 'URL',
+    dialogLabel: 'Explorer URL',
+    value: 'explorerUrl',
+    type: 'url',
+  },
 })
 
 /*

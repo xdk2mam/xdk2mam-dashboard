@@ -8,8 +8,10 @@ import { connect } from 'react-redux'
 import {
   setEmailDispatcher,
   setFullnodeIotaUrlDispatcher,
+  setExplorerUrlDispatcher,
   clearEmailDispatcher,
   clearFullnodeIotaUrlDispatcher,
+  clearExplorerUrlDispatcher,
 } from '../store/actions/settings'
 import Colors from '../helpers/colors'
 import SettingsValues from '../constants/SettingsValues'
@@ -24,11 +26,14 @@ import SettingItem from '../components/SettingItem'
 const Settings = ({
   dispatchSetEmail,
   dispatchSetFullNodeIotaUrl,
+  dispatchSetExplorerUrl,
   dispatchClearEmail,
   dispatchClearFullNodeIotaUrl,
+  dispatchClearExplorerUrl,
   classes,
   email,
   fullNodeIotaUrl,
+  explorerUrl,
 }) => {
   const initialSelectedSetting = {
     label: '',
@@ -65,6 +70,11 @@ const Settings = ({
     setSelectedSetting(SettingsValues.fullNodeIotaUrl)
   }
 
+  const handleAddExplorerUrlButton = () => {
+    setOpenDialog(true)
+    setSelectedSetting(SettingsValues.explorerUrl)
+  }
+
   const handleSave = value => {
     const selectedSettingValue = selectedSetting.value
 
@@ -74,6 +84,10 @@ const Settings = ({
 
     if (selectedSettingValue === SettingsValues.fullNodeIotaUrl.value) {
       dispatchSetFullNodeIotaUrl(value)
+    }
+
+    if (selectedSettingValue === SettingsValues.explorerUrl.value) {
+      dispatchSetExplorerUrl(value)
     }
 
     handleCloseDialog()
@@ -90,6 +104,10 @@ const Settings = ({
       dispatchClearFullNodeIotaUrl(value)
     }
 
+    if (selectedSettingValue === SettingsValues.explorerUrl.value) {
+      dispatchClearExplorerUrl(value)
+    }
+
     handleCloseMenu()
   }
 
@@ -101,6 +119,7 @@ const Settings = ({
   const dialogValue =
     (selectedSetting.value === SettingsValues.email.value && email) ||
     (selectedSetting.value === SettingsValues.fullNodeIotaUrl.value && fullNodeIotaUrl) ||
+    (selectedSetting.value === SettingsValues.explorerUrl.value && explorerUrl) ||
     ''
 
   return (
@@ -111,7 +130,7 @@ const Settings = ({
             <Typography variant="h5">Settings</Typography>
           </div>
           <Paper className={classes.root}>
-            <div className={classnames(classes.setting, classes.email)}>
+            <div className={classes.setting}>
               <SettingItem
                 type={SettingsValues.email.value}
                 value={email}
@@ -124,6 +143,14 @@ const Settings = ({
                 type={SettingsValues.fullNodeIotaUrl.value}
                 value={fullNodeIotaUrl}
                 onAddClick={handleAddFullNodeIotaUrlButton}
+                onMenuClick={handleMenuClick}
+              />
+            </div>
+            <div className={classnames(classes.setting, classes.explorerUrl)}>
+              <SettingItem
+                type={SettingsValues.explorerUrl.value}
+                value={explorerUrl}
+                onAddClick={handleAddExplorerUrlButton}
                 onMenuClick={handleMenuClick}
               />
             </div>
@@ -158,16 +185,20 @@ const Settings = ({
 Settings.propTypes = {
   dispatchSetEmail: PropTypes.func.isRequired,
   dispatchSetFullNodeIotaUrl: PropTypes.func.isRequired,
+  dispatchSetExplorerUrl: PropTypes.func.isRequired,
   dispatchClearEmail: PropTypes.func.isRequired,
   dispatchClearFullNodeIotaUrl: PropTypes.func.isRequired,
+  dispatchClearExplorerUrl: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   email: PropTypes.string,
   fullNodeIotaUrl: PropTypes.string,
+  explorerUrl: PropTypes.string,
 }
 
 Settings.defaultProps = {
   email: '',
   fullNodeIotaUrl: '',
+  explorerUrl: '',
 }
 
 /**
@@ -187,6 +218,8 @@ const styles = {
 
   setting: {
     padding: 20,
+    borderBottom: '1px solid',
+    borderBottomColor: Colors.GREY,
   },
 
   settingHeader: {
@@ -196,9 +229,8 @@ const styles = {
     alignItems: 'center',
   },
 
-  email: {
-    borderBottom: '1px solid',
-    borderBottomColor: Colors.GREY,
+  explorerUrl: {
+    border: 0,
   },
 }
 
@@ -209,6 +241,7 @@ const styles = {
 const mapStateToProps = state => ({
   email: state.settings.email,
   fullNodeIotaUrl: state.settings.fullNodeIotaUrl,
+  explorerUrl: state.settings.explorerUrl,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -216,6 +249,8 @@ const mapDispatchToProps = dispatch => ({
   dispatchClearEmail: clearEmailDispatcher(dispatch),
   dispatchSetFullNodeIotaUrl: setFullnodeIotaUrlDispatcher(dispatch),
   dispatchClearFullNodeIotaUrl: clearFullnodeIotaUrlDispatcher(dispatch),
+  dispatchSetExplorerUrl: setExplorerUrlDispatcher(dispatch),
+  dispatchClearExplorerUrl: clearExplorerUrlDispatcher(dispatch),
 })
 
 /**
