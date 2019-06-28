@@ -187,7 +187,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"fullNode\": \"https://node.vanityfive.de:443\"\n}"
+					"raw": "{\n\t\"fullNode\": \"https://nodes.devnet.thetangle.org:443\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8081/api/userConfig/fullnode",
@@ -284,6 +284,38 @@
 					"path": [
 						"api",
 						"userConfig",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/api/event/",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id_dataset\": 2,\n\t\"value\": 54,\n\t\"type_sensor\": 5\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/event/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"event",
 						""
 					]
 				}

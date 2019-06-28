@@ -29,6 +29,14 @@ VALUES('https://nodes.devnet.thetangle.org:443',
 NULL,
 'https://devnet.thetangle.org/mam/');
 
+CREATE TABLE `events` (
+  `id` int(11) AUTO_INCREMENT NOT NULL,  
+  `id_dataset` int(11)  NULL,
+  `value` int(11)  NULL,
+  `type_sensor` int(6)  NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `datasets` (
     `id` int(11) AUTO_INCREMENT NOT NULL,    
     `dataset_name_table` varchar(100) NOT NULL,
