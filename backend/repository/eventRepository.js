@@ -7,8 +7,8 @@ var EventRepository = function () {
     this.put = function (data, prop) {
         var query
         var deferred = q.defer()
-        query = 'INSERT INTO `events` (id_dataset,value,type_sensor) '
-        query += 'VALUES(' + data.id_dataset + ',' + data.value + ', ' + prop + ')';
+        query = 'INSERT INTO `events` (id_dataset,value,type_sensor,operator) '
+        query += 'VALUES(' + data.id_dataset + ',' + data.value + ', ' + prop + ', "'+ data.operator+ '")';
 
         connectionService.getConnectionRequest(query, function (err, data) {
             if (err) {

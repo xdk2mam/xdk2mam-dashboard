@@ -1,14 +1,25 @@
 var connectionService = require('./../service/connectionService.js')
 var q = require('q')
+var nodemailer = require('nodemailer')
+const { typesEventsConst } = require('../utils/consts')
+const config = require('../config')
 
-var DataRepository = function() {
-  this.putData = function(dataSensors) {
+var transporter = nodemailer.createTransport({
+  service: config.email_provider,
+  auth: {
+    user: config.email_account,
+    pass: config.email_password
+  }
+})
+
+var DataRepository = function () {
+  this.putData = function (dataSensors) {
     var query
     var deferred = q.defer()
 
-    query = 'SELECT dataset_name_table FROM datasets WHERE status = 1 LIMIT 1'
+    query = 'SELECT dataset_name_table,id FROM datasets WHERE status = 1 LIMIT 1'
 
-    connectionService.getConnectionRequest(query, function(err, data) {
+    connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {
         deferred.resolve({ msg: err })
       } else {
@@ -18,6 +29,8 @@ var DataRepository = function() {
         }
 
         var queryInsert = 'INSERT INTO ' + data[0].dataset_name_table + ' (timestamp,device,device_name,'
+
+        var id_dataset = data[0].id
 
         var queryAux = ''
 
@@ -68,10 +81,56 @@ var DataRepository = function() {
           0 +
           ')'
 
-        connectionService.getConnectionRequest(finalQuery, function(err, dt) {
+        connectionService.getConnectionRequest(finalQuery, function (err, dt) {
           if (err) {
             deferred.reject(err)
           } else {
+
+            let idInsert = dt.insertId
+
+            let queryEvent = "SELECT * FROM events WHERE id_dataset = " + id_dataset
+            connectionService.getConnectionRequest(queryEvent, function (err, dt) {
+              if (err) {
+                deferred.reject(err)
+              } else {
+
+                dt.map(result => {
+
+                  let queryEventDataSensor = "SELECT * FROM " + data[0].dataset_name_table
+                  queryEventDataSensor += " WHERE " + typesEventsConst[result.type_sensor] + " " + result.operator + " " + result.value
+                  queryEventDataSensor += " AND id = " + idInsert
+
+
+                  console.log(queryEventDataSensor)
+                  connectionService.getConnectionRequest(queryEventDataSensor, function (err, dt_sensor) {
+                    if (err) {
+                      deferred.reject(err)
+                    } else {
+
+                      if (dt_sensor.length > 0) {
+
+                        const value = dt_sensor[0][typesEventsConst[result.type_sensor]]
+                        const mailOptions = {
+                          from: config.email_account,
+                          to: config.destination_email_account,
+                          subject: 'XDK2MAM Dashboard - events - ' + typesEventsConst[result.type_sensor] + ' sensor' ,
+                          html:  typesEventsConst[result.type_sensor]+ ' is <b>'+ value + '</b>!!!'
+                        }
+
+                        transporter.sendMail(mailOptions, function (error, info) {
+                          if (error) {
+                            console.log(error);
+                          } else {
+                            console.log('Email sent: ' + info.response);
+                          }
+                        });
+                      }
+                    }
+                  })
+                })
+              }
+            })
+
             deferred.resolve({ id: dt.insertId, dataset_name_table: data[0].dataset_name_table })
           }
         })
@@ -81,13 +140,13 @@ var DataRepository = function() {
     return deferred.promise
   }
 
-  this.getLast = function(last) {
+  this.getLast = function (last) {
     var query
     var deferred = q.defer()
 
     query = 'SELECT * FROM information ' + 'WHERE tangle = 0 ' + 'ORDER BY id DESC LIMIT ' + last + ''
 
-    connectionService.getConnectionRequest(query, function(err, data) {
+    connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {
         deferred.reject(err)
       } else {
@@ -98,7 +157,7 @@ var DataRepository = function() {
     return deferred.promise
   }
 
-  this.getData = function(id, interval, limit) {
+  this.getData = function (id, interval, limit) {
     var query
     var deferred = q.defer()
 
@@ -106,7 +165,7 @@ var DataRepository = function() {
 
     query = 'SELECT dataset_name_table FROM datasets WHERE id = ' + id
 
-    connectionService.getConnectionRequest(query, function(err, data) {
+    connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {
         deferred.reject(err)
       } else {
@@ -126,7 +185,7 @@ var DataRepository = function() {
             'SELECT * FROM ' + data[0].dataset_name_table + ' WHERE  1=1 ' + queryInterval + ' LIMIT ' + limit
 
           console.log(querySelect)
-          connectionService.getConnectionRequest(querySelect, function(err, dt) {
+          connectionService.getConnectionRequest(querySelect, function (err, dt) {
             if (err) {
               deferred.reject(err)
               console.log(err)
@@ -142,7 +201,7 @@ var DataRepository = function() {
     return deferred.promise
   }
 
-  this.updateStatus = function(table, ids, idBundle) {
+  this.updateStatus = function (table, ids, idBundle) {
     var query
     var deferred = q.defer()
 
@@ -155,7 +214,7 @@ var DataRepository = function() {
       else query += ')'
     }
 
-    connectionService.getConnectionRequest(query, function(err, data) {
+    connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {
         deferred.reject(err)
       } else {
@@ -166,7 +225,7 @@ var DataRepository = function() {
     return deferred.promise
   }
 
-  this.updateFlag = function(table, ids) {
+  this.updateFlag = function (table, ids) {
     var query
     var deferred = q.defer()
 
@@ -180,7 +239,7 @@ var DataRepository = function() {
     }
     console.log(query)
 
-    connectionService.getConnectionRequest(query, function(err, data) {
+    connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {
         deferred.reject(err)
       } else {
@@ -191,7 +250,7 @@ var DataRepository = function() {
     return deferred.promise
   }
 
-  this.createBundle = function(root) {
+  this.createBundle = function (root) {
     var query
     var deferred = q.defer()
 
@@ -199,7 +258,7 @@ var DataRepository = function() {
 
     query = 'INSERT INTO bundles (timestamp,id_bundle,root) VALUES (' + timestampNOW + ',' + null + ',"' + root + '")'
 
-    connectionService.getConnectionRequest(query, function(err, data) {
+    connectionService.getConnectionRequest(query, function (err, data) {
       if (err) {
         deferred.reject(err)
       } else {

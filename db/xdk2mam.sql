@@ -34,6 +34,7 @@ CREATE TABLE `events` (
   `id_dataset` int(11)  NULL,
   `value` int(11)  NULL,
   `type_sensor` int(6)  NULL,
+  `operator` varchar(5)  NULL,
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8mb4;
 

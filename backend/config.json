@@ -1,0 +1,10 @@
+{
+  "host": "localhost",
+  "user": "root",
+  "password": "",
+  "database": "xdk2mam",
+  "email_account": "enterHereTheEmailAccount@gmail.com",
+  "email_password": "enterHereTheEmailPassword",
+  "email_provider": "gmail",
+  "destination_email_account": "enterHereTheDestinationEmailAccount@gmail.com"
+}

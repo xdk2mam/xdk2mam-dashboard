@@ -1,7 +1,7 @@
 var mysql = require('mysql')
-var dbConfig = require('../dbConfig.json')
+var config = require('../config.json')
 
-var con = mysql.createConnection(dbConfig)
+var con = mysql.createConnection(config)
 
 var ConnectionService = function() {
   this.getConnectionRequest = async function(query, callback) {

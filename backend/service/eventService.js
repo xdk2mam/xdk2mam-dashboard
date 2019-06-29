@@ -5,7 +5,7 @@ var EventService = function () {
 
   this.putEvent = function (info) {
     var deferred = q.defer()
-    const data = { id_dataset: info.id_dataset, value: info.value }
+    const data = { id_dataset: info.id_dataset, value: info.value, operator: info.operator }
     eventRepository
       .put(data, info.type_sensor)
       .then(function (data) {
