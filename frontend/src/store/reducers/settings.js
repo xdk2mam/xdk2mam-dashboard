@@ -5,6 +5,7 @@ import {
   CLEAR_FULLNODE_IOTA_URL,
   SET_EXPLORER_URL,
   CLEAR_EXPLORER_URL,
+  SET_USER_CONFIG,
 } from '../actions/settings'
 
 const initialState = {
@@ -14,6 +15,14 @@ const initialState = {
 
 const settings = (state = initialState, action) => {
   switch (action.type) {
+    case SET_USER_CONFIG:
+      return {
+        ...state,
+        email: action.payload.email,
+        fullNodeIotaUrl: action.payload.fullNodeIotaUrl,
+        explorerUrl: action.payload.explorerUrl,
+      }
+
     case SET_EMAIL:
       return {
         ...state,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
@@ -12,6 +12,7 @@ import {
   clearEmailDispatcher,
   clearFullnodeIotaUrlDispatcher,
   clearExplorerUrlDispatcher,
+  getUserConfigDispatcher,
 } from '../store/actions/settings'
 import Colors from '../helpers/colors'
 import SettingsValues from '../constants/SettingsValues'
@@ -24,6 +25,7 @@ import SettingItem from '../components/SettingItem'
  */
 
 const Settings = ({
+  dispatchGetUserConfig,
   dispatchSetEmail,
   dispatchSetFullNodeIotaUrl,
   dispatchSetExplorerUrl,
@@ -41,6 +43,10 @@ const Settings = ({
     value: '',
   }
 
+  useEffect(() => {
+    dispatchGetUserConfig()
+  }, [dispatchGetUserConfig])
+
   const [selectedSetting, setSelectedSetting] = useState(initialSelectedSetting)
   const [openDialog, setOpenDialog] = useState(false)
   const [menuAnchorElement, setMenuAnchorElement] = useState(null)
@@ -57,7 +63,7 @@ const Settings = ({
   const handleCloseDialog = () => {
     setOpenDialog(false)
     handleCloseMenu()
-    setTimeout(() => setSelectedSetting(initialSelectedSetting), 200)
+    setTimeout(() => setSelectedSetting(initialSelectedSetting), 300)
   }
 
   const handleAddEmailButton = () => {
@@ -93,7 +99,7 @@ const Settings = ({
     handleCloseDialog()
   }
 
-  const handleRemove = value => {
+  const handleRemove = () => {
     const selectedSettingValue = selectedSetting.value
 
     if (selectedSettingValue === SettingsValues.email.value) {
@@ -101,11 +107,11 @@ const Settings = ({
     }
 
     if (selectedSettingValue === SettingsValues.fullNodeIotaUrl.value) {
-      dispatchClearFullNodeIotaUrl(value)
+      dispatchClearFullNodeIotaUrl()
     }
 
     if (selectedSettingValue === SettingsValues.explorerUrl.value) {
-      dispatchClearExplorerUrl(value)
+      dispatchClearExplorerUrl()
     }
 
     handleCloseMenu()
@@ -183,6 +189,7 @@ const Settings = ({
  */
 
 Settings.propTypes = {
+  dispatchGetUserConfig: PropTypes.func.isRequired,
   dispatchSetEmail: PropTypes.func.isRequired,
   dispatchSetFullNodeIotaUrl: PropTypes.func.isRequired,
   dispatchSetExplorerUrl: PropTypes.func.isRequired,
@@ -251,6 +258,7 @@ const mapDispatchToProps = dispatch => ({
   dispatchClearFullNodeIotaUrl: clearFullnodeIotaUrlDispatcher(dispatch),
   dispatchSetExplorerUrl: setExplorerUrlDispatcher(dispatch),
   dispatchClearExplorerUrl: clearExplorerUrlDispatcher(dispatch),
+  dispatchGetUserConfig: getUserConfigDispatcher(dispatch),
 })
 
 /**

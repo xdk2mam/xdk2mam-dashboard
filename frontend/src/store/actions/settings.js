@@ -1,7 +1,10 @@
+import api from '../../api/api'
+
 /**
  * Types
  */
 
+export const SET_USER_CONFIG = 'SET_USER_CONFIG'
 export const SET_EMAIL = 'SET_EMAIL'
 export const SET_FULLNODE_IOTA_URL = 'SET_FULLNODE_IOTA_URL'
 export const SET_EXPLORER_URL = 'SET_EXPLORER_URL'
@@ -12,6 +15,15 @@ export const CLEAR_EXPLORER_URL = 'CLEAR_EXPLORER_URL'
 /**
  * Action creators
  */
+
+export const setUserConfig = config => ({
+  type: SET_USER_CONFIG,
+  payload: {
+    email: config.email,
+    fullNodeIotaUrl: config.fullnode,
+    explorerUrl: config.explorer,
+  },
+})
 
 export const setEmail = email => ({
   type: SET_EMAIL,
@@ -44,26 +56,58 @@ export const clearExplorerUrl = () => ({
  * Action dispatchers
  */
 
-export const setEmailDispatcher = dispatch => email => {
-  dispatch(setEmail(email))
+export const getUserConfigDispatcher = dispatch => async () => {
+  const response = await api.getUserConfig()
+
+  if (response.status === 200) {
+    dispatch(setUserConfig(response.data))
+  }
 }
 
-export const setFullnodeIotaUrlDispatcher = dispatch => url => {
-  dispatch(setFullnodeIotaUrl(url))
+export const setEmailDispatcher = dispatch => async email => {
+  const response = await api.setEmail(email)
+
+  if (response.status === 200) {
+    dispatch(setEmail(email))
+  }
 }
 
-export const setExplorerUrlDispatcher = dispatch => url => {
-  dispatch(setExplorerUrl(url))
+export const setFullnodeIotaUrlDispatcher = dispatch => async url => {
+  const response = await api.setFullNodeIotaUrl(url)
+
+  if (response.status === 200) {
+    dispatch(setFullnodeIotaUrl(url))
+  }
 }
 
-export const clearEmailDispatcher = dispatch => () => {
-  dispatch(clearEmail())
+export const setExplorerUrlDispatcher = dispatch => async url => {
+  const response = await api.setExplorerUrl(url)
+
+  if (response.status === 200) {
+    dispatch(setExplorerUrl(url))
+  }
 }
 
-export const clearFullnodeIotaUrlDispatcher = dispatch => () => {
-  dispatch(clearFullnodeIotaUrl())
+export const clearEmailDispatcher = dispatch => async () => {
+  const response = await api.setEmail('')
+
+  if (response.status === 200) {
+    dispatch(setEmail(''))
+  }
 }
 
-export const clearExplorerUrlDispatcher = dispatch => () => {
-  dispatch(clearExplorerUrl())
+export const clearFullnodeIotaUrlDispatcher = dispatch => async () => {
+  const response = await api.setFullNodeIotaUrl('')
+
+  if (response.status === 200) {
+    dispatch(setFullnodeIotaUrl(''))
+  }
+}
+
+export const clearExplorerUrlDispatcher = dispatch => async () => {
+  const response = await api.setExplorerUrl('')
+
+  if (response.status === 200) {
+    dispatch(setExplorerUrl(''))
+  }
 }
