@@ -38,19 +38,20 @@ const SettingDialog = ({ classes, onCancel, onSave, open, selectedSetting, value
   const titleText = `${actionText} ${selectedSetting.dialogLabel}`
   const validationSchema = getValidationSchema(selectedSetting.value)
   const type = get(SettingsValues[selectedSetting.value], 'type', '')
+  const initialValues = selectedSetting ? { [selectedSetting.value]: value } : null
 
   return (
     <Dialog open={open} onClose={onCancel} fullWidth maxWidth="xs">
       <Formik
         validationSchema={validationSchema}
         validateOnChange
-        initialValues={{ settingValue: value }}
+        initialValues={initialValues}
         onSubmit={(values, actions) => {
           actions.setSubmitting(true)
           onSave(values[selectedSetting.value])
           actions.setSubmitting(false)
         }}
-        render={({ handleChange, handleBlur, handleSubmit, isValid, errors, touched }) => (
+        render={({ handleChange, handleBlur, handleSubmit, isValid, errors, touched, values }) => (
           <Fragment>
             <DialogTitle disableTypography classes={{ root: classes.titleContainer }}>
               <h4 className={classes.titleText}>{titleText}</h4>
@@ -58,6 +59,7 @@ const SettingDialog = ({ classes, onCancel, onSave, open, selectedSetting, value
             <DialogContent>
               <div className={classes.field}>
                 <Field
+                  value={values[selectedSetting.value]}
                   component={TextField}
                   inputProps={{
                     maxLength: 50,
