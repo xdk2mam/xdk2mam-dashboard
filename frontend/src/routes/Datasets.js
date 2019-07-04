@@ -11,6 +11,8 @@ import { createDatasetDispatcher, setActiveDatasetIdDispatcher, getDatasetsDispa
 import Layout from '../components/Layout'
 import CreateDatasetButton from '../components/CreateDatasetButton'
 import CreateDatasetDialog from '../components/CreateDatasetDialog'
+import CompareDatasetsButton from '../components/CompareDatasetsButton'
+import CancelButton from '../components/CancelButton'
 
 /**
  * Constants
@@ -64,15 +66,33 @@ class Datasets extends PureComponent {
     history.push('/')
   }
 
+  handleCompareClick = () => this.setState({ compareMode: true })
+
+  handleCancelCompareClick = () => this.setState({ compareMode: false })
+
   render() {
     const { classes, datasets } = this.props
+    const { compareMode } = this.state
+
+    const showCompareDatasetsButton = datasets.length >= 2
 
     return (
       <Layout>
         <Grid item xs={12} className={classes.gridInner}>
           <div className={classes.sectionHeader}>
             <Typography variant="h5">Datasets</Typography>
-            <CreateDatasetButton onClick={this.handleOpenDialog} />
+            {!compareMode && (
+              <div>
+                {showCompareDatasetsButton && <CompareDatasetsButton onClick={this.handleCompareClick} />}
+                <CreateDatasetButton onClick={this.handleOpenDialog} />
+              </div>
+            )}
+            {compareMode && (
+              <div>
+                <CancelButton onClick={this.handleCancelCompareClick} />
+                <CompareDatasetsButton onClick={this.handleCompareClick} />
+              </div>
+            )}
           </div>
           <Paper className={classes.root}>
             <Table className={classes.table}>
@@ -80,11 +100,11 @@ class Datasets extends PureComponent {
                 <TableRow>
                   {DATASET_HEADERS.map((header, i) => {
                     if (i === 0) {
-                      return <TableCell key={`${header}-${i}`}>{header}</TableCell>
+                      return <TableCell key={header}>{header}</TableCell>
                     }
 
                     return (
-                      <TableCell key={`${header}-${i}`} align="right">
+                      <TableCell key={header} align="right">
                         {header}
                       </TableCell>
                     )
