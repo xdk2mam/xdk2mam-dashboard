@@ -5,8 +5,13 @@ import { Paper, Grid, Typography } from '@material-ui/core'
 import { includes, isEmpty, find, remove } from 'lodash'
 import { connect } from 'react-redux'
 
-import { createDatasetDispatcher, clearActiveDatasetIdDispatcher } from '../store/actions/dataset'
-import { getActiveDataset } from '../store/selectors/dataset'
+import {
+  createDatasetDispatcher,
+  clearActiveDatasetIdDispatcher,
+  setDatasetsToCompareIdsDispatcher,
+  clearDatasetsToCompareIdsDispatcher,
+} from '../store/actions/dataset'
+import { getActiveDataset, datasetsToCompareIdsSelector, getDatasetsToCompare } from '../store/selectors/dataset'
 import { formatDataForCharts, formatDataForTable, getYDomain, getSeriesLegendItems } from '../helpers/utils'
 import api from '../api/api'
 import generateRandomData from '../helpers/randomData'
@@ -15,11 +20,12 @@ import Table from '../components/Table/Table'
 import FullscreenModal from '../components/FullscreenModal'
 import ChartView from '../components/ChartView'
 import TabNavigator from '../components/TabNavigator'
+import CompareHeader from '../components/CompareHeader'
 import SubHeader from '../components/SubHeader'
 import NoDataMessage from '../components/NoDataMessage'
 import NoActiveDataset from '../components/NoActiveDataset'
 import SensorTypes from '../constants/SensorTypes'
-import { ChartColors } from '../helpers/colors'
+import Colors, { ChartColors } from '../helpers/colors'
 
 /**
  * Constants
@@ -70,6 +76,7 @@ const TIME_INTERVALS = [{ '1m': 1 }, { '5m': 5 }, { '10m': 10 }, { '30m': 30 }, 
 
 const initialState = {
   infoSensor: [],
+  infoSensorCompare: [],
   rawData: [],
   rawChartData: [],
   tableData: [],
@@ -78,6 +85,7 @@ const initialState = {
   selectedTimeInterval: '',
   disabledSeries: [],
   legendItems: INERTIAL_LEGENDS,
+  isSelectedChartFromCompare: false,
 }
 
 /**
@@ -108,17 +116,35 @@ class Home extends PureComponent {
   }
 
   getAllData = async () => {
-    const {
-      activeDataset: { id },
-    } = this.props
     const { selectedTimeInterval } = this.state
+    const { datasetsToCompareIds } = this.props
 
     const selectedTimeIntervalValue = find(TIME_INTERVALS, value => Object.keys(value)[0] === selectedTimeInterval)[
       selectedTimeInterval
     ]
-    const sensorData = await api.getDatasetData(id, selectedTimeIntervalValue, GET_ALL_LIMIT_ENTRIES)
 
-    this.setState({
+    let sensorData, sensorCompareData
+    if (!isEmpty(datasetsToCompareIds)) {
+      sensorData = await api.getDatasetData(datasetsToCompareIds[0], selectedTimeIntervalValue, GET_ALL_LIMIT_ENTRIES)
+      sensorCompareData = await api.getDatasetData(
+        datasetsToCompareIds[1],
+        selectedTimeIntervalValue,
+        GET_ALL_LIMIT_ENTRIES
+      )
+
+      return this.setState({
+        infoSensor: !isEmpty(sensorData) ? formatDataForCharts(sensorData) : null,
+        infoSensorCompare: !isEmpty(sensorCompareData) ? formatDataForCharts(sensorCompareData) : null,
+      })
+    }
+
+    const {
+      activeDataset: { id },
+    } = this.props
+
+    sensorData = await api.getDatasetData(id, selectedTimeIntervalValue, GET_ALL_LIMIT_ENTRIES)
+
+    return this.setState({
       infoSensor: !isEmpty(sensorData) ? formatDataForCharts(sensorData) : null,
       tableData: !isEmpty(sensorData) ? formatDataForTable(sensorData) : null,
       rawData: sensorData,
@@ -132,6 +158,10 @@ class Home extends PureComponent {
     if (isEmpty(activeDataset)) {
       return
     }
+
+    /** @todo: remove these when all the feature is complete */
+    this.props.dispatchSetDatasetsToCompareIds([11, 12])
+    // this.props.dispatchClearDatasetsToCompareIds()
 
     if (activeDataset.status === 1) {
       this.setState({ selectedTimeInterval: '1m' }, () => {
@@ -176,9 +206,14 @@ class Home extends PureComponent {
 
   handleTabChange = (_event, value) => this.setState({ selectedTab: value })
 
-  handleFullscreenButton = selectedChart => {
+  handleFullscreenButton = (selectedChart, compareView) => {
     /** @todo: we should show the entire data of this chart and not the fragmented one */
     this.setState({ selectedChart })
+    if (compareView) {
+      this.setState({ isSelectedChartFromCompare: true })
+    } else {
+      this.setState({ isSelectedChartFromCompare: false })
+    }
   }
 
   handleCloseFullscreenButton = () => this.setState({ selectedChart: null })
@@ -212,14 +247,16 @@ class Home extends PureComponent {
   }
 
   getSelectedChartData = () => {
-    const { infoSensor, selectedChart } = this.state
+    const { infoSensor, infoSensorCompare, selectedChart, isSelectedChartFromCompare } = this.state
 
     if (isEmpty(selectedChart)) {
       return null
     }
 
+    const datasetData = isSelectedChartFromCompare ? infoSensorCompare : infoSensor
+
     if (selectedChart.sensorName) {
-      return find(infoSensor, { sensorName: selectedChart.sensorName })
+      return find(datasetData, { sensorName: selectedChart.sensorName })
     }
 
     let sensorType = ''
@@ -239,7 +276,7 @@ class Home extends PureComponent {
       sensorType = SensorTypes.ACOUSTIC
     }
 
-    const selectedSensor = find(infoSensor, { sensorName: sensorType })
+    const selectedSensor = find(datasetData, { sensorName: sensorType })
     /** @todo: backend should return consistent objects */
     const data = sensorType === SensorTypes.ACOUSTIC_SENSORS ? selectedSensor.data : selectedSensor.series
 
@@ -247,14 +284,23 @@ class Home extends PureComponent {
   }
 
   render() {
-    const { classes, activeDataset } = this.props
-    const { selectedTab, infoSensor, tableData, selectedTimeInterval, legendItems, disabledSeries } = this.state
+    const { classes, activeDataset, datasetsToCompare } = this.props
+    const {
+      selectedTab,
+      infoSensor,
+      infoSensorCompare,
+      tableData,
+      selectedTimeInterval,
+      legendItems,
+      disabledSeries,
+    } = this.state
 
     const selectedChartData = this.getSelectedChartData()
 
-    const showNoDataMessage = (!isEmpty(activeDataset) && isEmpty(infoSensor)) || isEmpty(tableData)
+    const compareView = !isEmpty(infoSensorCompare)
     const showDashboard = !isEmpty(infoSensor)
     const showSubHeader = !isEmpty(activeDataset)
+    const showNoDataMessage = (!isEmpty(activeDataset) && isEmpty(infoSensor)) || (!compareView && isEmpty(tableData))
 
     return (
       <Layout>
@@ -265,22 +311,24 @@ class Home extends PureComponent {
               <SubHeader
                 deviceName={activeDataset.deviceName}
                 activeDataset={activeDataset}
+                datasetsToCompare={datasetsToCompare}
                 onTimeIntervalClick={this.handleSelectTimeInterval}
                 onFinishDatasetClick={this.handleFinishDatasetClick}
                 selectedTimeInterval={selectedTimeInterval}
               />
               <TabNavigator selected={selectedTab} onChange={this.handleTabChange} />
+              {compareView && <CompareHeader datasetsToCompare={datasetsToCompare} />}
             </Grid>
             {showNoDataMessage && <NoDataMessage />}
             {showDashboard && selectedTab === 0 && (
               <Grid container>
-                {infoSensor &&
-                  infoSensor[0].series.map((data, index) => {
+                <Grid container xs={compareView ? 6 : 12}>
+                  {infoSensor[0].series.map(data => {
                     const title = data.seriesName
                     const yDomain = getYDomain(title)
 
                     return (
-                      <Grid item sm={4} xs={12} key={index} className={classes.gridInner}>
+                      <Grid item sm={compareView ? 12 : 4} xs={12} key={title} className={classes.gridInner}>
                         <Grid item xs={12}>
                           <ChartView
                             title={title}
@@ -292,17 +340,39 @@ class Home extends PureComponent {
                       </Grid>
                     )
                   })}
+                </Grid>
+                {compareView && (
+                  <Grid item xs={6} className={classes.rightContainer}>
+                    {infoSensorCompare[0].series.map(data => {
+                      const title = data.seriesName
+                      const yDomain = getYDomain(title)
+
+                      return (
+                        <Grid item sm={12} xs={12} key={title} className={classes.gridInner}>
+                          <Grid item xs={12}>
+                            <ChartView
+                              title={title}
+                              data={data.data}
+                              onFullscreenClick={() => this.handleFullscreenButton(data, compareView)}
+                              yDomain={yDomain}
+                            />
+                          </Grid>
+                        </Grid>
+                      )
+                    })}
+                  </Grid>
+                )}
               </Grid>
             )}
 
             {showDashboard && selectedTab === 1 && (
               <Grid container>
-                {infoSensor &&
-                  infoSensor[4].series.map((data, index) => {
+                <Grid container xs={compareView ? 6 : 12}>
+                  {infoSensor[4].series.map(data => {
                     const title = infoSensor[4].sensorName
 
                     return (
-                      <Grid item xs={6} key={index} className={classes.gridInner}>
+                      <Grid item xs={compareView ? 12 : 6} key={title} className={classes.gridInner}>
                         <Grid item xs={12}>
                           <ChartView
                             title={title}
@@ -313,12 +383,11 @@ class Home extends PureComponent {
                       </Grid>
                     )
                   })}
-                {infoSensor &&
-                  infoSensor[6].series.map((data, index) => {
+                  {infoSensor[6].series.map(data => {
                     const title = infoSensor[6].sensorName
 
                     return (
-                      <Grid item xs={6} key={index} className={classes.gridInner}>
+                      <Grid item xs={compareView ? 12 : 6} key={title} className={classes.gridInner}>
                         <Grid item xs={12}>
                           <ChartView
                             title={title}
@@ -329,13 +398,48 @@ class Home extends PureComponent {
                       </Grid>
                     )
                   })}
+                </Grid>
+                {compareView && (
+                  <Grid item xs={6} className={classes.rightContainer}>
+                    {infoSensorCompare[4].series.map(data => {
+                      const title = infoSensor[4].sensorName
+
+                      return (
+                        <Grid item xs={12} key={title} className={classes.gridInner}>
+                          <Grid item xs={12}>
+                            <ChartView
+                              title={title}
+                              data={data.data}
+                              onFullscreenClick={() => this.handleFullscreenButton(data)}
+                            />
+                          </Grid>
+                        </Grid>
+                      )
+                    })}
+                    {infoSensorCompare[6].series.map(data => {
+                      const title = infoSensor[6].sensorName
+
+                      return (
+                        <Grid item xs={12} key={title} className={classes.gridInner}>
+                          <Grid item xs={12}>
+                            <ChartView
+                              title={title}
+                              data={data.data}
+                              onFullscreenClick={() => this.handleFullscreenButton(data)}
+                            />
+                          </Grid>
+                        </Grid>
+                      )
+                    })}
+                  </Grid>
+                )}
               </Grid>
             )}
 
             {showDashboard && selectedTab === 2 && (
               <Grid container>
-                {infoSensor &&
-                  infoSensor.map((sensors, index) => {
+                <Grid container xs={compareView ? 6 : 12}>
+                  {infoSensor.map((sensors, index) => {
                     if (index === 0 || index === 4 || index === 6) {
                       return false
                     }
@@ -347,7 +451,7 @@ class Home extends PureComponent {
                       index !== 0 &&
                       index !== 4 &&
                       index !== 6 && (
-                        <Grid item sm={6} xs={12} key={index} className={classes.gridInner}>
+                        <Grid item sm={compareView ? 12 : 6} xs={12} key={index} className={classes.gridInner}>
                           <Grid item xs={12}>
                             <ChartView
                               title={sensorName}
@@ -362,9 +466,41 @@ class Home extends PureComponent {
                       )
                     )
                   })}
+                </Grid>
+                {compareView && (
+                  <Grid item xs={6} className={classes.rightContainer}>
+                    {infoSensorCompare.map((sensors, index) => {
+                      if (index === 0 || index === 4 || index === 6) {
+                        return false
+                      }
+
+                      const sensorName = sensors.sensorName
+                      const legends = getSeriesLegendItems(legendItems, sensorName)
+
+                      return (
+                        index !== 0 &&
+                        index !== 4 &&
+                        index !== 6 && (
+                          <Grid item sm={12} key={index} className={classes.gridInner}>
+                            <Grid item xs={12}>
+                              <ChartView
+                                title={sensorName}
+                                data={sensors}
+                                onFullscreenClick={() => this.handleFullscreenButton(sensors)}
+                                legendItems={legends}
+                                onLegendClick={this.handleLegendClick}
+                                disabledSeries={disabledSeries}
+                              />
+                            </Grid>
+                          </Grid>
+                        )
+                      )
+                    })}
+                  </Grid>
+                )}
               </Grid>
             )}
-            {showDashboard && (
+            {showDashboard && !compareView && (
               <Grid container>
                 <Grid item xs={12} classes={{ item: classes.gridInner }}>
                   <Typography variant="h5" classes={{ root: classes.tableTitle }}>
@@ -400,12 +536,16 @@ class Home extends PureComponent {
 Home.propTypes = {
   classes: PropTypes.object.isRequired,
   activeDataset: PropTypes.object,
+  datasetsToCompareIds: PropTypes.array,
+  datasetsToCompare: PropTypes.array,
   dispatchCreateDataset: PropTypes.func.isRequired,
   dispatchClearActiveDatasetId: PropTypes.func.isRequired,
 }
 
 Home.defaultProps = {
   activeDataset: null,
+  datasetsToCompareIds: null,
+  datasetsToCompare: null,
 }
 
 /**
@@ -415,6 +555,10 @@ Home.defaultProps = {
 const styles = {
   gridInner: {
     padding: '1%',
+  },
+
+  rightContainer: {
+    backgroundColor: Colors.LIGHT_GREY,
   },
 
   paper: {
@@ -440,11 +584,15 @@ const styles = {
 const mapStateToProps = state => ({
   datasets: state.dataset.datasets,
   activeDataset: getActiveDataset(state),
+  datasetsToCompareIds: datasetsToCompareIdsSelector(state),
+  datasetsToCompare: getDatasetsToCompare(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   dispatchCreateDataset: createDatasetDispatcher(dispatch),
   dispatchClearActiveDatasetId: clearActiveDatasetIdDispatcher(dispatch),
+  dispatchSetDatasetsToCompareIds: setDatasetsToCompareIdsDispatcher(dispatch),
+  dispatchClearDatasetsToCompareIds: clearDatasetsToCompareIdsDispatcher(dispatch),
 })
 
 /**

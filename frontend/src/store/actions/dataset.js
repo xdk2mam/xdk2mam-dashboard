@@ -9,6 +9,8 @@ import api from '../../api/api'
 
 export const SET_ACTIVE_DATASET_ID = 'SET_ACTIVE_DATASET_ID'
 export const CLEAR_ACTIVE_DATASET_ID = 'CLEAR_ACTIVE_DATASET_ID'
+export const SET_DATASET_COMPARE_IDS = 'SET_DATASET_COMPARE_IDS'
+export const CLEAR_DATASET_COMPARE_IDS = 'CLEAR_DATASET_COMPARE_IDS'
 export const CREATE_DATASET = 'CREATE_DATASET'
 export const SET_DATASETS = 'SET_DATASETS'
 
@@ -23,6 +25,15 @@ export const setActiveDatasetId = activeDatasetId => ({
 
 export const clearActiveDatasetId = () => ({
   type: CLEAR_ACTIVE_DATASET_ID,
+})
+
+export const setDatasetsToCompareIds = datasetsToCompareIds => ({
+  type: SET_DATASET_COMPARE_IDS,
+  payload: { datasetsToCompareIds },
+})
+
+export const clearDatasetsToCompareIds = () => ({
+  type: CLEAR_DATASET_COMPARE_IDS,
 })
 
 export const createDataset = dataset => ({
@@ -57,6 +68,14 @@ export const clearActiveDatasetIdDispatcher = dispatch => async id => {
   if (response.status === 200) {
     dispatch(clearActiveDatasetId())
   }
+}
+
+export const setDatasetsToCompareIdsDispatcher = dispatch => datasetsToCompareIds => {
+  dispatch(setDatasetsToCompareIds(datasetsToCompareIds))
+}
+
+export const clearDatasetsToCompareIdsDispatcher = dispatch => () => {
+  dispatch(clearDatasetsToCompareIds())
 }
 
 export const createDatasetDispatcher = dispatch => async (dataset, setAsActive = false) => {

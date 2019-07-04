@@ -29,22 +29,36 @@ class SubHeader extends PureComponent {
       classes,
       // deviceName,
       activeDataset,
+      datasetsToCompare,
       activeDataset: { dataset_name_table: name, name: displayName },
       onFinishDatasetClick,
       selectedTimeInterval,
     } = this.props
 
     const isRecording = !isEmpty(activeDataset) && activeDataset.status === 1
+    const compareView = !isEmpty(datasetsToCompare)
 
     return (
       <div className={classes.container}>
         <div>
-          <Typography variant={TYPOGRAPHY_VARIANT} color={TYPOGRAPHY_COLOR}>
-            {/** @todo: add deviceName to the backend */}
-            {/* Device Name: <span className={classnames(classes.info, classes.deviceText)}>{deviceName}</span> /  */}
-            Active Dataset: <span className={classes.info}>{name || displayName}</span>
-            {isRecording && <span className={classes.info}> | Recording</span>}
-          </Typography>
+          {compareView && (
+            <Typography variant={TYPOGRAPHY_VARIANT} color={TYPOGRAPHY_COLOR}>
+              {/** @todo: add deviceName to the backend */}
+              {/* Device Name: <span className={classnames(classes.info, classes.deviceText)}>{deviceName}</span> /  */}
+              Comparing Datasets:
+              {datasetsToCompare.map((dataset, i) => (
+                <span className={classes.info}>{` ${dataset.dataset_name_table}${i === 0 ? ' | ' : ''} `}</span>
+              ))}
+            </Typography>
+          )}
+          {!compareView && (
+            <Typography variant={TYPOGRAPHY_VARIANT} color={TYPOGRAPHY_COLOR}>
+              {/** @todo: add deviceName to the backend */}
+              {/* Device Name: <span className={classnames(classes.info, classes.deviceText)}>{deviceName}</span> /  */}
+              Active Dataset: <span className={classes.info}>{name || displayName}</span>
+              {isRecording && <span className={classes.info}> | Recording</span>}
+            </Typography>
+          )}
         </div>
         <div className={classes.right}>
           <div className={classes.timeIntervals}>
@@ -91,7 +105,9 @@ SubHeader.propTypes = {
   classes: PropTypes.object.isRequired,
   onFinishDatasetClick: PropTypes.func.isRequired,
   onTimeIntervalClick: PropTypes.func.isRequired,
-  deviceName: PropTypes.string,
+  // deviceName: PropTypes.string,
+  selectedTimeInterval: PropTypes.string,
+  datasetsToCompare: PropTypes.array,
   activeDataset: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
@@ -101,7 +117,7 @@ SubHeader.propTypes = {
 }
 
 SubHeader.defaultProps = {
-  deviceName: '',
+  // deviceName: '',
   activeDataset: '',
 }
 

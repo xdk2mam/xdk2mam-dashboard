@@ -43,7 +43,6 @@ TabNavigator.propTypes = {
 const styles = {
   tabsRoot: {
     backgroundColor: Colors.COMP_PURPLE,
-    borderBottom: `1px solid ${Colors.WHITE}`,
   },
 
   tabsIndicator: {
