@@ -2,9 +2,20 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
-import { Grid, Paper, Button, TableRow, TableHead, TableCell, TableBody, Table, Typography } from '@material-ui/core'
+import {
+  Checkbox,
+  Grid,
+  Paper,
+  Button,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableBody,
+  Table,
+  Typography,
+} from '@material-ui/core'
 import moment from 'moment'
-import { isNil, toString } from 'lodash'
+import { concat, filter, isNil, toString } from 'lodash'
 
 import { datasetsSelector, getActiveDataset } from '../store/selectors/dataset'
 import { createDatasetDispatcher, setActiveDatasetIdDispatcher, getDatasetsDispatcher } from '../store/actions/dataset'
@@ -34,8 +45,20 @@ const DATASET_HEADERS = [
  */
 
 class Datasets extends PureComponent {
-  state = {
-    openDialog: false,
+  constructor(props) {
+    super(props)
+
+    const checkboxes = {}
+    // eslint-disable-next-line array-callback-return
+    props.datasets.map(item => {
+      checkboxes[`checkbox${item.id}`] = false
+    })
+
+    this.state = {
+      openDialog: false,
+      datasetsToCompareIds: [],
+      checkboxes,
+    }
   }
 
   componentDidMount() {
@@ -68,11 +91,27 @@ class Datasets extends PureComponent {
 
   handleCompareClick = () => this.setState({ compareMode: true })
 
-  handleCancelCompareClick = () => this.setState({ compareMode: false })
+  handleCancelCompareClick = () => this.setState({ compareMode: false, datasetsToCompareIds: [] })
+
+  handleCompareCheckboxClick = id => event => {
+    const { checkboxes, datasetsToCompareIds } = this.state
+
+    const isSelected = !event.target.checked
+
+    if (!isSelected && datasetsToCompareIds.length >= 2) {
+      return
+    }
+
+    const newCheckboxes = checkboxes
+    newCheckboxes[`checkbox${id}`] = event.target.checked
+
+    const newArray = isSelected ? filter(datasetsToCompareIds, item => item !== id) : concat(datasetsToCompareIds, id)
+    this.setState({ datasetsToCompareIds: newArray, checkboxes: newCheckboxes })
+  }
 
   render() {
     const { classes, datasets } = this.props
-    const { compareMode } = this.state
+    const { checkboxes, compareMode, datasetsToCompareIds } = this.state
 
     const showCompareDatasetsButton = datasets.length >= 2
 
@@ -103,6 +142,14 @@ class Datasets extends PureComponent {
                       return <TableCell key={header}>{header}</TableCell>
                     }
 
+                    if (i === DATASET_HEADERS.length - 1) {
+                      return (
+                        <TableCell width={150} align="right" key={header}>
+                          {compareMode ? 'Compare' : 'Actions'}
+                        </TableCell>
+                      )
+                    }
+
                     return (
                       <TableCell key={header} align="right">
                         {header}
@@ -126,6 +173,7 @@ class Datasets extends PureComponent {
                   const dateText = !isNil(endDate) ? moment.unix(endDate).format('Y/M/D hh:mm') : 'N/A'
                   const activeDatasetText = status === 1 ? 'Yes' : 'No'
                   const intervalText = `${toString(interval / 1000)} sec`
+                  const disableCheckbox = !checkboxes[`checkbox${id}`] && datasetsToCompareIds.length >= 2
 
                   return (
                     <TableRow key={`${deviceName}-${id}`}>
@@ -138,15 +186,26 @@ class Datasets extends PureComponent {
                       <TableCell align="right">{dateText}</TableCell>
                       <TableCell align="right">{activeDatasetText}</TableCell>
                       <TableCell align="right">{intervalText}</TableCell>
-                      <TableCell align="right">
-                        <Button
-                          color="primary"
-                          className={classes.viewDatasetButton}
-                          onClick={() => this.handleViewDataset(id)}
-                        >
-                          View
-                        </Button>
-                      </TableCell>
+                      {!compareMode ? (
+                        <TableCell align="right">
+                          <Button
+                            color="primary"
+                            className={classes.viewDatasetButton}
+                            onClick={() => this.handleViewDataset(id)}
+                          >
+                            View
+                          </Button>
+                        </TableCell>
+                      ) : (
+                        <TableCell classes={{ root: classes.checkboxContainer }} align="right">
+                          <Checkbox
+                            checked={checkboxes[`checkbox${id}`]}
+                            disabled={disableCheckbox}
+                            color="primary"
+                            onClick={this.handleCompareCheckboxClick(id)}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   )
                 })}
@@ -210,6 +269,10 @@ const styles = {
   viewDatasetButton: {
     padding: 0,
     minWidth: 0,
+  },
+
+  checkboxContainer: {
+    padding: 5,
   },
 }
 
