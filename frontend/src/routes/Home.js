@@ -2,7 +2,7 @@ import React, { Fragment, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Paper, Grid, Typography } from '@material-ui/core'
-import { includes, isEmpty, find, remove } from 'lodash'
+import { get, includes, isEmpty, find, remove } from 'lodash'
 import { connect } from 'react-redux'
 
 import {
@@ -112,7 +112,13 @@ class Home extends PureComponent {
   }
 
   componentWillUnmount() {
+    const { datasetsToCompareIds, dispatchClearDatasetsToCompareIds } = this.props
+
     clearInterval(this.intervalId)
+
+    if (!isEmpty(datasetsToCompareIds)) {
+      dispatchClearDatasetsToCompareIds()
+    }
   }
 
   getAllData = async () => {
@@ -124,6 +130,7 @@ class Home extends PureComponent {
     ]
 
     let sensorData, sensorCompareData
+
     if (!isEmpty(datasetsToCompareIds)) {
       sensorData = await api.getDatasetData(datasetsToCompareIds[0], selectedTimeIntervalValue, GET_ALL_LIMIT_ENTRIES)
       sensorCompareData = await api.getDatasetData(
@@ -153,15 +160,11 @@ class Home extends PureComponent {
   }
 
   start = () => {
-    const { activeDataset } = this.props
+    const { activeDataset, datasetsToCompareIds } = this.props
 
-    if (isEmpty(activeDataset)) {
+    if (isEmpty(activeDataset) || isEmpty(datasetsToCompareIds)) {
       return
     }
-
-    /** @todo: remove these when all the feature is complete */
-    this.props.dispatchSetDatasetsToCompareIds([11, 12])
-    // this.props.dispatchClearDatasetsToCompareIds()
 
     if (activeDataset.status === 1) {
       this.setState({ selectedTimeInterval: '1m' }, () => {
@@ -220,15 +223,28 @@ class Home extends PureComponent {
 
   handleSelectTimeInterval = selectedTimeInterval => this.setState({ selectedTimeInterval })
 
-  handleCreateDataset = (name, deviceName, description, endDate) => {
-    this.props.dispatchCreateDataset({ name, deviceName, description, endDate }, true)
+  handleCreateDataset = (name, deviceName, description, endDate, interval) => {
+    this.props.dispatchCreateDataset({ name, deviceName, description, endDate, interval }, true)
     this.start()
   }
 
   handleFinishDatasetClick = () => {
-    const { dispatchClearActiveDatasetId, activeDataset } = this.props
+    const {
+      dispatchClearActiveDatasetId,
+      dispatchClearDatasetsToCompareIds,
+      activeDataset,
+      datasetsToCompareIds,
+    } = this.props
     clearInterval(this.intervalId)
-    dispatchClearActiveDatasetId(activeDataset.id)
+
+    if (activeDataset) {
+      dispatchClearActiveDatasetId(activeDataset.id)
+    }
+
+    if (datasetsToCompareIds) {
+      dispatchClearDatasetsToCompareIds()
+    }
+
     this.setState(initialState)
   }
 
@@ -299,17 +315,18 @@ class Home extends PureComponent {
 
     const compareView = !isEmpty(infoSensorCompare)
     const showDashboard = !isEmpty(infoSensor)
-    const showSubHeader = !isEmpty(activeDataset)
+    const showSubHeader = !isEmpty(activeDataset) || !isEmpty(datasetsToCompare)
     const showNoDataMessage = (!isEmpty(activeDataset) && isEmpty(infoSensor)) || (!compareView && isEmpty(tableData))
+    const showNoActiveDataset = isEmpty(activeDataset) && isEmpty(datasetsToCompare)
 
     return (
       <Layout>
-        {isEmpty(activeDataset) && <NoActiveDataset onCreateDataset={this.handleCreateDataset} />}
+        {showNoActiveDataset && <NoActiveDataset onCreateDataset={this.handleCreateDataset} />}
         {showSubHeader && (
           <Fragment>
             <Grid item xs={12}>
               <SubHeader
-                deviceName={activeDataset.deviceName}
+                deviceName={get(activeDataset, 'deviceName')}
                 activeDataset={activeDataset}
                 datasetsToCompare={datasetsToCompare}
                 onTimeIntervalClick={this.handleSelectTimeInterval}
@@ -451,7 +468,7 @@ class Home extends PureComponent {
                       index !== 0 &&
                       index !== 4 &&
                       index !== 6 && (
-                        <Grid item sm={compareView ? 12 : 6} xs={12} key={index} className={classes.gridInner}>
+                        <Grid item sm={compareView ? 12 : 6} xs={12} key={sensorName} className={classes.gridInner}>
                           <Grid item xs={12}>
                             <ChartView
                               title={sensorName}
@@ -481,7 +498,7 @@ class Home extends PureComponent {
                         index !== 0 &&
                         index !== 4 &&
                         index !== 6 && (
-                          <Grid item sm={12} key={index} className={classes.gridInner}>
+                          <Grid item sm={12} key={sensorName} className={classes.gridInner}>
                             <Grid item xs={12}>
                               <ChartView
                                 title={sensorName}
@@ -540,6 +557,7 @@ Home.propTypes = {
   datasetsToCompare: PropTypes.array,
   dispatchCreateDataset: PropTypes.func.isRequired,
   dispatchClearActiveDatasetId: PropTypes.func.isRequired,
+  dispatchClearDatasetsToCompareIds: PropTypes.func.isRequired,
 }
 
 Home.defaultProps = {

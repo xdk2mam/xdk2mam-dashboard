@@ -18,7 +18,12 @@ import moment from 'moment'
 import { concat, filter, isNil, toString } from 'lodash'
 
 import { datasetsSelector, getActiveDataset } from '../store/selectors/dataset'
-import { createDatasetDispatcher, setActiveDatasetIdDispatcher, getDatasetsDispatcher } from '../store/actions/dataset'
+import {
+  createDatasetDispatcher,
+  setActiveDatasetIdDispatcher,
+  getDatasetsDispatcher,
+  setDatasetsToCompareIdsDispatcher,
+} from '../store/actions/dataset'
 import Layout from '../components/Layout'
 import CreateDatasetButton from '../components/CreateDatasetButton'
 import CreateDatasetDialog from '../components/CreateDatasetDialog'
@@ -91,6 +96,14 @@ class Datasets extends PureComponent {
 
   handleCompareClick = () => this.setState({ compareMode: true })
 
+  handleConfirmCompareClick = () => {
+    const { dispatchSetDatasetsToCompareIds, history } = this.props
+    const { datasetsToCompareIds } = this.state
+
+    dispatchSetDatasetsToCompareIds(datasetsToCompareIds)
+    history.push('/')
+  }
+
   handleCancelCompareClick = () => this.setState({ compareMode: false, datasetsToCompareIds: [] })
 
   handleCompareCheckboxClick = id => event => {
@@ -114,6 +127,7 @@ class Datasets extends PureComponent {
     const { checkboxes, compareMode, datasetsToCompareIds } = this.state
 
     const showCompareDatasetsButton = datasets.length >= 2
+    const enableConfirmCompareDatasetsButton = datasetsToCompareIds.length === 2
 
     return (
       <Layout>
@@ -129,7 +143,10 @@ class Datasets extends PureComponent {
             {compareMode && (
               <div>
                 <CancelButton onClick={this.handleCancelCompareClick} />
-                <CompareDatasetsButton onClick={this.handleCompareClick} />
+                <CompareDatasetsButton
+                  disabled={!enableConfirmCompareDatasetsButton}
+                  onClick={this.handleConfirmCompareClick}
+                />
               </div>
             )}
           </div>
@@ -232,6 +249,7 @@ Datasets.propTypes = {
   dispatchCreateDataset: PropTypes.func.isRequired,
   dispatchSetActiveDatasetId: PropTypes.func.isRequired,
   dispatchGetDatasets: PropTypes.func.isRequired,
+  dispatchSetDatasetsToCompareIds: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   datasets: PropTypes.array,
   activeDataset: PropTypes.object,
@@ -289,6 +307,7 @@ const mapDispatchToProps = dispatch => ({
   dispatchCreateDataset: createDatasetDispatcher(dispatch),
   dispatchSetActiveDatasetId: setActiveDatasetIdDispatcher(dispatch),
   dispatchGetDatasets: getDatasetsDispatcher(dispatch),
+  dispatchSetDatasetsToCompareIds: setDatasetsToCompareIdsDispatcher(dispatch),
 })
 
 /**

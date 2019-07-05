@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react'
+import React, { Fragment, PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Typography, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
-import { isEmpty } from 'lodash'
+import { get, isEmpty } from 'lodash'
 import Colors from '../helpers/colors'
 
 /**
@@ -19,10 +19,7 @@ const TIME_INTERVALS = [{ value: '1m' }, { value: '5m' }, { value: '10m' }, { va
  */
 
 class SubHeader extends PureComponent {
-  handleTimeIntervalClick = value => {
-    const { onTimeIntervalClick } = this.props
-    onTimeIntervalClick(value)
-  }
+  handleTimeIntervalClick = value => this.props.onTimeIntervalClick(value)
 
   render() {
     const {
@@ -30,18 +27,20 @@ class SubHeader extends PureComponent {
       // deviceName,
       activeDataset,
       datasetsToCompare,
-      activeDataset: { dataset_name_table: name, name: displayName },
       onFinishDatasetClick,
       selectedTimeInterval,
     } = this.props
 
+    const activeDatasetName = get(activeDataset, 'dataset_name_table')
+    const activeDatasetDisplayName = get(activeDataset, 'name')
+
     const isRecording = !isEmpty(activeDataset) && activeDataset.status === 1
-    const compareView = !isEmpty(datasetsToCompare)
+    const isComparing = !isEmpty(datasetsToCompare)
 
     return (
       <div className={classes.container}>
         <div>
-          {compareView && (
+          {isComparing && (
             <Typography variant={TYPOGRAPHY_VARIANT} color={TYPOGRAPHY_COLOR}>
               {/** @todo: add deviceName to the backend */}
               {/* Device Name: <span className={classnames(classes.info, classes.deviceText)}>{deviceName}</span> /  */}
@@ -51,11 +50,11 @@ class SubHeader extends PureComponent {
               ))}
             </Typography>
           )}
-          {!compareView && (
+          {!isComparing && (
             <Typography variant={TYPOGRAPHY_VARIANT} color={TYPOGRAPHY_COLOR}>
               {/** @todo: add deviceName to the backend */}
               {/* Device Name: <span className={classnames(classes.info, classes.deviceText)}>{deviceName}</span> /  */}
-              Active Dataset: <span className={classes.info}>{name || displayName}</span>
+              Active Dataset: <span className={classes.info}>{activeDatasetName || activeDatasetDisplayName}</span>
               {isRecording && <span className={classes.info}> | Recording</span>}
             </Typography>
           )}
@@ -69,26 +68,27 @@ class SubHeader extends PureComponent {
               const selected = selectedTimeInterval === option.value
 
               return (
-                <React.Fragment key={`${option}-${index}`}>
+                <Fragment key={`${TIME_INTERVALS[index].value}`}>
                   <span
+                    role="presentation"
                     className={classnames(classes.text, classes.button, selected && classes.selectedButton)}
                     onClick={() => this.handleTimeIntervalClick(option.value)}
                   >
                     {option.value}
                   </span>
                   {!isEmpty(separator) && <span className={classes.separator}>{separator}</span>}
-                </React.Fragment>
+                </Fragment>
               )
             })}
           </div>
-          {isRecording && (
+          {(isRecording || isComparing) && (
             <Button
               variant="outlined"
               size="small"
               className={classes.finishDatasetButton}
               onClick={onFinishDatasetClick}
             >
-              Finish Dataset
+              {isRecording ? 'Finish Dataset' : 'Finish Comparison'}
             </Button>
           )}
         </div>
