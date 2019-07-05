@@ -10,8 +10,14 @@ import Colors from '../helpers/colors'
  * CompareDatasetsButton
  */
 
-const CompareDatasetsButton = ({ classes, onClick, style }) => (
-  <Button variant="outlined" color="primary" className={classnames(classes.button, style)} onClick={onClick}>
+const CompareDatasetsButton = ({ classes, disabled, onClick, style }) => (
+  <Button
+    disabled={disabled}
+    variant="outlined"
+    color="primary"
+    className={classnames(classes.button, style)}
+    onClick={onClick}
+  >
     Compare Datasets
   </Button>
 )
@@ -24,6 +30,7 @@ CompareDatasetsButton.propTypes = {
   classes: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
   style: PropTypes.string,
+  disabled: PropTypes.bool,
 }
 
 /**
