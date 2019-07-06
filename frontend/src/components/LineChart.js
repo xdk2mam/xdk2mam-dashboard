@@ -56,7 +56,18 @@ class LineChart extends PureComponent {
   handleXAxisFormat = value => `${moment.unix(value).format('mm:ss')}`
 
   render() {
-    const { data, classes, color, baseColor, height, yDomain, legendItems, onLegendClick, disabledSeries } = this.props
+    const {
+      data,
+      classes,
+      color,
+      baseColor,
+      height,
+      yDomain,
+      legendItems,
+      onLegendClick,
+      disabledSeries,
+      isCompare,
+    } = this.props
     const { crosshairValues } = this.state
 
     if (isEmpty(data)) {
@@ -94,7 +105,9 @@ class LineChart extends PureComponent {
         )}
         {hasSeries &&
           data.series.map((series, index) => {
-            const name = `${data.sensorName}${series.seriesName.toUpperCase()}`
+            /** dirty fix to make names unique between original and compare object, necessary for Legends */
+            const name = `${data.sensorName}${series.seriesName.toUpperCase()}${isCompare ? ' ' : ''}`
+
             const isDisabled = disabledSeries.find(i => i === name)
 
             return (
@@ -145,6 +158,7 @@ LineChart.propTypes = {
   yDomain: PropTypes.array,
   onLegendClick: PropTypes.func,
   legendItems: PropTypes.array,
+  isCompare: PropTypes.bool,
 }
 
 LineChart.defaultProps = {
@@ -153,6 +167,7 @@ LineChart.defaultProps = {
   legendItems: [],
   onLegendClick: null,
   yDomain: undefined,
+  isCompare: false,
 }
 
 /**

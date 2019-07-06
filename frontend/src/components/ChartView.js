@@ -16,7 +16,17 @@ import FullscreenButton from './FullscreenButton'
 
 class ChartView extends PureComponent {
   render() {
-    const { classes, data, onFullscreenClick, title, yDomain, legendItems, onLegendClick, disabledSeries } = this.props
+    const {
+      classes,
+      data,
+      onFullscreenClick,
+      title,
+      yDomain,
+      legendItems,
+      onLegendClick,
+      disabledSeries,
+      isCompare,
+    } = this.props
 
     if (isEmpty(data)) {
       return false
@@ -61,6 +71,7 @@ class ChartView extends PureComponent {
           disabledSeries={disabledSeries}
           legendItems={formattedlegendItems}
           yDomain={yDomain}
+          isCompare={isCompare}
         />
         {!isEmpty(data.series) ? (
           data.series.map((item, index) => {
@@ -103,6 +114,7 @@ ChartView.propTypes = {
   legendItems: PropTypes.array,
   disabledSeries: PropTypes.array,
   onLegendClick: PropTypes.func,
+  isCompare: PropTypes.bool,
 }
 
 ChartView.defaultProps = {
@@ -113,6 +125,7 @@ ChartView.defaultProps = {
   legendItems: [],
   onLegendClick: () => {},
   disabledSeries: [],
+  isCompare: false,
 }
 
 /**
