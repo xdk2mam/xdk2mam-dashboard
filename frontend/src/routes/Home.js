@@ -25,7 +25,8 @@ import SubHeader from '../components/SubHeader'
 import NoDataMessage from '../components/NoDataMessage'
 import NoActiveDataset from '../components/NoActiveDataset'
 import SensorTypes from '../constants/SensorTypes'
-import Colors, { ChartColors } from '../helpers/colors'
+import Colors from '../helpers/colors'
+import { INERTIAL_LEGENDS, INERTIAL_LEGENDS_COMPARE } from '../helpers/inertialLegends'
 
 /**
  * Constants
@@ -34,41 +35,6 @@ import Colors, { ChartColors } from '../helpers/colors'
 const USE_FAKE_DATA = false
 
 const VISIBLE_VALUES_ON_CHART = 25
-
-const INERTIAL_LEGENDS = [
-  {
-    sensor: 'Accelerometer',
-    legends: [
-      { title: 'AccelerometerX', color: ChartColors.x },
-      { title: 'AccelerometerY', color: ChartColors.y },
-      { title: 'AccelerometerZ', color: ChartColors.z },
-    ],
-  },
-  {
-    sensor: 'Gyroscope',
-    legends: [
-      { title: 'GyroscopeX', color: ChartColors.x },
-      { title: 'GyroscopeY', color: ChartColors.y },
-      { title: 'GyroscopeZ', color: ChartColors.z },
-    ],
-  },
-  {
-    sensor: 'Inertial',
-    legends: [
-      { title: 'InertialX', color: ChartColors.x },
-      { title: 'InertialY', color: ChartColors.y },
-      { title: 'InertialZ', color: ChartColors.z },
-    ],
-  },
-  {
-    sensor: 'Magnetometer',
-    legends: [
-      { title: 'MagnetometerX', color: ChartColors.x },
-      { title: 'MagnetometerY', color: ChartColors.y },
-      { title: 'MagnetometerZ', color: ChartColors.z },
-    ],
-  },
-]
 
 const GET_ALL_LIMIT_ENTRIES = 10000
 
@@ -85,6 +51,7 @@ const initialState = {
   selectedTimeInterval: '',
   disabledSeries: [],
   legendItems: INERTIAL_LEGENDS,
+  legendItemsCompare: INERTIAL_LEGENDS_COMPARE,
   isSelectedChartFromCompare: false,
 }
 
@@ -252,14 +219,17 @@ class Home extends PureComponent {
     const { disabledSeries } = this.state
     const { title } = item
 
+    /** @todo: refactor to maintain immutability */
     item.disabled = !item.disabled
 
     if (item.disabled) {
       disabledSeries.push(title)
-      this.setState({ disabledSeries })
+      /** @todo: forceUpdate shouldn't be necessary, but setState is not triggering re-render for children */
+      this.setState({ disabledSeries }, () => this.forceUpdate())
     } else {
       remove(disabledSeries, seriesName => seriesName === item.title)
-      this.setState({ disabledSeries })
+      /** @todo: forceUpdate shouldn't be necessary, but setState is not triggering re-render for children */
+      this.setState({ disabledSeries }, () => this.forceUpdate())
     }
   }
 
@@ -309,6 +279,7 @@ class Home extends PureComponent {
       tableData,
       selectedTimeInterval,
       legendItems,
+      legendItemsCompare,
       disabledSeries,
     } = this.state
 
@@ -494,7 +465,7 @@ class Home extends PureComponent {
                       }
 
                       const sensorName = sensors.sensorName
-                      const legends = getSeriesLegendItems(legendItems, sensorName)
+                      const legends = getSeriesLegendItems(legendItemsCompare, sensorName)
 
                       return (
                         index !== 0 &&
@@ -509,6 +480,7 @@ class Home extends PureComponent {
                                 legendItems={legends}
                                 onLegendClick={this.handleLegendClick}
                                 disabledSeries={disabledSeries}
+                                isCompare={compareView}
                               />
                             </Grid>
                           </Grid>
