@@ -99,7 +99,7 @@ class LineChart extends PureComponent {
 
             return (
               <LineSeries
-                key={index}
+                key={name}
                 curve={CURVE_TYPE}
                 color={isDisabled ? 'transparent' : color[index]}
                 data={series.data}

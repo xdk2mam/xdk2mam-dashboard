@@ -19,7 +19,7 @@ const CompareHeader = ({ classes, datasetsToCompare }) => {
   return (
     <Grid container className={classes.container}>
       {datasetsToCompare.map((dataset, i) => (
-        <Grid item sm={6} className={i === 1 ? classes.rightContainer : undefined}>
+        <Grid item sm={6} key={dataset.dataset_name_table} className={i === 1 ? classes.rightContainer : undefined}>
           <Typography variant={TYPOGRAPHY_VARIANT} color={TYPOGRAPHY_COLOR} className={classes.text}>
             {dataset.dataset_name_table}
           </Typography>

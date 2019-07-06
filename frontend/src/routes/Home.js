@@ -209,10 +209,10 @@ class Home extends PureComponent {
 
   handleTabChange = (_event, value) => this.setState({ selectedTab: value })
 
-  handleFullscreenButton = (selectedChart, compareView) => {
+  handleFullscreenButton = (selectedChart, isCompare) => {
     /** @todo: we should show the entire data of this chart and not the fragmented one */
     this.setState({ selectedChart })
-    if (compareView) {
+    if (isCompare) {
       this.setState({ isSelectedChartFromCompare: true })
     } else {
       this.setState({ isSelectedChartFromCompare: false })
@@ -251,6 +251,7 @@ class Home extends PureComponent {
   handleLegendClick = item => {
     const { disabledSeries } = this.state
     const { title } = item
+
     item.disabled = !item.disabled
 
     if (item.disabled) {
@@ -339,7 +340,7 @@ class Home extends PureComponent {
             {showNoDataMessage && <NoDataMessage />}
             {showDashboard && selectedTab === 0 && (
               <Grid container>
-                <Grid container xs={compareView ? 6 : 12}>
+                <Grid container item xs={compareView ? 6 : 12}>
                   {infoSensor[0].series.map(data => {
                     const title = data.seriesName
                     const yDomain = getYDomain(title)
@@ -352,6 +353,7 @@ class Home extends PureComponent {
                             data={data.data}
                             onFullscreenClick={() => this.handleFullscreenButton(data)}
                             yDomain={yDomain}
+                            isCompare={compareView}
                           />
                         </Grid>
                       </Grid>
@@ -384,7 +386,7 @@ class Home extends PureComponent {
 
             {showDashboard && selectedTab === 1 && (
               <Grid container>
-                <Grid container xs={compareView ? 6 : 12}>
+                <Grid container item xs={compareView ? 6 : 12}>
                   {infoSensor[4].series.map(data => {
                     const title = infoSensor[4].sensorName
 
@@ -455,7 +457,7 @@ class Home extends PureComponent {
 
             {showDashboard && selectedTab === 2 && (
               <Grid container>
-                <Grid container xs={compareView ? 6 : 12}>
+                <Grid container item xs={compareView ? 6 : 12}>
                   {infoSensor.map((sensors, index) => {
                     if (index === 0 || index === 4 || index === 6) {
                       return false

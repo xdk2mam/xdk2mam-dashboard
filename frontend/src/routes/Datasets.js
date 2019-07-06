@@ -23,6 +23,7 @@ import {
   setActiveDatasetIdDispatcher,
   getDatasetsDispatcher,
   setDatasetsToCompareIdsDispatcher,
+  clearActiveDatasetIdDispatcher,
 } from '../store/actions/dataset'
 import Layout from '../components/Layout'
 import CreateDatasetButton from '../components/CreateDatasetButton'
@@ -108,6 +109,7 @@ class Datasets extends PureComponent {
 
   handleCompareCheckboxClick = id => event => {
     const { checkboxes, datasetsToCompareIds } = this.state
+    const { dispatchClearActiveDatasetId, activeDataset } = this.props
 
     const isSelected = !event.target.checked
 
@@ -120,6 +122,10 @@ class Datasets extends PureComponent {
 
     const newArray = isSelected ? filter(datasetsToCompareIds, item => item !== id) : concat(datasetsToCompareIds, id)
     this.setState({ datasetsToCompareIds: newArray, checkboxes: newCheckboxes })
+
+    if (activeDataset) {
+      dispatchClearActiveDatasetId(activeDataset.id)
+    }
   }
 
   render() {
@@ -250,6 +256,7 @@ Datasets.propTypes = {
   dispatchSetActiveDatasetId: PropTypes.func.isRequired,
   dispatchGetDatasets: PropTypes.func.isRequired,
   dispatchSetDatasetsToCompareIds: PropTypes.func.isRequired,
+  dispatchClearActiveDatasetId: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   datasets: PropTypes.array,
   activeDataset: PropTypes.object,
@@ -306,6 +313,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   dispatchCreateDataset: createDatasetDispatcher(dispatch),
   dispatchSetActiveDatasetId: setActiveDatasetIdDispatcher(dispatch),
+  dispatchClearActiveDatasetId: clearActiveDatasetIdDispatcher(dispatch),
   dispatchGetDatasets: getDatasetsDispatcher(dispatch),
   dispatchSetDatasetsToCompareIds: setDatasetsToCompareIdsDispatcher(dispatch),
 })

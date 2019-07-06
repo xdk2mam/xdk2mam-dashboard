@@ -46,7 +46,9 @@ class SubHeader extends PureComponent {
               {/* Device Name: <span className={classnames(classes.info, classes.deviceText)}>{deviceName}</span> /  */}
               Comparing Datasets:
               {datasetsToCompare.map((dataset, i) => (
-                <span className={classes.info}>{` ${dataset.dataset_name_table}${i === 0 ? ' | ' : ''} `}</span>
+                <span key={dataset.dataset_name_table} className={classes.info}>
+                  {` ${dataset.dataset_name_table}${i === 0 ? ' | ' : ''} `}
+                </span>
               ))}
             </Typography>
           )}
