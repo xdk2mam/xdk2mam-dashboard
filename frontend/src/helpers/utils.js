@@ -134,31 +134,29 @@ export const formatDataForCharts = data => {
     }
 
     return item.xdk2mam.map((sensor, j) => {
-      if (j === 0 || j === 4 || j === 6) {
-        // Weather or Ambient Light sensors
-        sensor.data.map((datum, i) => {
-          const dataEntry = {
-            x: 0,
-            y: 0,
-          }
-          dataEntry.x = item.timestamp
-          dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName], 10)
+      return j === 0 || j === 4 || j === 6
+        ? // Weather or Ambient Light sensors
+          sensor.data.map((datum, i) => {
+            const dataEntry = {
+              x: 0,
+              y: 0,
+            }
+            dataEntry.x = item.timestamp
+            dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName], 10)
 
-          return formattedData[j].series[i].data.push(dataEntry)
-        })
-      } else {
-        // Rest of the available sensors
-        sensor.data.map((datum, i) => {
-          const dataEntry = {
-            x: 0,
-            y: 0,
-          }
-          dataEntry.x = item.timestamp
-          dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName], 10)
+            return formattedData[j].series[i].data.push(dataEntry)
+          })
+        : // Rest of the available sensors
+          sensor.data.map((datum, i) => {
+            const dataEntry = {
+              x: 0,
+              y: 0,
+            }
+            dataEntry.x = item.timestamp
+            dataEntry.y = parseInt(datum[formattedData[j].series[i].seriesName], 10)
 
-          return formattedData[j].series[i].data.push(dataEntry)
-        })
-      }
+            return formattedData[j].series[i].data.push(dataEntry)
+          })
     })
   })
 

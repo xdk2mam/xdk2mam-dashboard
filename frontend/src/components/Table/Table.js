@@ -165,12 +165,13 @@ VirtualizedTable.propTypes = {
   rowClassName: PropTypes.string,
   rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
   sort: PropTypes.func,
-  root: PropTypes.string.isRequired,
+  root: PropTypes.string,
 }
 
 VirtualizedTable.defaultProps = {
   headerHeight: 40,
   rowHeight: 40,
+  root: null,
 }
 
 /**

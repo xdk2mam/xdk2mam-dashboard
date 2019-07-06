@@ -33,7 +33,7 @@ MaxMinAvgLabels.propTypes = {
   title: PropTypes.string,
   maxValue: PropTypes.number.isRequired,
   minValue: PropTypes.number.isRequired,
-  avgValue: PropTypes.number.isRequired,
+  avgValue: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
   greyBackground: PropTypes.bool,
 }

@@ -27,7 +27,7 @@ const LabelItem = ({ classes, value, label }) => {
 
 LabelItem.propTypes = {
   classes: PropTypes.object.isRequired,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   label: PropTypes.string.isRequired,
 }
 
