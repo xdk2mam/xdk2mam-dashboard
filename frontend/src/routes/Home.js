@@ -114,10 +114,10 @@ class Home extends PureComponent {
   componentWillUnmount() {
     const { datasetsToCompareIds, dispatchClearDatasetsToCompareIds } = this.props
 
-    clearInterval(this.intervalId)
-
     if (!isEmpty(datasetsToCompareIds)) {
       dispatchClearDatasetsToCompareIds()
+    } else {
+      clearInterval(this.intervalId)
     }
   }
 
@@ -162,11 +162,11 @@ class Home extends PureComponent {
   start = () => {
     const { activeDataset, datasetsToCompareIds } = this.props
 
-    if (isEmpty(activeDataset) || isEmpty(datasetsToCompareIds)) {
+    if (isEmpty(activeDataset) && isEmpty(datasetsToCompareIds)) {
       return
     }
 
-    if (activeDataset.status === 1) {
+    if (!isEmpty(activeDataset) && activeDataset.status === 1) {
       this.setState({ selectedTimeInterval: '1m' }, () => {
         if (USE_FAKE_DATA) {
           this.startFakeDataset()
